@@ -1,0 +1,10 @@
+common:
+  service_password:
+development:
+  service_password: wx
+test:
+  service_password: wx
+production:
+  service_password: wx
+
+

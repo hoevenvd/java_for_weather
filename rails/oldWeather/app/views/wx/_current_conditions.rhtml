@@ -1,0 +1,81 @@
+<TABLE BORDER WIDTH="303" BGCOLOR="#C0C0C0" >
+<tr>														 
+<TD ALIGN=CENTER VALIGN=center COLSPAN=2 WIDTH="100%"><B>
+<FONT FACE="Arial"><%= @conditions %><br>Visibility <%= @visibility %> miles</FONT></B><br/>
+Observed (Beverly Airport)<br/>
+ <%= @conditions_date %>
+</TD>
+</tr>
+
+<TR>
+<TD ALIGN=CENTER VALIGN=TOP COLSPAN=2 WIDTH="100%"><B>
+<FONT FACE="Arial">Live Conditions<br><%= @current.sample_date.getlocal.strftime("%a, %b %d %Y %I:%M:%S %p ") + Time.new.getlocal.zone %></FONT></B></TD>
+</tr>
+
+<TR>
+
+<% if @current.is_raining %>
+<TR>
+<TD ALIGN=CENTER VALIGN=TOP COLSPAN=2 WIDTH="100%"><B>
+<FONT FACE="Arial">Raining at <%= @current.rain_rate %> inches per hour</FONT></B>
+</TD>
+</tr>
+<% end %>
+
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="50%"><B><FONT FACE="Arial">Temperature</FONT></B>&nbsp;
+<BR><%= @current.outside_temperature %> </TD>
+
+
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="50%"><B><FONT FACE="Arial">Humidity</FONT></B>&nbsp;
+<BR><%= @current.outside_humidity %> </TD>
+
+</tr>
+<tr>
+
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="50%"><B><FONT FACE="Arial">Dewpoint</FONT></B>&nbsp;
+<BR><%= @current.dewpoint %></TD>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="50%"><B><FONT FACE="Arial">Apparent Temp</FONT></B>
+&nbsp;<BR><%= @current.apparent_temp %></TD>
+</TR>
+
+<TR>
+<TD COLSPAN="2" WIDTH="292">
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Pressure</b><br><%= @current.pressure %></FONT></FONT></B></CENTER>
+</TD>
+</TR>
+
+
+<TR>
+<TD COLSPAN="2" WIDTH="292">
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Wind</b><br><%= @current.wind_str %></FONT></FONT></B></CENTER>
+</TD>
+</TR>
+
+<!--
+<TR>
+<TD ALIGN=CENTER VALIGN=TOP COLSPAN=2 WIDTH="100%"><B>
+<FONT FACE="Arial">Data collected from sensors:</FONT></B>
+<BR><%= @current.sample_date.strftime("%a %b %d %I:%M:%S %p") %></TD>
+</tr>
+-->
+
+<TR>
+<TD ALIGN=CENTER VALIGN=TOP COLSPAN=2 WIDTH="100%"><B>
+<FONT FACE="Arial">Current conditions are updated every 10 seconds!</FONT></B></TD>
+</tr>
+
+<TR>
+</table>
+<TD ALIGN=CENTER VALIGN=CENTER COLSPAN="2" WIDTH="100%">
+<TABLE BORDER=0 WIDTH="100%" >
+<TR>
+</TR>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-838235-1";
+urchinTracker();
+</script>
+
+
+</TABLE>
