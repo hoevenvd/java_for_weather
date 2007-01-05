@@ -1,0 +1,15 @@
+<html>
+<head>
+  <title>Sample: <%= controller.action_name %></title>
+  <%= stylesheet_link_tag 'scaffold' %>
+	<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+	<meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+	<meta HTTP-EQUIV="Refresh" CONTENT="30"></head>
+<body>
+
+<p style="color: green"><%= flash[:notice] %></p>
+
+<%= @content_for_layout %>
+
+</body>
+</html>

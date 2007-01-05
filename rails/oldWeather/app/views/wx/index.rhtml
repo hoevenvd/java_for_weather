@@ -1,0 +1,237 @@
+<head>
+<%= javascript_include_tag "prototype" %>
+<META name="verify-v1" content="GYFz3wNRskJO2k9uhxRRYuYW+kH9UmPZj8lnMV1BzaY=" />
+<META NAME="keywords" CONTENT="Beverly weather tide Boston Mass massachusetts ma live rails java temperature dry hot humid cold new england northeast current humid rain wind windy current">
+<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+<meta HTTP-EQUIV="Refresh" CONTENT="600">
+<meta HTTP-EQUIV="ContentType" CONTENT="text/html">
+<title>Live Beverly, MA Weather</title>
+</head>
+
+<html>
+<body BGCOLOR="#FFFFFF" background="http://www.tom.org:8081/weather/images/sky-bkgd1.jpg">
+<center>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+  <tr>
+    <td width="100%" bgcolor="#000080"><font face="Arial Black" color="#FFFFFF"><big>
+    <strong>Live Weather in Beverly, MA</strong></big></font></td>
+  </tr>
+</table>
+
+<p>
+<applet CODE = "SimpleSunApplet.class" archive="java/earth24.jar" WIDTH = 360 HEIGHT = 168 NAME = "SimpleSun">
+<PARAM NAME = bgcolor VALUE ="#FFFFFF" >
+  The SimpleSun Applet is displayed here if your browser supports Java.
+</applet>
+<!-- insert magic here -->
+<div id="current_conditions">
+
+<%= render(:partial => "current_conditions", :layout => false  ) %>
+
+</div>
+
+<%= periodically_call_remote(:update => 'current_conditions',
+														 :url => { :action => :current_conditions },
+														 :frequency => 10 ) %>
+<TABLE BORDER=1 ALIGN="CENTER" WIDTH="50%" >
+<BR>
+<BR>
+<TR>
+<TD ALIGN=CENTER COLSPAN="2" WIDTH="100%">
+<p><font face="Arial">This page features up to the second weather from the 
+ <a href="http://maps.google.com/?t=k&ll=42.555641,-70.850959&spn=0.025701,0.036135&t=k">Beverly Cove neighborhood of
+ Beverly, Mass</a> which is about 20 miles Northeast of downtown Boston.<p>
+ With the exception of the radar image thanks to 
+ <a href="http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=KMASTONE1">Weather Underground</a>,
+  all of this information comes from sensors mounted on my house.<p>
+   The current conditions are updated <b>every 10 seconds</b> and the page reloads itself every 10 minutes.  The graphs are built every 10 minutes too.<p>
+  This iteration of this site has been build on Ruby on Rails for presentation with Java polling the device and saving
+  to a MySQL database.  Everything runs on Linux.<p>
+</font>
+</TD>
+</TR>
+</table>
+Comments or suggestions: <A HREF="mailto:tom@tom.org">Tom Mitchell</A>
+<p>
+
+
+
+<TABLE BORDER WIDTH="303" BGCOLOR="#C0C0C0" >
+
+
+<TR>
+
+<TR>
+<TD VALIGN=TOP COLSPAN="2">
+<TABLE BORDER=0 WIDTH="100%" >
+<TR>
+<TD ALIGN=CENTER  VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's Low: </FONT><%= @today.lowTemp %></TD>
+</TR>
+<TR>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's High: </FONT><%= @today.hiTemp %></TD>
+<tr>
+
+<TR>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's Low Wind Chill: </FONT><%= @today.lowWindchill %></TD>
+<tr>
+
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Yesterday's Low: <%= @yesterday.lowTemp %></td>
+</tr>
+
+<tr>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Yesterday's High: <%= @yesterday.hiTemp %></td>
+</tr>
+
+<tr>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
+This Week Avg Temp: <%= @this_week.avgTemp %></td>
+</tr>
+
+<tr>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
+Last Week Avg Temp: <%= @last_week.avgTemp %></td>
+</tr>
+
+<tr>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
+This Month Avg Temp: <%= @this_month.avgTemp %></td>
+</tr>
+
+<tr>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Last Month Avg Temp: <%= @last_month.avgTemp %></td>
+</tr>
+
+</TABLE>
+</TD>
+</TR>
+<TR>
+<TD COLSPAN="2" >
+
+<img src="http://www.srh.weather.gov/ridge/lite/N0R/BOX_loop.gif"   width="480" height="480" alt="">
+</TD>
+</TR>
+
+<TR>
+<TD COLSPAN="2" ><center>View to the North - updated every <b>minute</b></center></TD>
+</TR>
+
+<TR>
+<TD COLSPAN="2" >
+<img src="http://www.tom.org:8081/~tom/images/weather/north-webcam.jpg"   width="480" height="360" alt="Current Webcam">
+
+</TD>
+</TR>
+
+<TD ALIGN=CENTER VALIGN=CENTER >
+
+<FONT FACE="Arial">Today's High Gust: </FONT><%= @today.hiWindspeed %> mph 
+<br>This Hour Avg. WindSpeed: <%= @this_hour.avgWindspeed %> mph
+<br>Last Hour Avg. WindSpeed: <%= @last_hour.avgWindspeed %> mph
+<br>Today's Avg. WindSpeed: <%= @today.avgWindspeed %> mph
+
+</TD>
+</TR>
+&nbsp;</TD>
+</TR>
+<TR>
+<TD COLSPAN="2" WIDTH="292">
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Barometer</FONT></FONT></B></CENTER>
+<CENTER><%= @current.pressure %></CENTER>
+<CENTER>Today's High: <%= @today.hiPressure %></CENTER>
+<CENTER>Today's Low:  <%= @today.lowPressure %>
+</TD>
+</TR>
+<TR>
+<TD COLSPAN="2" WIDTH="292">
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Precipitation</FONT></FONT></B></CENTER>
+<CENTER>Today: <%= @today.rain %></CENTER>
+<CENTER>Yesterday: <%= @yesterday.rain %> inches</CENTER>
+
+<CENTER>This week: <%= @this_week.rain %> inches</CENTER>
+<CENTER>Last week: <%= @last_week.rain %> inches (Mon - Sun)</CENTER>
+<CENTER>Last rain: <%= @last_rain.getlocal.strftime("%a, %b %d %Y %I:%M:%S %p " + Time.new.getlocal.zone)  %></CENTER>
+</TD>
+</TR>
+<TR>
+<TD>
+<CENTER>N 42&deg;33'41.54, W 70&deg;50'58.28</CENTER>
+</TD>
+</TR>
+
+</TABLE>
+</center>
+<p>
+
+<center><b><h2>Forcast Graphs</h2></b></center>
+
+<p align="center"><font face="Arial"><img width=600 height=430 border=1 src="http://www.wunderground.com/data/images/KBVYMOS.gif" alt="Today's forcast"></font></p>
+
+<center><b><h2>48 Hour Temperatures</h2></b></center>
+
+<p align="center">
+    <font face="Arial">
+        <img width=600 height=300 border=1 src="http://www.tom.org:8081/weather/images/temp24.jpg" alt="temp24.gif"></font></p>
+
+<center><b><h2>48 Hour Wind Speed</h2></b></center>
+<p align="center"><font face="Arial"><img width=600 height=300 border=1 src="http://www.tom.org:8081/weather/images/wind24.jpg" alt="windspeed24.gif"></font></p>
+
+<center><b><h2>48 Hour Wind Direction</h2></b></center>
+<p align="center"><font face="Arial"><img width=600 height=300 border=1 src="http://www.tom.org:8081/weather/images/winddir24.jpg" alt="winddir24.gif"></font></p>
+
+<center><b><h2>14 Day Temperatures</h2></b></center>
+<p align="center"><font face="Arial"><img width=600 height=300 border=1 src="http://www.tom.org:8081/weather/images/tempweek.jpg" alt="tempweek.gif"></font></p>
+
+<center><b><h2>14 Day Pressure</h2></b></center>
+<p align="center"><font face="Arial"><img width=600 height=300 border=1 src="http://www.tom.org:8081/weather/images/pressureweek.jpg" alt="pressure24.gif"></font></p>
+
+<center><b><h2>14 Day Wind Direction</h2></b></center>
+<p align="center"><font face="Arial"><img width=600 height=300 border=1 src="http://www.tom.org:8081/weather/images/winddirweek.jpg" alt="winddirweek.gif"></font></p>
+
+
+<p>
+<center><b><h2>3 Day Tide Predictions</h2></b></center>
+
+<p align="center">
+    <font face="Arial">
+        <img src="http://www.tom.org:8081/weather/images/tides.png" alt="tides.png">
+    </font>
+</p>
+
+<br>
+<TABLE BORDER=1 ALIGN="CENTER" WIDTH="50%" >
+
+<TR>
+<TD ALIGN=CENTER COLSPAN="2" WIDTH="100%"><B><FONT FACE="Arial">Long-term average Temperatures</FONT></b>
+</TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">This Week: </FONT><%= @this_week.avgTemp %></TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Last Week: </FONT><%= @last_week.avgTemp %></TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">This Month: </FONT><%= @this_month.avgTemp %></TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Last Month: </FONT><%= @last_month.avgTemp %></TD>
+</TR>
+
+</TABLE>
+
+<img src="http://www.visi.com/cgi-bin/Count.cgi?sh=f&df=tom.dat">
+<center>
+<img src="http://www.tom.org:8081/weather/images/rails.png" alt="100% Java (tm)!">
+</center>
+<br>
+<center>
+<a href="http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=KMASTONE1">
+<img border=0 src="http://banners.wunderground.com/cgi-bin/banner/ban/wxBanner?bannertype=WeatherStationCount&weatherstationcount=KMASTONE1" width=160 height=163>
+</center>
+</body>
+</html>
