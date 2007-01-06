@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+
+<project name="Weather" default="main" basedir="." >
+	<property file="build.properties"/>  
+<!-- set global properties for this build -->
+  <property name="src" value="./src"/>
+  <property name="src_generated" value="./src_generated"/>
+	<property name="build" value="./classes"/>
+  <property name="lib" value="./lib"/>
+  <property name="dist" value="./dist"/>
+  <property name="appjar" value="weather.jar"/>
+  <property name="distjar" value="${dist}/weather-1.0.jar"/>
+  <property name="tmp" value="./tmp"/>
+  <property name="staging" value="./staging"/>
+  <property name="webapp" value="./webapp"/>
+  <property name="ws.client.gen" value="./classes"/>
+  
+  <property name="axis.home" value="." />
+    <path id="axis.classpath">
+    <fileset dir="${axis.home}/lib">
+      <include name="**/*.jar" />
+    </fileset>
+  </path> 
+  <taskdef resource="axis-tasks.properties"
+    classpathref="axis.classpath" />
+  
+<target name="clean" depends="init">
+  <delete>
+    <fileset dir="${build}" includes="**/*"/>
+    <fileset dir="${dist}" includes="**/*"/>
+    <fileset dir="${tmp}" includes="**/*"/>
+    <fileset dir="${build}" includes="**/*"/>
+    <fileset dir="${src_generated}" includes="**/*"/>
+  </delete>
+</target>
+
+<target name="main"  depends="package">
+</target>
+
+<target name="base"  depends="gen-ws-client,init">
+	 <javac srcdir="${src_generated}:${src}"
+	         destdir="${build}"
+	         includes="**/*.java"
+	         debug="on">
+	    <classpath>
+	      <fileset dir="${lib}" includes="*.jar"/>
+	    </classpath>
+	 </javac>
+</target>
+
+
+  <target name="init" depends="">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+    <mkdir dir="${dist}"/>
+    <mkdir dir="${tmp}"/>
+    <mkdir dir="${build}"/>
+    <mkdir dir="${src_generated}"/>
+  </target>
+
+  <target name="make-jar" depends="base">
+    <jar jarfile="${tmp}/${appjar}"
+         manifest="./staging/META-INF/MANIFEST.MF"
+         basedir="${build}"/>
+  </target>
+	
+  <target name="make-webapp" depends="make-jar">
+
+	<war warfile="${dist}/weather.war" webxml="${staging}/web.xml">
+		<fileset dir="${webapp}"/>
+		<lib dir="${lib}" includes="*.jar"/>
+	</war>
+  </target>
+
+
+  <target name="package" depends="make-jar, make-webapp">
+    <copy todir="${tmp}">
+      <fileset dir="${lib}" includes="*.jar"/>
+    </copy>
+    <jar jarfile="${distjar}" basedir="${tmp}"/>
+    <delete>
+      <fileset dir="${tmp}" includes="**/*" excludes="weather.jar"/>
+    </delete>
+  </target>
+
+	
+    <!-- ================================= 
+          target: gen-ws-client              
+         ================================= -->
+    <target name="gen-ws-client" depends="init" description="generate web service client">
+      <axis-wsdl2java
+        output="${src_generated}"
+        testcase="false"
+        verbose="true" 
+        url="${wsdl.url}" >
+          <mapping
+            namespace="urn:ActionWebService"
+            package="org.tom.weather.ws.client.generated" />
+  	    <classpath>
+  	      <fileset dir="${lib}" includes="*.jar"/>
+  	    </classpath>
+      </axis-wsdl2java>
+      
+    </target>
+
+</project>
+
