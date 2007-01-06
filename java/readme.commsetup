@@ -1,0 +1,10 @@
+To install the comm libraries
+
+1. place the dll from the kit into jdk home/jre/bin
+2. place comm.jar into home/jre/lib/ext
+3. place the properties file into home/jre/lib
+
+for linux on 1.5, you have to copy the jcl.jar from the 1.4 dist into jre/lib/ext - a bug
+
+when using the usb-serial adapter, it installs itself as /dev/ttyUSB0 - create a symlink to it from another /dev/TTY
+entry and link to that
