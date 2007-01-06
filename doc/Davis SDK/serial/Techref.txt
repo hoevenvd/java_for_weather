@@ -1,0 +1,2996 @@
+2/11/98 4:52 PM                                           48
+                       Monitor, Wizard, Perception
+                      GroWeather, Energy, & Health
+                     WeatherLink Protocol  02-11-98
+                                 Rev 3.3
+                                    
+                                    
+Table of Contents:
+
+I. Introduction
+II. Definitions
+III. Pseudo code description of WeatherLink command processing loop.
+IV. Code illustration of the Communication functions used in the examples.
+V. Link Types and Revision Levels
+VI. Command Description
+VII. Command Summary
+VIII. Illustrated Examples
+ A. Reading Calibrated Data
+  1. Temperature CAL
+  2. Humidity CAL
+  3. Barometer
+  4. Rain
+  5. Wind Speed
+  6. Rain Rate
+  7. UV MED's
+ B. Using the LOOP command
+ C. Using MDMP command
+ D. Invalid Data values
+ E. Calculated Data values
+  1. Wind Chill
+  2. Dew Point
+  3. Temperature-Humidity Index
+  4. THSWI
+  5. Wind Run
+  6. Degree-Days
+  7. Solar Energy
+  8. UV Dose
+  9. Rain Rate
+ F. CRC Checking
+ G. Reading Hi/Low Times and Dates
+IX. Memory addresses.
+ A. Monitor, Wizard, and Perception Station
+ B. Monitor, Wizard, and Perception Link
+ C. GroWeather Station
+ D. GroWeather Link
+ E. Energy Station
+ F. Energy Link
+ G. Health Station
+ H. Health Link
+Appendices      (Contained in "appendix.txt")
+ A Bar/Power Bit definitions
+ B Control Module communication status codes (AOM Status)
+ C Model Numbers
+ D Power Voltage Codes
+ E THSWI Latitude Codes
+ F Wind Direction Sector Codes
+ G1 GroWeather Alarm Bits
+ G2 ET Status bits
+ G3 Leaf Wetness Data/Status byte in the LOOP packet.
+ E1 Energy Alarm Bits
+ H1 Health Alarm Bits
+
+I.   Introduction
+     This document is a technical description of the software
+interface to both the Standard WeatherLink, which can connect to
+the Monitor, Wizard, and Perception models, and the GroWeather
+WeatherLink, the Energy WeatherLink, and the Health WeatherLink.
+The WeatherLink interprets commands sent by a PC over an RS232C
+serial link (8 bits, 1 stop bit, no parity).  The commands are a
+combination of ASCII and binary data.  The command structure and
+format are almost identical for the 4 kinds of WeatherLink, but
+the available data and their locations are different.
+
+     The diagram below illustrates the relationship between the
+PC, WeatherLink, and Weather Station.  The sensor image, archive
+image, and the archive memory belong to the WeatherLink.   As
+shown in the diagram the PC sends commands and receives data from
+the WeatherLink.  The WeatherLink sends commands and receives
+data from the Weather Station.  Data is contained in both the
+WeatherLink and the Weather Station.  You will notice you can
+read data from the WeatherLink faster than the Weather Station.
+Therefore, if the data exists in the WeatherLink and is being
+updated fast enough for your purposes, read it from the
+WeatherLink. Study the "Command Processing Loop" carefully to
+understand what is in the WeatherLink and when it is updated.
+"RRD" commands read from the WeatherLink.  "WRD" commands read
+from the Weather Station.  The addresses of the data available in
+the WeatherLink and the Weather Station are given in section IX.
+
+     cmds                 cmds                    (Monitor Station)
+PC   ->        Weather    ->     Weather Station  (Wizard Station)
+               Link                               (Perception Station)
+     data                 data                    (GroWeather)
+     <-        .          <-                      (Energy Station)
+               .                                  (Health Station)
+               .
+               sensor image
+               archive image
+               archive memory
+
+     The Appendices, in the separate file "appendix.txt", contain
+descriptions of coded numerical values and Bit definitions.
+
+     Please note Davis Instruments is not responsible for any
+damages your use of this information may cause.  Furthermore, we
+reserve the right to modify our designs without notice.
+
+II.  Definitions
+     station processor memory - 256 bytes of memory directly
+          accessible by the station processor, organized into 2
+          banks of 256 nibbles.
+     link processor memory - 256 bytes of memory directly
+          accessible by the link processor, organized into 2
+          banks of 256 nibbles.
+     archive memory - 32K of memory where weather data is stored
+          before downloading to PC.
+     sensor image - Memory containing the latest data from the
+          weather station. Part of the link processor memory
+     archive image - Memory where archive entries are assembled
+          before being written to the archive memory. Part of the
+          link processor memory
+
+
+III.  Pseudo code description of WeatherLink command processing loop.
+   All references to Inside temperature apply to Soil temperature
+       on the GroWeather station.
+   Items marked (G) are only applicable to the GroWeather station
+                (E) are only applicable to the Energy Station
+                (H) are only applicable to the Health Station
+                (O) are only applicable to the Monitor, Wizard, & Perception
+                (N) are only applicable to the GroWeather, Energy, & Health
+
+        // Initialize the Link chip memory
+        Set archive interval to be 30 minutes.
+        Set sample interval to be 20 seconds.
+        Test archive memory.
+        If (memory test passes)
+           Do a beep on the weather station.
+
+      /*
+     Wind speed and wind direction are read and stored in the
+     sensor image each time around the loop.  Temperature is
+     read once for every ten wind  speed readings.  Humidity,
+     Barometer, and Rain are updated every time the sensor image
+     is updated.
+      */
+        while (1) // beginning of command processing loop
+           GetWindSpeed ();
+           Test for new Gust Value;
+           GetWindDirection ();
+              For every 10 wind speed reads {
+               read Inside and Outside temperature;
+               Read Rain Rate (N)
+               read Solar Rad (N)
+               read UV Intensity (H)
+               read Alarm and Control-Module communication status (N)
+
+               Check current Outside Temp for new Hi/Low in this period
+                And record in archive image.
+               Check for new Hi Rain Rate (N)
+               Check for new Hi Solar Rad (H)
+               Check for new Hi UV Intensity (H)
+               }
+
+           if (in loop mode)
+              Transmit copy of sensor image.
+
+           if (time to sample sensor image)  Sample sensor image:
+               Add current data values for variables that are averaged:
+                Inside & Outside Temperature
+                Wind Speed
+                Solar Radiation (N)
+                UV Intensity (H)
+               If wind speed is > wind threshold (0), then add one to the
+                 direction bin corresponding to the current wind direction
+               Read other values not read in above: (GetRBH)
+                read Rain
+                read Barometer
+                read outside Humidity
+                read inside Humidity (H) (O)
+                read Wind Run (G) (E)
+                read Total ET (G)
+                read Total Growing Degree-Days (G)
+                read Total Heating, Chill, Cooling, & THI Degree-Days (E)
+                read Total Solar Energy (G) (E)
+                read Bar and Power status bits (N)
+                read Leaf Wetness value (G)
+                read Rain Cal (N)
+
+            Every 18 seconds
+                collect data from the ET Sensors to calculate hourly ET (G)
+
+              if ( Time to check archive clock )      // Every 16 seconds.
+              {
+              Call GetRBH as above (N)
+              if (it is time to calculate ET) (G)
+               calculate ET and store in archive Image (G)
+              if (lastArchiveTime - currentTime >= archiveInterval)
+               {
+               // Make sure the sensor image is up to date.
+               Call GetRBH as above (O)
+
+               // Fill in the archive image before archiving
+               // Hi and Low Outside temps are already set (see above)
+               // The following reads are stored in the sensor image.
+               Read current barometric pressure.
+               Read current outside humidity.
+               Read the current Leaf Wetness Value (G)
+               Read current inside humidity. (H) (O)
+                // The following are incremental values derived from the
+                 difference between the current value and the previous
+                 value
+               Calculate rain in period.
+               Calculate Wind Run in Period (G) (E)
+               Calculate Growing Degree Days in period (G)
+               Calculate Heating Degree Days in period (E)
+               Calculate Wind Chill Degree Days in period (E)
+               Calculate Cooling Degree Days in period (E)
+               Calculate Temp-Hum-Index Degree Days in period (E)
+               Calculate Solar energy in Period (G) (E)
+               Calculate UV Dose in period (H)
+
+                // The following are average values are derived by
+                 dividing an accumulator by the number of samples taken
+               Calculate average Inside temperature for period.
+               Calculate average Outside temperature for period.
+               Calculate average wind speed for period.
+               Calculate Average Solar Rad for period. (N)
+               Calculate Average UV Intensity (H)
+               Calculate dominant wind direction for period
+
+               Finally, read the primary power voltage code from the station (G) (E)
+
+               Write data to archive memory.
+               Update last archive time:
+        (O) Set the "last time" to the current station time
+        (N) set the "last time" so that the next archive happens on the hour
+               Clear Hi/Low entries in Archive image
+               Clear Accumulators and sample count
+               Set the "Previous" registers to the current values
+               Reset ET data to FFFF (G)
+               } // create archive record
+              } // 16 second polling
+
+           if (A command is available)
+              Process the command.
+           }   // End while (1)...
+
+
+IV.  Code illustration of the Communication functions used in the examples.
+     The functions "put_serial_char()", "put_serial_string()",
+"send_unsigned()", "get_serial_char()" "get_acknowledge()",
+"fill_buffer()", and "fill_crc_buffer()" are used in the examples
+in the next sections to send commands and data to the
+WeatherLink. You must provide these functions. The illustrations
+given here are for reference.
+     All of the example code included with this programmer's
+reference disk assumes that the "int" data type is a 16 bit (2
+byte) signed number. On some machines you may be required to use
+the "short int" data type. In most cases, the "char" data type is
+explicitly stated as being unsigned. In a few places (i.e. Hum
+Cal on GroWeather, etc.) a one byte number needs to be treated as
+a signed value.
+     "receive_buffer" is an external (global) array of unsigned
+char that is at least 32K in length (the size of the SRAM).
+
+     /* +----------------------------------------------------------+ 
+        Output a character to current serial port.
+     */
+      int put_serial_char (unsigned char c)
+      {
+        // write character c to the current serial port
+      }
+
+      /* +-------------------------------------------------------------+
+       Output a string to current serial port.
+      */
+      int put_serial_string (char *s)
+      {
+        int i;
+
+        for (i = 0; s [i] != '\0'; i++)
+            put_serial_char (s [i]);
+      }
+
+     /* +-------------------------------------------------------------+
+       Outputs the unsigned integer (16 bits) to the current
+       serial port. assumes "Intel" least significant byte first.
+     */
+      int send_unsigned (unsigned d)
+      {
+        unsigned char *cp;
+
+        cp = (unsigned char *) &d;
+        put_serial_char (*cp);     // Low order byte
+        put_serial_char (*(cp+1)); // Hi order byte
+      }
+     /* +-------------------------------------------------------------+
+      Read a character from the current serial port.
+      */
+      int get_serial_char ()
+      {
+          int c
+          // read a character from the current serial port and assign it to c
+          // If there has been a timeout or some other error, set c to a negative
+          // value that indicates the type of error
+          return c;
+      }
+
+     /* +-------------------------------------------------------------+
+      anticipates an ACK  to verify that the link has understood
+      the command it has just received. If the character received
+      is not ACK, or there has been some serial error (i.e. timeout),
+      return an error value, otherwise return OK
+      */
+      int get_ acknowledge ()
+      {
+          int c
+          c = get_serial_char();
+          if (c == ACK)
+             return OK;
+          else if (c < 0)              // serial error
+             return serial_error_code;
+          else                         // did not receive ACK
+             return c
+      }
+     /* +------------------------------------------------------------------+
+       Read a series of bytes from the current serial port and store them in
+       the receive buffer.
+      */
+        int fill_buffer (int n)
+        {
+           int i;
+           for (i=0; i<n; i++)
+              {
+              c = get_serial_char();
+              if (c >= 0)
+                 recieve_buffer[i] = c;
+              else
+                 // there has been an error getting the next character
+                 return serial_error_code;
+              }
+           return OK;   // we have read in n bytes
+        }
+     /* +------------------------------------------------------------------+
+       Read a series of bytes from the current serial port, perform a CRC
+       check on the data, and store them in the receive buffer.
+      */
+        int fill_crc_buffer (int n)   // n includes the CRC bytes
+        {
+           int i;
+           int crc = 0;               // initialize the CRC checksum to 0
+           for (i=0; i<n; i++)
+              {
+              c = get_serial_char();
+              if (c >= 0)
+                 {
+                 recieve_buffer[i] = c;   // Store the data
+                 crc =  crc_table [(crc >> 8) ^ c] ^ (crc << 8);
+                 }
+              else
+                 // there has been an error getting the next character
+                 return serial_error_code;
+              }
+           if (crc == 0)
+              return OK;         // we have read in n bytes and the CRC is OK
+           else
+              return CRC_ERROR;  // The CRC check failed.
+        }
+
+V.   Link Types and Revision Levels
+      WeatherLink hardware modules can be classified by the
+station model they are intended for, and by revision level.
+      There is one link type for the Monitor, Wizard, and
+Perception stations. The WeatherLink logs all the sensors for
+each of these stations, Any sensor or calculated value that the
+station does not support will be filled with the appropriate
+Invalid Data value (see below).
+      The GroWeather, Energy, and Health stations are substatialy
+different from each other, both in the sensors supported, and in
+the types of calculated values. The corresponding Links are
+therefore also different. The primary difference, from the
+programmer's viewpoint, is the memory locations of the desired
+data which can be found in the corresponding memory address table
+below.
+      There are 3 different revision levels of WeatherLink
+modules. These represent changes and upgrades made over the life
+of the product.
+      The Rev C (and earlier) level is only used for
+Monitor/Wizard/ Perception Links. This version does not support
+the use of SR modems for communicating with the PC at distances
+greater than 50 feet
+      The only difference between Monitor Links made at Rev D and
+Rev C is that the Rev D WeatherLinks support the use of SR
+modems. The GroWeather, Energy, and Health Links are also
+manufactured at the Rev D level.
+      The Rev E Link implements a slightly different
+communication protocol between it and the PC to provide greater
+communication reliability. This consists, primarily, of extra CRC
+information that must be provided by the PC so that the
+WeatherLink can verify every command. Also, ALL data returned by
+the WeatherLink has a CRC code included, not just LOOP, MDMP, and
+SRD data. This means that the Rev E link is software incompatible
+with previous versions.  The actual commands used to program a
+Rev E link, however, are the same as the corresponding Rev D
+link. Two additional commands are added to allow Rev E links to
+operate with the Rev D communication protocol ("Rev D Emulation
+Mode").
+      In addition, the GroWeather and Energy versions of the Rev
+E link implements a simple powersavings procedure with the AOM
+for use with solar powered radio installations.
+      At this time only the GroWeather link is available in Rev E
+versions. Contact Davis' technical support at
+support@davisnet.com for information on getting Energy or Health
+versions of the Rev E link if required.
+      Most of the included software examples assume you are NOT
+using a Rev E WeatherLink. Please read the "CRC Checking"
+(section VIII-F) for information on how to generate the necessary
+CRC codes. Or, read the description of the "CRC0" command for how
+to disable CRC command checking.
+
+VI.  Command Description
+      Commands must be in upper case and terminated with a
+carriage return (0dh). Do not insert spaces between binary data
+arguments. If an argument description uses the character '|' then
+one byte of data is to be formed from the 4 bit values on either
+side. For example: "bank | n-1" becomes the single byte "0x13"
+where bank = 1 and n = 4
+     Rev E links must also include a two byte CRC code with each
+command so that the WeatherLink can verify correct transmission.
+The CRC code is transmitted BEFORE the command. It is possible to
+program Rev E links to use the Rev D communication protocol, if
+desired.
+     If a command is understood, an ASCII 6 (0x06) (ACK) is
+returned (before any returned data).  If the command was not
+understood, an ASCII 33 (0x21) (!) is returned. Note that this
+implies that the command passed its CRC check sum if the link is
+a Rev E. For Rev E links, if the command does not pass its CRC
+check sum, then an ASCII 24 (0x18) (CAN) is returned.
+     Some commands return a data stream and a CRC check sum.  The
+generator polynomial for the check sum is x^16 + x^12 + x^5 + 1
+(CRC-CCITT backward).
+     All binary data is transferred in "Intel" format: least
+significant byte first. In addition, multi-nibble data values on
+the station are stored least significant nibble first. This does
+not make a difference when you look at byte sized pieces of
+memory, since the Link will correctly align the nibbles when
+sending byte data.
+     Use the appropriate table in section IX to determine the
+memory locations and sizes for the data you would like to operate
+on. If you read data with an odd length, the upper nibble of the
+last (most significant) byte will be set to 0, not sign extended.
+If you write data with an odd length, the upper nibble of the
+last byte will be ignored. Sign extension is taken care of for
+data in the sensor image and archive image on the link.
+     The commands "RRD" and "RWR" operate on the link processor
+memory. These commands execute faster than the "WRD" and "WWR"
+commands which operate on the station processor memory.
+     The MDMP command is only available on the GroWeather,
+Energy, and Health Links.
+     The CRC0 and CRC1 commands are only available on Rev E links.
+
+
+DMP
+     Transfer the contents of the archive memory beginning at
+address 0 using the XMODEM CRC protocol.  This command can be
+used with any standard communication package (i.e. Procomm). The
+archive memory is organized as a set of equal sized archive
+records. The appropriate link memory addresses section contains a
+description of the size and structure of an archive image, which
+is the same as the format of the archive records.
+i.e.
+put_serial_string ("DMP");
+put_serial_char (0x0d);
+
+MDMP
+
+     Dumps an image of the current contents of the Station
+processor memory to the serial port. This typically takes around
+6 seconds and is much faster than requesting lots of pieces
+separately. 256 bytes are sent along with a 2 byte CRC check sum
+in a similar fashion to the SRD command below. The memory tables
+below show how this data is organized. See "Using the MDMP
+command" (section VIII-C) below for how to do the appropriate bit
+masking and shifting to extract data from the received data.
+     NOTE: MDMP uses archive memory 7F00-7FFF to record the
+memory image from the station before sending it on the computer.
+This archive memory is not available for normal archive purposes,
+but the last MDMP can be read by using the SRD command, or the
+DMP command.
+     The MDMP command is only available on the GroWeather,
+Energy, and Health Links.
+
+put_serial_string ("MDMP");
+put_serial_char (0x0d);
+
+
+LOOP 65536-n
+
+      Send 'n' packets of weather data (sensor image) from the
+WeatherLink.  The first byte (01) signals the start of a new
+block.  This is followed by binary data (15 bytes for the
+Monitor/Wizard/Perception, 33 bytes for the GroWeather, 27 bytes
+for the Energy, or 25 bytes for the Health) and a 2 byte CRC
+check sum.  The CRC check sum is calculated on the data only. The
+"start of block" byte is not included in the CRC calculation. See
+"CRC Checking" (section VIII-F) below for how to use the CRC
+information.
+
+Monitor, Wizard, and Perception Sensor Image:
+     start of block                     1 byte
+     inside temperature                 2 bytes
+     outside temperature                2 bytes
+     wind speed                         1 byte
+     wind direction                     2 bytes
+     barometer                          2 bytes
+     inside humidity                    1 byte
+     outside humidity                   1 byte
+     total rain                         2 bytes
+     not used                           2 bytes
+     CRC checksum                       2 bytes
+                                       --------
+                                       18 bytes
+
+
+GroWeather Sensor Image:
+     start of block                     1 byte
+     Archive memory address of
+       the next Archive record          2 bytes
+     Bar/Power status bits              1 byte     See Appendix A
+     Soil temperature                   2 bytes
+     Air temperature                    2 bytes
+     wind speed                         1 byte
+     wind direction                     2 bytes
+     barometer                          2 bytes
+     Rain Rate                          1 byte
+     outside humidity                   1 byte
+     total rain                         2 bytes
+     Solar Radiation                    2 bytes
+     Total Wind Run                     3 bytes
+     Total ET                           2 bytes
+     Total Degree-Days                  3 bytes
+     Total Solar Energy                 3 bytes
+     Alarm Bits and AOM status          3 bytes    See Appendices G1 & B
+     Leaf Wetness Data and status       1 byte     See Appendix G3
+     CRC checksum                       2 bytes
+                                       --------
+                                       36 bytes
+
+Energy Sensor Image:
+     start of block                     1 byte
+     Archive memory address of
+       the next Archive record          2 bytes
+     Bar/Power status bits              1 byte     See Appendix A
+     Inside temperature                 2 bytes
+     Outside temperature                2 bytes
+     wind speed                         1 byte
+     wind direction                     2 bytes
+     barometer                          2 bytes
+     Rain Rate                          1 byte
+     outside humidity                   1 byte
+     total rain                         2 bytes
+     Solar Radiation                    2 bytes
+     Total Wind Run                     3 bytes
+     Total Solar Energy                 3 bytes
+     Alarm Bits and AOM status          3 bytes    See Appendices E1 & B
+     CRC checksum                       2 bytes
+                                       --------
+                                       30 bytes
+
+Health Sensor Image:
+     start of block                     1 byte
+     Archive memory address of
+       the next Archive record          2 bytes
+     Bar/Power status bits              1 byte     See Appendix A
+     Inside temperature                 2 bytes
+     Outside temperature                2 bytes
+     wind speed                         1 byte
+     wind direction                     2 bytes
+     barometer                          2 bytes
+     Rain Rate                          1 byte
+     total rain                         2 bytes
+     Solar Radiation                    2 bytes
+     Inside humidity                    1 byte
+     outside humidity                   1 byte
+     UV Intensity                       1 bytes
+     UV Dose                            2 bytes
+     Alarm Bits and AOM status          3 bytes    See Appendices H1 & B
+     CRC checksum                       2 bytes
+                                       --------
+                                       28 bytes
+
+Example:
+      put_serial_string ("LOOP");
+      send_unsigned ((unsigned) (65536 - n));
+      put_serial_char (0x0d);
+
+     See "Using the LOOP command" (section VIII-B) for examples
+of how to extract data from a Loop image
+
+
+RRD bank address n-1
+
+     Read 'n' nibbles from the link processor memory from
+'address' in bank 'bank'. n = 1...8
+     On Rev E links, the data returned will also include a 2 byte
+CRC code. See "CRC Checking" (section VIII-F) for how to use the
+CRC information.
+
+put_serial_string ("RRD"); // Send the command.
+put_serial_char (bank);    // bank = 0 or 1.
+put_serial_char (address); // address = 0..FF
+put_serial_char (n - 1);   // Get n nibbles..
+put_serial_char (0x0d);    // Send CR...
+
+RWR bank | n-1  address data
+
+     Write 'n' nibbles of 'data' into the link processor memory
+beginning at 'address' in bank 'bank.'  n = 1..8
+
+put_serial_string("RWR");  // Send the command.
+put_serial_char(0x13);     // bank = 1  n = 4
+put_serial_char(0x54);     // address = 54h (Last Archive Time)
+send_unsigned (0);         // write 0.
+put_serial_char(0x0D);     // Send CR...
+
+SRD address n-1
+
+     Read 'n' bytes of archive memory beginning at 'address.'
+Both 'address' and 'n-1' are 16 bit numbers between 0 and 0x7FFF.
+A two byte CRC checksum is sent at the end of the data stream.
+See "CRC Checking" (section VIII-F) for how to use the CRC
+information.
+
+put_serial_string ("SRD"); // Send the command.
+send_unsigned (address);   // Start sending from address.
+send_unsigned (n-1);       // Send n bytes.
+put_serial_char (0x0d);    // Send CR...
+
+SWR address data
+
+     Write 'data' (one byte) to 'address' in archive memory.
+'address' is a 16 bit number between 0 and 0x7FFF.
+
+put_serial_string ("SWR"); // Send the command.
+send_unsigned (address);   // Send two byte address.
+put_serial_char (data);    // Send byte of data.
+put_serial_char (0x0d);    // Send CR...
+
+WRD n | bank address
+
+     Read 'n' nibbles of data from the station processor memory
+starting at 'address' in bank 'bank'. For bank 0 use 'bank' = 2
+for bank 1 use 'bank' = 4. A maximum of 8 nibbles can be read.
+     On Rev E links, the data returned will also include a 2 byte
+CRC code. See "CRC Checking" (section VIII-F) for how to use the
+CRC information.
+
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x44);    // read 4 nibbles from bank 1.
+put_serial_char (0xB0);    // Read beginning at B0h.
+                           // (Period Length on GroWeather)
+put_serial_char (0x0D);    // Send CR...
+
+WWR n | bank address data
+
+     Write 'n' nibbles of data to the station processor memory
+starting at 'address' in bank 'bank'. For bank 0 use 'bank' = 1
+for bank 1 use 'bank' = 3. A maximum of 8 nibbles can be written.
+
+put_serial_string ("WWR"); // Send write command.
+put_serial_char (0x31);    // n = 3, writing to bank 0.
+put_serial_char (0x34);    // Write to AAh.=
+                           // Daily ET Alarm Threshold on GroWeather
+send_unsigned (0x0FFF);    // Send 4095 or 0FFFh.
+put_serial_char (0x0D);    // Send CR...
+
+SAP n
+     Set the archive interval to 'n' minutes.  'n' is one byte.
+
+put_serial_string ("SAP");      // Send the command.
+put_serial_char (n);            // Set interval to 'n' minutes.
+put_serial_char (0x0D);          // Send CR...
+
+SSP 256-n
+     Set the time interval between samples of the sensor image in
+the WeatherLink to 'n' seconds.  'n' is one byte.  At each
+sampling instant the sensor image is sampled and variables that
+are "averaged" are accumulated.  The maximum number of samples in
+an interval is 255.
+
+put_serial_string ("SSP");      // Send the command...
+put_serial_char ((unsigned char) (256 - newSamplePeriod));
+put_serial_char (0x0D);          // Send CR...
+
+STOP
+     Tell the WeatherLink to stop it's constant updating of
+weather information from the weather station.  The command also
+disables the archive timer on the WeatherLink.  Stopping weather
+station reads allows the WeatherLink to process commands more
+quickly.
+
+put_serial_string ("STOP");
+put_serial_char (0x0d);
+
+START
+     Tell the WeatherLink to begin "reading" the weather station
+and archiving weather information. This command is only needed if
+you have previously sent a STOP command.
+
+put_serial_string ("START");
+put_serial_char (0x0d);
+
+ARC
+     Force a write to archive memory.
+
+put_serial_string ("ARC");
+put_serial_char (0x0d);
+
+IMG
+     Force a sampling of the sensor image.
+
+put_serial_string ("IMG");
+put_serial_char (0x0d);
+
+DBT
+     Disable the archive timer.
+
+put_serial_string ("DBT");
+put_serial_char (0x0d);
+
+EBT
+     Enable the archive timer.
+
+put_serial_string ("EBT");
+put_serial_char (0x0d);
+
+CRC0
+     Disable CRC command checking for Rev E links. This command
+will set a Rev E WeatherLink into Rev D emulation mode. This means
+that CRC check sums are not required (not allowed either!) for
+commands sent to the WeatherLink. Also, only LOOP, MDMP, and SRD
+data from the WeatherLink include CRC check sums.
+     If CRC command checking is enabled when you issue this
+command, you MUST include the CRC code. CRC command checking is
+only disabled AFTER the command is received and validated. The CRC
+code is given below.
+     CRC0 command is only available on Rev E Links.
+     Note, the last character of the command is an ASCII zero
+character.
+
+put_serial_char (44);            // CRC code first byte (decimal)
+put_serial_char (247);           // CRC code second byte (decimal)
+put_serial_string ("CRC0");      // The fourth character is a zero
+put_serial_char (0x0d);
+
+
+CRC1
+     Enable CRC command checking for Rev E links. This command will
+return a Rev E WeatherLink to normal operation. This means that CRC
+check sums ARE required for commands sent to the WeatherLink. Also,
+ALL data from the WeatherLink includes CRC check sums.
+     If CRC command checking is disabled when you issue this
+command, you MUST NOT include the CRC code. CRC command checking is
+only enabled AFTER the command is received.
+     CRC1 command is only available on Rev E Links.
+
+put_serial_string ("CRC1");
+put_serial_char (0x0d);
+
+VII. Command Summary
+DMP
+    Transfer the contents of the archive memory using the XMODEM
+CRC protocol.
+
+MDMP
+    Dumps an image of Station processor memory to the serial
+port. This command is only available on the GroWeather, Energy,
+and Health Links.
+
+LOOP 65536-n
+    Send 'n' packets of weather data (sensor image) from the
+WeatherLink.
+
+RRD bank address n-1
+    Read 'n' (1-8) nibbles from the link memory from 'address' in
+'bank'.
+
+RWR bank | n-1  address data
+    Write 'n' (1-8) nibbles of 'data' into the link memory at
+'address' in 'bank.'
+
+SRD address n-1
+    Read 'n' bytes of archive memory beginning at 'address.' Both
+'address' and 'n-1' are 16 bit numbers.
+
+SWR address data
+    Write 'data' (one byte) to 'address' (2 bytes) in archive
+memory.
+
+WRD n | bank address
+    Read 'n' (1-8) nibbles of data from the station memory
+starting at 'address'  For a bank 0 use 'bank' = 2, for a bank 1
+use 'bank' = 4.
+
+WWR n | bank address data
+    Write 'n' (1-8) nibbles of data to the station memory
+starting at 'address' For bank 0 use 'bank' = 1, for bank 1 use
+'bank' = 3.
+
+SAP n
+    Set the archive interval to 'n' minutes.  'n' is one byte.
+
+SSP 256-n
+    Set the time interval between samples of the sensor image to
+'n' seconds.  'n' is one byte. The maximum number of samples in
+an interval is 255.
+
+STOP
+    Tell the WeatherLink to stop updating the sensor image and
+archiving.
+
+START
+    Tell the WeatherLink to begin updating the sensor image and
+archiving data. This command is only needed if you have
+previously sent a stop command.
+
+ARC
+    Force a write to archive memory.
+
+IMG
+    Force a sampling of the sensor image.
+
+DBT
+    Disable the archive timer.
+
+EBT
+    Enable the archive timer.
+
+CRC0
+    Disable CRC command checking for Rev E links.
+
+CRC1
+    Enable CRC command checking for Rev E links.
+
+VIII.     Illustrated Examples
+A.   Reading Calibrated Data
+
+     Most of the data values displayed on the Station's LCD have
+been calibrated. The term "calibrated" here means a user supplied
+offset has been added to the "raw" number read by the weather
+station. The data stored in "XxxxDta" memory locations (i.e.
+Tp1Dta, SpdDta, etc. See Section IX) are uncalibrated. This goes
+for LOOP data, and archived data as well. Thus, you may have to
+calibrate the data you read off the station (or link). You should
+take the time to read the station's user manual to familiarize
+yourself with some of the Cal number basics.
+     There are several approaches to how to implement Cal
+numbers. 1: Your program takes input from the user and records
+the Cal numbers in a configuration file on the PC. Optionally the
+program could set the station's Cal numbers at the same time so
+they agree. 2. Or, the user could set the Cal number on the
+station (either manually or with another program) and your
+program reads the required Cal numbers off the station.
+     Always check sensor values for invalid data BEFORE applying
+calibration numbers. Do not apply a calibration number to an
+invalid data value. See "Invalid Data values" below for more
+information.
+     The rest of this section will explain how to use the second
+approach. The following Cal Numbers are explained: 1 Temperature,
+2 Humidity, 3 Barometer, 4 Rain, 5 Wind Speed, 6 Rain Rate, and 7
+UV MED's.
+
+1.   Temperature CAL
+     Each of the two temperature sensors has a separate Cal
+number. Only the current station data and all Link
+data--including the sensor image (LOOP) and archived data--needs
+to be calibrated. Hi/Low data on the station and "derived" data
+(i.e. Dewpoint, Wind chill, and THI) already have the Cal number
+taken into account. The value at the Cal number location is an
+offset (in Degrees F*10) to be added to the data. Note: this
+value is a signed data value.
+
+     Reading Inside Temp on the Monitor (or Wizard or
+Perception):
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x44);    // read 4 nibbles from bank 1.
+put_serial_char (0x52);    // Read beginning at 52h.
+                           // (Inside Temp Cal on Monitor)
+put_serial_char (0x0D);     // Send CR...
+
+get_acknowledge();         // verify that the command was
+received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+InTempCAL = *((int *) receive_buffer)
+                           // read the Cal number out of the
+buffer
+
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x44);    // read 4 nibbles from bank 1.
+put_serial_char (0x30);    // Read beginning at 30h.
+                           // (Inside Temp Data on Monitor)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was
+received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+InTemp = *((int *) receive_buffer)
+                           // read the Raw Temperature out of the
+buffer
+
+// Verify that the Raw Temperature is not an invalid data value
+before
+// applying the cal number. See "Invalid Data values" below for
+// more information.
+
+InTemp = InTemp + InTempCal  // InTemp is now Calibrated
+
+
+     Reading Outside Temp on the Energy Station:
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x34);    // read 3 nibbles from bank 1.
+put_serial_char (0x45);    // Read beginning at 45h.
+                           // (Outside Temp Cal on Energy)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was
+received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+     // Note that the upper nibble of the last byte will be set
+     //  to 0 Also, even though the address was odd, the nibbles 
+     //  are aligned so that the addressed nibble is the least 
+     //  significant nibble of the first byte
+
+OutTempCAL = *((int *) receive_buffer)
+                           // read the Cal number out of the
+buffer
+if(OutTempCAL > 2048)      // Check for negative numbers
+   {
+   OutTempCAL = OutTempCAL - 4096;
+                           // convert a 3 nibble 2's complement
+negative
+                           // number into a "real" negative
+number
+   }
+
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x34);    // read 3 nibbles from bank 1.
+put_serial_char (0x36);    // Read beginning at 36h.
+                           // (Outside Temp Data on Energy)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was
+received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+OutTemp = *((int *) receive_buffer)
+                           // read the Raw Temperature out of the
+buffer
+if(OutTemp > 2048)         // Check for negative numbers
+   {
+   OutTemp = OutTemp - 4096; // convert a 3 nibble 2's complement
+negative
+                             //  number into a "real" negative
+number
+   }
+
+// Verify that the Raw Temperature is not an invalid data value
+// before applying the cal number. See "Invalid Data values" 
+// below for more information.
+
+OutTemp = OutTemp + OutTempCAL  // OutTemp is now Calibrated
+
+
+2.   Humidity CAL
+     Only Outside Humidity on the GroWeather, Energy, Health,
+and on the Monitor Rev C or later have a CAL number. It consists
+of either a signed 2-byte number (on the Monitor) or a signed 1-
+byte number (on the other stations) to be added to the current
+station data and Link data including the sensor image (LOOP) and
+archived data. Hi/Low and "Derived" values (dewpoint, THI, etc.)
+already take the Cal number into account.
+     After adding the Cal number to the data, you will need to
+make sure that the result is in the range 1 to 100. If not, then
+clip the data at these boundaries.
+
+Reading Outside Hum on the Monitor:
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x44);    // read 4 nibbles from bank 1.
+put_serial_char (0xDA);    // Read beginning at DAh.
+                           // (Outside Hum Cal on Monitor)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was
+received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+
+OutHumCAL = *((int *) receive_buffer)
+                           // read the Cal number out of the
+buffer
+
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x24);    // read 2 nibbles from bank 1.
+put_serial_char (0x98);    // Read beginning at 98h.
+                           // (Outside Hum Data on Monitor)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was
+received and got ACK
+fill_buffer(1);            // get the returned data (in bytes)
+OutHum = *((unsigned char *) receive_buffer)
+                           // read the Raw Humidity out of the
+buffer
+
+if (OutHum == 128)         // if the raw sensor value is 128,then either the
+   return HUM_ERROR_VALUE  // hum sensor is not working or not attached.
+
+OutHum = OutHum + OutHumCal
+                        // OutHum is now Calibrated, but possibly
+out of range
+if (OutHum >100)
+   OutHum = 100;
+else if (OutHum < 1)
+   OutHum = 1;             // OutHum has been clipped to the
+range 1 - 100.
+
+
+3.   Barometer
+     The weather station measures the absolute atmospheric
+pressure. In order to convert this to a Standard Barometric
+pressure, the station subtracts a calibration offset value. This
+is determined by having the user enter the desired Barometric
+reading (derived from some other source i.e. airport, newspaper
+etc.). The station stores the difference between the desired
+reading and the actual reading in the "StnDrd" memory register.
+This calibration number must be subtracted from the current
+Station data and Link data including the sensor interface (LOOP)
+and archived data.
+     Note: since at higher elevations the absolute pressure
+decreases, the barometric pressure is generally larger than the
+atmospheric pressure and since the calibration number is
+subtracted from the data, it is generally a negative number. It
+is 2 bytes long
+
+Reading Barometer on the Monitor (or Perception):
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x44);    // read 4 nibbles from bank 1.
+put_serial_char (0x2C);    // Read beginning at 2Ch.
+                           // (Barometer Standard on Monitor)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was
+received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+BarCAL = *((int *) receive_buffer)   // read the Cal number out
+of the buffer
+
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x44);    // read 4 nibbles from bank 1.
+put_serial_char (0x00);    // Read beginning at 00h.
+                           // (Barometer Data on Monitor)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was
+received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+Barometer = *((int *) receive_buffer)
+                           // read the Raw Barometer out of the
+buffer
+
+Barometer = Barometer - BarCal  // Barometer is now Calibrated
+
+4.   Rain
+     Rain data on all stations and links are stored in "unit-
+less" clicks. The RainCal number tells how many clicks are in an
+inch of rain. The most common numbers are: 10 for the 0.1" rain
+collector, 100 for the 0.01" rain collector, and 127 for the
+0.2mm rain collector.
+
+Reading Yearly Rain on the Monitor (or Wizard):
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x44);    // read 4 nibbles from bank 1.
+put_serial_char (0xD6);    // Read beginning at D6h.
+                           // (Rain Cal on Monitor)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was
+received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+RainCAL = *((int *) receive_buffer)   // read the Cal number out
+of the buffer
+
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x44);    // read 4 nibbles from bank 1.
+put_serial_char (0xCE);    // Read beginning at CEh.
+                           // (Yearly Rain Data on Monitor)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was
+received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+RainClicks = *((int *) receive_buffer)
+                           // read the Raw Rain out of the buffer
+YearRain = (float) RainClicks / (float) RainCal
+                           // Make sure this is a floating point
+calculation
+                           // YearRain is now Calibrated in
+Inches
+
+     Reading Daily Rain on the GroWeather Station:
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x44);    // read 4 nibbles from bank 1.
+put_serial_char (0xCF);    // Read beginning at CFh.
+                           // (Rain Cal on GroWeather)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was
+received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+
+RainCAL = *((int *) receive_buffer)
+                           // read the Cal number out of the
+buffer
+
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x34);    // read 3 nibbles from bank 1.
+put_serial_char (0xC9);    // Read beginning at C9h.
+                           // (Daily Rain Data on GroWeather)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was
+received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+     // Note that the upper nibble of the last byte will be set
+     //  to 0 Also, even though the address was odd, the nibbles 
+     //  are aligned so that the addressed nibble is the least 
+     //  significant nibble of the first byte
+RainClicks = *((int *) receive_buffer)  // read the Raw Rain out
+
+     // of the buffer. Since Rain is unsigned, we do not need to 
+     // Check for negative numbers
+
+DailyRain = (float) RainClicks / (float) RainCal
+                   // Make sure this is a floating point calculation
+                   // YearRain is now Calibrated in Inches
+
+5.   Wind Speed
+     While all of the stations have a Wind Speed cal number,
+there are very few situations where it is useful. Primarily if
+you do not attach a Davis anemometer, or if you are not measuring
+wind speed. The formula for Wind Speed in MPH is "SpdDta" * 1600
+/ "SpdCal". Since, the default Cal number is 1600, you can just
+read "SpdDta" in MPH directly without any further calculation.
+     The Speed Cal only effects the LCD display of the current
+and Hi wind speed. It is not used in any "Derived" calculations
+(i.e. Wind Chill, THSWI, or ET).
+     Setting the Cal Number to 3600 will cause the display to be
+in Hz. That is it will show the number of anemometer revolutions
+per second.
+
+6.   Rain Rate
+     Rain Rate is only available on the GroWeather, Energy, and
+Health stations. There are two different ways that the Rain Rate
+data is stored. On the Links (both Sensor Image and archived
+data), the rate is stored in inches per hour times 10. The
+current station rain cal is used to calculate this value. See
+Below.
+     On the Station, the current rain rate (and the Hi rate on
+the Health station) is stored as "The number of half-seconds
+between the last rain click and the previous rain click. Given
+the information above about the station's rain Cal number, the
+formula for converting raw rate data is:
+
+Rate(in/hr) = 7200(1/2 sec/hr) / ("RateDta"(1/2sec/clicks)*
+                                  "RainCal"(clicks/In))
+
+7.   UV MED's
+     The UV MED's Cal number is designed to allow the UV MED's
+displays to be adjusted for different skin types. UV Intensity
+data is stored in tenths of an Index, but can be displayed in
+both Index and MED's per Hour. UV Doses are stored as "Standard"
+MED's and always displayed in MED's. The UV MED's Cal number is a
+number between 1 and 14 which represents a multiplication factor
+of 0.1 to 1.4.  The "Standard" Cal number is 10, representing a
+multiplication factor of 1.0.
+     The formula for converting UV Index to "Standard" MED's is:
+UV_MEDs = (3/7) * UV_Index
+
+     The formula to convert "Standard" MED's to calibrated MED's
+is:
+Caled_MEDs = Standard_MEDs * "UVCal" / 10
+
+Note: Make sure that you perform both of the above conversions
+using floating point arithmetic!
+
+B.   Using the LOOP command
+     The LOOP command is the preferred way to acquire real time
+updates of weather data. The data sent in a LOOP packet is the
+data from the Link's Sensor interface. The pseudo-code
+description of the link processing loop above describes how often
+this data is updated from the station. The answer to the question
+"How often is the data updated?" in the FAQ contains some useful
+approximate timing figures. LOOP data is also CRC checked (See
+below for how to implement CRC Checking).
+     Assuming that you want a virtually continuous stream of loop
+packets, one approach is to ask for a large number (say 1000) of
+packets in one LOOP command, another approach is to ask for a few
+packets (5-10) in one LOOP command and repeat the request when
+they have arrived.  In either case there is the possibility that
+missed characters or other communication difficulties may cause
+the receiver to become unsynchronized with the link as to where
+the data packets begin. If this happens you should first stop the
+stream of LOOP data by sending another valid command (like a read
+of Link memory). Then clear your receive buffer and send the LOOP
+command again.
+     Another feature of the LOOP command, only available on the
+GroWeather, Energy, and Health stations, is the ability to
+monitor the archiving of data. On these stations, one of the data
+fields is the "NewPtr" that indicates the SRAM address where the
+next archive record is to be written. If this number changes
+during the course of reading LOOP packets, you know that the
+station has created a new archive record. This feature is used in
+the "Strip Charts" in the GroWeather, Energy, and Health software
+to keep the PC database current with the archive memory.
+
+     The following examples show how to extract data from a data
+buffer filled with LOOP data. See above for a description of
+fill_crc_buffer() and see below for how CRC checking is done.
+
+     Example of reading a Monitor Sensor Image. (reading a Wizard
+or a Perception is the same only omitting the fields of non-
+existing sensors).
+put_serial_string ("LOOP");
+send_unsigned ((unsigned) (65535));   // request 1 LOOP packet
+put_serial_char (0x0d);
+get_acknowledge();         // verify that the command was
+received and got ACK
+
+header = get_serial_char();    // This should be the block header
+byte
+if (header != 1) { error = 1;}
+                        //  If the header byte is not 1 then
+there is an error
+// assuming there is no error ...
+CRC_Error = fill_crc_buffer(17);  // 15 data bytes + 2 CRC bytes.
+                                  // Header Byte is not included
+in CRC check
+// assuming there is no CRC error, the data is stored in
+recieve_buffer ...
+inside_temperature =  *((int *)(receive_buffer+0));
+outside_temperature =  *((int *)(receive_buffer+2));
+wind_speed =  *((unsigned char *)(receive_buffer+4));
+wind_direction =  *((int *)(receive_buffer+5));
+barometer =  *((int *)(receive_buffer+7));
+inside_humidity = *((unsigned char *)(receive_buffer+9));
+outside_humidity = *((unsigned char*)(receive_buffer+10));
+rain =  *((unsigned *)(receive_buffer+11));
+
+     Example of reading a GroWeather sensor image
+
+put_serial_string ("LOOP");
+send_unsigned ((unsigned) (65535));   // request 1 LOOP packet
+put_serial_char (0x0d);
+get_acknowledge();         // verify that the command was
+received and got ACK
+
+header = get_serial_char();    // This should be the block header
+byte
+if (header != 1) { error = 1;}
+            //  If the header byte is not 1 then there is an error
+// assuming there is no error ...
+CRC_Error = fill_crc_buffer(34);  // 32 data bytes + 2 CRC bytes.
+                           // Header Byte is not included in CRC check
+// assuming there is no CRC error, the data is stored in
+receive_buffer ...
+New_pointer = *((unsigned int *)(receive_buffer));
+bar_power_flag  =  *(( unsigned char *)(receive_buffer+2));
+soil_temperature =  *((int *)(receive_buffer+3));
+air_temperature =  *((int *)(receive_buffer+5));
+wind_speed =  *((unsigned char *)(receive_buffer+7));
+wind_dir =  *((int *)(receive_buffer+8));
+barometer =  *((int *)(receive_buffer+10));
+rain_rate = *((unsigned char *)(receive_buffer+12));
+outside_humidity = *((unsigned char*)(receive_buffer+13));
+rain =  *((unsigned *)(receive_buffer+14));
+solar_rad =  *((int *)(receive_buffer+16));
+wind_run = *((unsigned char *) (recieve_buffer+18)) +
+            *((unsigned char *) (recieve_buffer+19))*256 +
+            *((unsigned char *) (recieve_buffer+20))*65536
+ET = *((unsigned char *) (recieve_buffer+21))
+ET_Flags = *((unsigned char *) (recieve_buffer+22))
+Deg_Days = *((unsigned char *) (recieve_buffer+23)) +
+            *((unsigned char *) (recieve_buffer+24))*256 +
+            *((unsigned char *) (recieve_buffer+25))*65536
+Energy = *((unsigned char *) (recieve_buffer+26)) +
+            *((unsigned char *) (recieve_buffer+27))*256 +
+            *((unsigned char *) (recieve_buffer+28))*65536
+Alarm_Flags = *((unsigned char *) (recieve_buffer+29)) +
+            *((unsigned char *) (recieve_buffer+30))*256 +
+            (*((unsigned char *) (recieve_buffer+31)) &
+            0x0F)*65536
+AOM_status = (*((unsigned char *)(recieve_buffer+31)) & 0xF0) >> 4
+LeafWetnessData = (*((unsigned char *)(recieve_buffer+32)) &
+                  0xF);
+LeafWetnessEnabled = (*((unsigned char *)(recieve_buffer+32)) &
+                  0x40) == 0x40;
+          // Check the value of bit 6
+
+C.   Using MDMP command
+     While the MDMP command is only available on the GroWeather,
+Energy, and Health stations, it is very useful any time you want
+to examine several station memory locations at once. For
+instance, looking at all the Hi/Lows or all the Alarm thresholds.
+You could, in principal, use MDMP as an alternative to the LOOP
+command to provide real time data, but it imposes a greater
+burden on the Station, Link, and PC processing power and
+bandwidth. It is therefore not recommend for continuous use.
+     There are 2 difficulties that must be addressed when
+extracting MDMP data. First, locating the desired data in the
+data buffer. Second, making sure that the number is sign extended
+if the value is supposed to be a negative number.
+     Assuming that the MDMP data is stored in a continuous byte
+sized buffer starting with byte 0, Bank 0 data from the station
+will be found in Bytes 0-127. Bank 1 data from the station will
+be found in Bytes 128-255. Remembering that the addresses in the
+tables below are in nibbles, even addresses are stored in the
+Least-Significant-Nibble of their corresponding byte, and odd
+addresses are in the Most-Significant-Nibble.
+
+     To request and store a memory dump:
+put_serial_string ("MDMP");  // Request Memory Dump
+put_serial_char (0x0d);
+get_acknowledge();         // verify that the command was 
+                           // received and got ACK
+CRC_Error = fill_crc_buffer(258);  // 256 data bytes + 2 CRC bytes.
+                              // receive_buffer has memory dump data.
+
+Some examples of reading data out of this buffer:
+     Wind speed on the GroWeather is located at address 0x060 =
+96. This corresponds to byte 48 in the buffer. Since the data
+starts on an even address and is only 2 nibbles long and
+unsigned, byte 48 is the Wind Speed without any further
+processing.
+
+WindSpeed = receive_buffer(48);
+
+     Daily ET on the GroWeather is located at address 0x0A7 =
+167. This corresponds to the upper nibble of byte 83 in the
+buffer. Since the data value is 3 nibbles long, the whole of byte
+84 is also part of this data field. The data is unsigned so we do
+not have to worry about sign extension.
+
+// Mask and shift nibble 1
+nibble1 = (receive_buffer[83] & 0xF0) >> 4;  
+// Add in the upper 2 nibbles
+DayET = nibble1 + (receive_buffer[84] * 16); 
+
+     Hi Air Temp on the GroWeather is located at address 0x145 =
+325 (69 in Bank 1). This corresponds to the upper nibble of byte
+162 (128 + 34.5). The data field also includes all of byte 163.
+After extracting the data, we must check for a negative value.
+
+// Mask and shift nibble 1
+nibble1 = (receive_buffer[162] & 0xF0) >> 4;  
+// Add in the upper 2 nibbles
+HiAirTemp = nibble1 + (receive_buffer[163] * 16);
+// Check the sign bit of a 3-nibble 2's complement number
+if (HiAirTemp > 2048)
+   HiAirTemp = HiAirTemp - 4096;   // If negative, make it so
+
+     And finally, Soil Temp Low Alarm Threshold on the GroWeather
+is located at address 0x13C = 316 (60 in Bank 1). This
+corresponds to byte 158. The data also extends into the lower
+nibble of byte 159. Again the data needs to be sign extended if
+necessary
+
+// Mask out the Hi nibble
+nibble3 = (receive_buffer[159] & 0x0F) * 256; 
+// add lower byte to nibble3
+SoilLowAlarm = receive_buffer[158] + nibble3; 
+// Check the sign bit of a 3-nibble number
+if (SoilLowAlarm > 2048)        
+   // If negative, make it so
+   SoilLowAlarm = SoilLowAlarm - 4096;        
+
+D.   Invalid Data values
+     In general there are 2 different ways that numerical data is
+stored on the weather station: Signed and Unsigned. These two
+methods use different values to indicate that the sensor is not
+attached (or not working).  Signed data can use either the
+largest positive or smallest negative number that fits into it's
+data size. Unsigned data uses the largest value.
+     You must keep in mind the size (in nibbles) of the data
+field you are examine since this will affect the numerical values
+to be checked for.
+     These Data values are also used in Alarm Thresholds to
+indicate that no threshold has been set and therefore not to test
+for that particular alarm condition.
+     Always check sensor values for invalid data BEFORE applying
+calibration numbers. Do not apply a calibration number to an
+invalid data value.
+     Rain Rate is a special case dealt with below.
+     Data that accumulates over time (i.e. Rain, ET, Degree-Days,
+Wind Run, Solar Energy, and UV Dose) is unsigned data. The error
+value is used only for inactive alarm thresholds.
+
+Signed Data Values:
+     Temperature: All temperatures, Hi/Lows, Alarm thresholds,
+and Cal numbers are Signed data. On the Monitor, the Wizard, and
+the Perception, these values are stored in 4 nibble fields.
+Therefore the error values are 0x7FFF = 32767 and 0x8000 = -
+32768.
+On the GroWeather, Energy, and Health stations, these values are
+stored in 3 nibble fields. And the error values are 0x7FF = 2047
+and 0x800 = -2048.
+
+     Barometer: The current and stored barometer data is stored
+in 4 nibble fields on all stations. The barometer alarm is stored
+in 2 nibbles, and uses the value 0x7F = 127 or 0x80 = -128 for
+invalid data.
+
+     Wind Direction: On the Monitor, and Wizard stations, the
+wind direction is stored in a 4 nibble field and uses the values
+0x7FFF or 0x8000 to indicate an invalid wind direction.
+     On the GroWeather, Energy, and Health stations, wind
+direction is stored in a 3 nibble field and uses the values 0x7FF
+or 0x800 to indicate an invalid wind direction.
+     This information only applies to the current wind direction
+on the station, or in the sensor image on the link (i.e. LOOP
+data packet). The data stored in the archive memory is an
+unsigned byte with the compass direction of the prevailing wind
+from 0-15. The value 255 is used to indicate that there was
+either no wind or no wind direction data during the archive
+period.
+     In addition, the GroWeather, Energy, and Health stations
+also have 1 nibble fields that record both the current wind
+direction and the wind direction at the time of the hi wind
+speed. All 16 values of a 1 nibble number are needed to represent
+the 16 different compass points. You will need to check the value
+of the appropriate status bit in order to determine if the data
+is valid.
+
+     Humidity: Since valid Humidity values only range from 1% to
+100%, it does not make much difference whether humidity is
+considered a signed or unsigned value. An illegal Humidity
+reading is represented by the value 0x80 which can either be
+thought of as 128 or -128 depending upon whether the data is
+signed or unsigned. The weather station treats the data as signed
+for the purposes of clearing Hi/Low values.
+
+Unsigned Data Values:
+
+     Wind Speed: Except for Rev A Monitors, and Wizards, wind
+speed data on all stations is 2 nibbles long and unsigned. On the
+Rev A Monitors and Wizards, the data is signed.
+     The wind speed hi alarm threshold on all Monitors and
+Wizards is a 4 nibble signed number using 0x7FFF or 0x8000 to
+indicate an invalid alarm.
+     On the GroWeather, Energy, and Health stations, the wind
+speed hi alarm is a 2 nibble unsigned number which uses 0xFF =
+255 to indicate an invalid alarm. Note that this means that while
+the current (and Hi) data can display the value of 255, the alarm
+can not be set to this value, since that value is used to
+indicate the absence of a wind speed alarm.
+
+     Solar Rad: Solar rad is a 3 nibble unsigned number that uses
+0xFFF = 4095 to indicate invalid data.
+
+     UV Intensity: UV Intensity is stored as a 2 nibble unsigned
+number. The current value, hi value, and hi alarm use the value
+0xFF = 255 to indicate invalid data.
+
+Rain Rate Data
+     The rain rate data is stored as a 3 nibble unsigned number.
+Because of the way that rain rate is measured and calculated,
+larger data values correspond to smaller rain rates. Setting the
+hi rain rate to zero, for instance, results in an infinite rain
+rate that is displayed with dashes. These dashes will not go away
+until the hi rain rate is cleared. When a rain rate value is
+cleared, it is set to 0xFFF = 4095, the display will read 0.0
+inches per hour. In some cases, the station treats this value as
+a signed number and uses the value 0x7FF = 2047 to indicate a
+cleared rain rate.
+
+E.   Calculated Data values
+     Here are some formulas and code examples for how to
+calculate some of the "Derived" data values found on the station:
+
+1.   Wind Chill
+     Wind chill represents how cold the temperature feels in the
+presence of wind. It is based on the current wind speed
+(calibration is ignored) and the current outside temperature
+(calibration is used). The following C code shows how this is
+done. Note that if the temperature is above 91, the wind has no
+effect on the wind chill.
+
+/* Chill Factor (cf) at 5 MPH intervals */
+unsigned char chillTableOne [] =
+{
+156, 151, 146, 141, 133, 123, 110, 87, 61, 14, 0
+};
+
+/* delta cf for interpolation of table one */
+unsigned char chillTableTwo [] =
+{
+0, 16, 16, 16, 25, 33, 41, 74, 82, 152, 0
+};
+
+/*
++-----------------------------------------+
+   Assumes temperature is in F.
+   & speed is in Mph
+   Returns Chill in F
+*/
+float ChillCalc (int speed, float t)
+{
+   int index;
+   float cf, chill;
+
+   if (speed > 50)                  // Max. speed of 50 mph.
+      speed = 50;
+
+   index = 10 - speed / 5;          // this division is not
+rounded!
+   cf = chillTableOne [index] +
+            (chillTableTwo [index] / 16.0) * (speed % 5);
+ // '%' is the mod operator that gives the remainder when the
+ // first operand is divided by the second operand
+
+ // Only apply chill factor if the temperature is less that 91.4
+   if ( t < 91.4 )
+      chill =  cf * ((t - 91.4) / 256.0) + t;
+   else
+      chill = t;
+
+return chill;
+}
+
+2.   Dew Point
+     The dewpoint is the temperature that dew begins to form.
+Water will condense on an object that is colder that the dewpoint
+of the surrounding air. It represents the absolute amount of
+water in the atmosphere -- a higher dewpoint means there is more
+water in the air. This value is based on the outside temperature
+and outside humidity (both calibrated).
+
+/******************
+ * DewCalc Computes the dew point based on Relative Hum & Temp
+ * rh in % (i.e. 0.0 - 100.0), temp in F
+ * Computes dp in C and converts to F if using those units
+ ******************/
+float DewCalc (float rh, float temp)
+{
+   // verify that the input data is valid before continuing
+   if (rh<1 || rh>100 || temp<-100 || temp>200)
+      {
+      return NO_DATA;  // return with "error" if input is invalid.
+      }
+
+   float dp, ews, num, den;
+
+   temp= (5.0/9.0)*(temp-32.0);  // convert temp to C
+   ews= rh*0.01*exp((17.502*temp)/(240.9+temp));
+                            // ews is proportional to the vapor pressure
+   num= 240.9*(log(ews));   // "log" is really "ln" (i.e. log base e)
+   den= 17.5-(log(ews));
+   dp= num/den;
+
+   if (tempUnits == FAHRENHEIT)  // Convert back to F if required.
+      dp= (9.0/5.0)*dp+32;
+
+   return dp;
+}
+
+
+3.   Temperature-Humidity Index
+     Temperature-Humidity Index (THI) is a measure of
+"sultriness", or "how hot does it feel?". Based on a paper by
+R.G. Steadman, it uses outside temperature and outside humidity
+(both calibrated).  The station determines THI by interpolation
+from the table in the file thitable.h. This table is indexed by
+temperature in 1 degree intervals for each row, and humidity in
+10 percent intervals for each column.
+     Because this measurement is primarily intended for
+monitoring human health and comfort in hot weather, it only
+covers temperatures greater than 68 F (20 C). If the temperature
+is less than 68 F then the station only displays that the THI is
+"LO". In addition, if the calculated THI is greater than 125 F
+(51 C) then the station reports a THI of 125 F alternated with a
+display of "HI". There are status bits on the station to let you
+know if either of these conditions exist.
+
+4.   THSWI
+     Temperature-Humidity-Sun-Wind Index (THSWI) extends THI by
+adding in the effects of the Sun and the Wind. For a complete
+discussion, see the paper "The Assessment of Sultriness. Part II:
+..." contained in Volume 18 of the Journal of Applied
+Meteorology.
+     If either the Solar sensor, or the anemometer is not
+attached (or not working) then the corresponding component of
+THSWI will not be calculated. Wind direction is used to determine
+if the anemometer is working since there is no other way to
+distinguish between an absent anemometer and a valid reading of 0
+MPH. This means you can not use a Wizard II-S anemometer (speed
+only, no wind direction) if you want the station to calculate
+THSWI.
+     THSWI has the same temperature limits as THI as described
+above.
+
+5.   Wind Run
+     Wind run measures the total volume of wind that has passed
+by the anemometer. It is implemented on the station by counting
+the number of revolutions of the anemometer. Every 1600
+revolutions is one mile of wind run. Thus every 160 revolutions
+is one tenth of a mile of wind run. You can use wind run data
+from the archive as an average wind speed after taking into
+account the archive period. The following table shows how to
+convert wind run data into average wind speed data. There is no
+advantage to using this technique for archive intervals of 1 or 5
+minutes.
+     You can also use this table to convert average wind speed
+data into wind run by dividing the wind speed data by the given
+factor. The resolution of the resulting wind run data will be the
+same as the conversion factor.
+
+Conversion factors for Wind Run to Average MPH
+
+Archive   multiply wind  Resolution (0.1 mile of wind run = XX
+MPH)
+interval  run by         MPH
+120       0.5            0.05
+60        1.0            0.1
+30        2.0            0.2
+15        4.0            0.4
+10        6.0            0.6
+5         12.0           1.2
+1         60.0           6.0
+
+6.   Degree-Days
+     Degree days are calculated by "integrating" the amount by
+which the current temperature is above (or below) a threshold
+over time. Here is how you could calculate degree-day values from
+an existing temperature database.
+     First, select the temperature threshold you will use, and
+whether you are calculating Heating Degree-days (temperature is
+below the threshold), Cooling Degree-days (temperature is above
+the threshold), or Growing Degree-days (like Cooling DD with an
+optional hi temperature limit). Also select the time period of
+the calculation. This procedure will give the total Degree-days
+over the whole period.
+     Second, Clear out your Degree-day accumulator.
+     Third, for each record in your data base in the specified
+period, calculate the difference between the temperature and the
+threshold. For Heating degree-days, use threshold - temperature;
+for Cooling degree-days use, use temperature - threshold; for
+Growing degree-days, use MIN(temperature, hi_threshold) -
+low_threshold. Only use these numbers if the value is greater
+than 0, otherwise use 0.
+     Fourth, multiply the value from step 3 by the number of
+minutes in the archive period and add to the accumulator. Repeat
+steps 3 and 4 for each record in the data base in the specified
+period.
+     Fifth, after all the data points have been accumulated,
+divide the result by 1440 (the number of minutes in a day). This
+is the total accumulated degree-days during the selected period.
+
+     Note that degree-day values calculated by the station
+console may differ from values calculated from the algorithm
+given above because the station samples the temperature values on
+a real time basis instead of using averaged values.
+
+7.   Solar Energy
+     Solar energy, measured in Langleys, is Solar radiation
+integrated over time. One Langley equals 11.622 Watt hours per
+square meter = 697.32 Watt minutes per square meter.
+
+8.   UV Dose
+     UV Dose is UV Intensity, measured in MED's per hour,
+integrated over time.  See above for how to convert UV Index into
+MED's per hour.
+
+9.   Rain Rate
+     Rain Rate data on the station is stored as the number of «
+seconds between rain clicks. See above for how to convert this to
+inches per hour. If the number of « seconds is 0, then the
+display will dash because the corresponding rate would be
+infinite. If the number of « seconds is greater than 720 = 6
+minutes, then the corresponding rate is less that 0.1 inch per
+hour.
+     One consequence of the way that rain rate is calculated is
+that there can be no rate determination until the second rain
+click occurs. Further, there will be some delay before any change
+in the rain rate is displayed, and this delay will be longer when
+the rate decreases. Any time the station notices that more than 6
+seconds have gone by without a rain click, the rate value is
+cleared to 0 (« seconds = 0xFFF = 4095). This is checked every 4
+seconds, so it might take as long as 10 seconds after the last
+rain click for the rate value to be cleared.
+
+F.   CRC Checking
+     The CRC checking used by the WeatherLink is based on the CRC-
+CCITT standard. The heart of the method involves a CRC-
+accumulator that uses the following formula on each successive
+data byte. After all the data bytes have been "accumulated",
+there will be a two byte CRC checksum that will get processed in
+the same manner as the data bytes. If there has been no
+transmission error, then the final CRC-accumulator value will be
+0 (assuming it was set to zero before accumulating data).
+     In the following code, "crc" is the crc accumulator (16 bits
+or 2 bytes), "data" is the data or crc checksum byte to be
+accumulated, and "crc_table" is the table of CRC values found in
+the CCITT.h header file. The operator "^" is an exclusive-or
+(XOR), ">> 8" shifts the data right by one byte (divides by 256),
+and "<< 8" shifts the data left by one byte (multiplies by 256).
+
+crc =  crc_table [(crc >> 8) ^ data] ^ (crc << 8);
+
+     Rev E WeatherLinks also require CRC codes on all commands
+sent from the PC (unless they have been disabled with the "CRC0"
+command.). The end of line character (0x0D) is included in the
+CRC calculation. The following code shows one way to implement
+this. Basically, the command to be sent is stored in the
+"command_buffer". A CRC code is calculated on this data and is
+sent to the WeatherLink. Then the command is sent.
+
+unsigned char command_buffer [32];
+int command_len;
+unsigned int crc;
+
+// generate the command
+command_buffer[0] = 'M';
+command_buffer[1] = 'D';
+command_buffer[2] = 'M';
+command_buffer[3] = 'P';
+command_buffer[4] = 0x0d;       // an MDMP command
+command_len = 5;                // 5 characters in the command
+// we can not use C string functions since the commands could
+contain
+// null bytes.
+
+// calculate the CRC code
+crc = 0;                        // initialize the crc value
+for (j=0; j<command_len; j++)   // for each character in the
+command
+   {
+   crc =  crc_table [(crc >> 8) ^ command_buffer[j]] ^ (crc << 8);
+                           // accumulate the j'th character into
+                           // the crc. Uses the above formula.
+   }
+
+// send the CRC code
+send_unsigned(crc);
+
+// send the command
+for (j=0; j<command_len; j++)
+   {
+   put_serial_char(command_buffer[j]);
+   }
+
+// We are ready to receive an acknowledge and the requested data.
+
+
+G.   Reading Hi/Low Times and Dates
+     On the Monitor, Wizard, and Perception stations, the times
+and dates of hi, low, and stored (bar) data takes 7 nibbles and
+has exactly the same format as the station time and date. The
+time uses 4 nibbles: the first two contain the hour in BCD and
+the next two contain the minutes also in BCD. The date is stored
+in 3 nibbles: the first two contain the day in BCD and the third
+nibble holds the month in binary.
+     This is also the same format used for the "TimeStamp" field
+in the archive image and archive records on all stations. The
+first two bytes are the time and the second two bytes are the
+date.
+     On the GroWeather station, the times and dates are stored in
+4 nibbles. The first nibble is used to indicate how many days ago
+the Hi/Low was recorded (0-14). If the event was more than 14
+days ago, then the value 15 is stored. The upper 3 nibbles
+contain the time, expressed as the number of minutes after
+midnight, in binary.
+     On the Energy and Health stations, the date of hi/low events
+is not recorded. The time is stored in 3 nibbles, expressed as
+the number of minutes after midnight, in binary.
+     In the following examples the function convert_BCD()
+converts one byte from BCD to binary. (e.g. if you pass in 69 =
+0x45, the function will return 45 = 0x2D.) There are many ways to
+represent the time and date on the PC. These examples will use
+the following structures:
+
+struct time {
+   int hour, minutes;
+} hi_low_time;
+
+struct date {
+   int day, month;
+} hi_low_date, current_date;
+
+
+Reading the time and date of the high wind speed on the Monitor:
+
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x42);    // read 4 nibbles from bank 0.
+put_serial_char (0x64);    // Read beginning at 64h.
+                           // (Time of hi wind speed on Monitor)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+
+hi_low_time.hour = convert_BCD(receive_buffer[0]);    // convert hours
+hi_low_time.minutes = convert_BCD(receive_buffer[1]); // convert minutes
+
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x32);    // read 3 nibbles from bank 0.
+put_serial_char (0x68);    // Read beginning at 68h.
+                           // (Date of hi wind speed on Monitor)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was
+received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+
+hi_low_date.day = convert_BCD(receive_buffer[0]);    // convert day
+hi_low_date.month = receive_buffer[1] & 0x0F;        // extract month
+
+
+Reading the time and date of high outside temp on the GroWeather
+
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x44);    // read 4 nibbles from bank 1.
+put_serial_char (0x54);    // Read beginning at 64h.
+                      // (Time/date of hi outside temp on GroWeather)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+
+days_ago = recieve_buffer[0] & 0x0F;   // Mask out the relative date
+minutes = *((unsigned int*) recieve_buffer);
+minutes = minutes >> 8;    // minutes now contains the time of
+the hi
+
+time.hour = minutes / 60;     // integer division
+time.minutes = minutes % 60;  // remainder after dividing by 60
+
+if (days_ago < 15)            // has the Hi/low expired?
+   // calculate the Hi/low date by subtracting days_ago from the current date
+   hi_low_date = current_date - days_ago;
+else
+   {  // Mark date invalid since we don't know how log ago the hi low happened
+   hi_low_date.day = hi_low_month = 0;
+   }
+
+
+Reading the time of high THI on the Energy
+
+put_serial_string ("WRD"); // Send read command.
+put_serial_char (0x32);    // read 3 nibbles from bank 0.
+put_serial_char (0x9F);    // Read beginning at 9Fh.
+                           // (Time of hi THI on Energy)
+put_serial_char (0xd);     // Send CR...
+
+get_acknowledge();         // verify that the command was
+received and got ACK
+fill_buffer(2);            // get the returned data (in bytes)
+
+minutes = *((unsigned int*) recieve_buffer);
+     // minutes now contains the time of the hi
+
+time.hour = minutes / 60;     // integer division
+time.minutes = minutes % 60;  // remainder after dividing by 60
+
+
+
+IX.  Memory addresses.
+NOTES:
+     In the tables below, the third hex digit of the address
+indicates the memory bank (0 or 1) where the data is stored.
+     Bit locations are indicated by a memory location name
+followed by a period and a number from 0-3. for example:
+"BarSteady     Equ BarFlag.0" indicates that the Bar Steady flag
+is located in bit 0 of the nibble named BarFlag.
+     Multi-nibble values are stored least significant nibble
+first. The addresses listed in the tables below are the addresses
+of the least significant nibble. Commands like WRD will correctly
+align nibbles into bytes before transmission to the PC for values
+that begin on both even and odd addresses.
+     The station date is encoded in 3 nibbles on the Monitor,
+Wizard, and Perception stations and 5 nibbles on the GroWeather,
+Energy and Health stations. The first 2 nibbles store the day of
+the month in BCD. The third nibble is a number (1..12)
+representing the month. On the GroWeather, Energy and Health
+stations, the last 2 nibbles are the year minus 1900 in binary.
+For example August 5 1996 is stored as "5 0 8 0 6" in increasing
+address order. Day = 05, Month = 8, Year = 60 hex = 96 = 1996;
+     The station time is encoded in 6 nibbles.  The first 2
+nibbles store the hour in BCD.  The second 2 nibbles store the
+minutes in BCD. The last 2 nibbles store the seconds in BCD.
+     On the Monitor, Wizard, and Perception stations, Hi/Low
+Times are stored exactly like the station time. Hi/Low Dates use
+3 nibbles and record the Day and Month of the Hi/Low event in the
+same manner as the first 3 nibbles of the station date.
+     On the GroWeather, Energy, and Health stations, Hi/Low
+Time/Dates are stored differently. On the GroWeather they take 4
+nibbles and include both time and date information, on the Energy
+and Health, only the time is recorded. In both storage schemes
+the time is recorded in 3 nibbles as a binary number giving the
+number of minutes since midnight. On the GroWeather, 1 nibble,
+the First, is used to indicate how many days ago the Hi/Low was
+recorded (0-14). If the event was more than 14 days ago, then the
+value 15 is stored.
+     The TimeStamp field in archive records and in the archive
+image consists of 4 bytes that identify the time and date of the
+stored record, or the current time and date on the station. The
+first byte is the hours (0-23) in BCD, the second is the minutes
+(0-60) in BCD, the third is the day of the month (0-31) in BCD,
+and the fourth is the month (1-12) in binary.
+     Temperatures and Degree-Days are stored in tenths of øF.
+     Humidity is stored as a percent (1-100).
+     Pressure is stored in thousandths of an inch.
+     Wind speeds are stored in miles per hour.
+     Wind Run is stored as tenths of a mile.
+     Rain is stored as "clicks" or rain bucket tips.
+     Rain Rate is stored on the station as 1/2 seconds between
+      clicks, and on the link in Tenths of an inch per hour,
+      calculated from the station's Rain Cal number.
+     Solar Radiation is stored as Watts per square meter.
+     Solar energy is stored in tenths of a Langley.
+     UV Intensity is stored in tenths of a UV Index.
+     UV Dose is stored in tenths of a "standard" MED
+     ET is stored in 100'th of an inch.
+     Leaf Wetness ranges from 0 to 15 with 0 = Dry and 15 = Wet.
+     THI Stands for Temperature-Humidity Index
+     THSWI Stands for Temperature-Humidity-Sun-Wind Index
+
+A.   Monitor, Wizard, and Perception Station
+Bank 0
+Address Data     Data Size (nibbles)
+004D     Model:      DS  1      ; Weather Station type  See
+Appendix C
+
+005E     SpdDta:     DS  2      ; Current wind speed.
+0060     SpdHi:      DS  4      ; Hi wind speed.
+0064     SpdHTime:   DS  4      ; BCD hour and minutes of hi.
+0068     SpdHDate:   DS  3      ; BCD day of month + 1 nibble for
+month
+006B     SpdAHi:     DS  4      ; Wind speed hi alarm threshold
+
+0079     BarFlag:    DS  1      ; Indicates the status of the bar
+trend arrows
+         BarSteady     Equ BarFlag.0  ; If BarSteady = 1, then
+Ignore BarRise
+         BarRise       Equ BarFlag.1  ; and BarFall Bits
+         BarFall       Equ BarFlag.2
+
+008A     DewDta:     DS  4      ; Current dew point in tenths F.
+008E     DewHi:      DS  4      ; Hi dew point in tenths F.
+0092     DewLo:      DS  4      ; Lo dew point in tenths F.
+0096     DewHTime:   DS  4      ; Time of hi dew point.
+009A     DewLTime:   DS  4      ; Time of lo dew point.
+009E     DewLDate:   DS  3      ; Date of lo dew point.
+00A1     DewHDate:   DS  3      ; Date of hi dew point.
+00A4     DewAHi:     DS  4      ; Hi dew point alarm.
+
+00A8     ChlDta:     DS  4      ; Current wind chill in tenths F.
+00AC     ChlLo:      DS  4      ; Low wind chill.
+00B0     ChlLTime:   DS  4      ; Time of low wind chill reading.
+00B4     ChlLDate:   DS  3      ; Date of low wind chill reading.
+00B7     ChlALo:     DS  4      ; Low wind chill alarm.
+
+Bank 1
+Address Data     Data Size (nibbles)
+0100     BarDta:     DS  4      ; Absolute barometric pressure.
+011A     BarAlm:     DS  2      ; Barometric pressure alarm.
+012C     StnDrd:     DS  4      ; Bar Calibration offset.
+                                ; LCD Display = BarDta - StnDrd
+
+0130     Tp1Dta:     DS  4      ; Current inside temperature.
+0134     Tp1Hi:      DS  4      ; Hi inside temperature.
+0138     Tp1Lo:      DS  4      ; Low inside temperature.
+013C     Tp1HTime:   DS  4      ; Time of hi inside temperature.
+0140     Tp1LTime:   DS  4      ; Time of low inside temperature.
+0144     Tp1HDate:   DS  3      ; Date of hi inside temperature.
+0147     Tp1LDate:   DS  3      ; Date of lo inside temperature.
+014A     Tp1AHi:     DS  4      ; Hi inside temperature alarm.
+014E     Tp1ALo:     DS  4      ; Low inside temperature alarm.
+0152     Tp1Cal:     DS  4      ; Inside temperature cal number.
+
+0156     Tp2Dta:     DS  4      ; Current outside temperature.
+015A     Tp2Hi:      DS  4      ; Hi outside temperature.
+015E     Tp2Lo:      DS  4      ; Lo outside temperature.
+0162     Tp2HTime:   DS  4      ; Time of hi outside temperature.
+0166     Tp2LTime:   DS  4      ; Time of lo outside temperature.
+016A     Tp2HDate:   DS  3      ; Date of hi outside temperature.
+016D     Tp2LDate:   DS  3      ; Date of low outside
+temperature.
+0170     Tp2AHi:     DS  4      ; Hi outside temperature alarm.
+0174     Tp2ALo:     DS  4      ; Low outside temperature alarm.
+0178     Tp2Cal:     DS  4      ; Outside temperature cal number.
+
+0180     Hm1Dta:     DS  2      ; Inside humidity.
+0182     Hm1Hi:      DS  2      ; Hi inside humidity.
+0184     Hm1Lo:      DS  2      ; Low inside humidity.
+0186     Hm1HTime:   DS  4      ; Time of hi inside humidity.
+018A     Hm1LTime:   DS  4      ; Time of low inside humidity.
+018E     Hm1HDate:   DS  3      ; Date of hi inside humidity.
+0191     Hm1LDate:   DS  3      ; Date of low inside humidity.
+0194     Hm1AHi:     DS  2      ; Hi inside humidity alarm.
+0196     Hm1ALo:     DS  2      ; Low inside humidity.
+
+0198     Hm2Dta:     DS  2      ; Current outside humidity.
+019A     Hm2Hi:      DS  2      ; Hi outside humidity.
+019C     Hm2Lo:      DS  2      ; Low outside humidity.
+019E     Hm2HTime:   DS  4      ; Time of hi outside humidity.
+01A2     Hm2LTime:   DS  4      ; Time of low outside humidity.
+01A6     Hm2HDate:   DS  3      ; Date of hi outside humidity.
+01A9     Hm2LDate:   DS  3      ; Date of low outside humidity.
+01AC     Hm2AHi:     DS  2      ; Hi outside humidity alarm.
+01AE     Hm2ALo:     DS  2      ; Low outside humidity alarm.
+
+01B4     DirDta:     DS  4      ; Wind direction (0...359)
+
+01BE     Time:       DS  6      ; Time on station. BCD hour min
+second.
+01BE     Hour       (DS  2)     ; BCD Hours (00 - 23)
+01C0     Minute     (DS  2)     ; BCD Minutes
+01C2     Second     (DS  2)     ; BCD Seconds
+
+01C4     TimeAlm:    DS  4      ; Station alarm.
+01C4     HrAlm      (DS  2)     ; BCD Time alarm Hours (00 - 23)
+01C6     MinAlm     (DS  2)     ; BCD Time alarm Minutes
+
+01C8     Date:       DS  5      ; Station date.
+01C8     Day        (DS  2)     ; BCD Day of the month
+01CA     Month      (DS  1)     ; stored in binary 1-12
+
+01CE     YRnDta:     DS  4      ; Rain clicks recorded this year.
+01D2     DRnDta:     DS  4      ; Rain clicks recorded since last
+                                ;   clear of daily rain.
+01D6     RnCal:      DS  4      ; Number of clicks equivalent to
+1 inch.
+
+01DA     Hm2Cal:     DS  4      ; Outside hum cal number.
+
+
+B.   Monitor, Wizard, and Perception Link
+Bank 0
+Address Data     Data Size (nibbles)
+004D     Model:      DS  1      ; Weather Station type  See
+Appendix C
+
+Bank 1
+Address Data     Data Size (nibbles)
+0100     NewPtr      DS  4      ; Address of next archive entry.
+0104     OldPtr      DS  4      ; Address of oldest archive
+entry.
+
+; Sensor image begins here. (11Ch) - (139h)
+011C     Tin         DS  4      ; Inside temperature
+0120     Tout        DS  4      ; Outside temperature
+0124     WSp         DS  2      ; Wind speed
+0126     WDir        DS  4      ; Wind direction
+012A     Barom       DS  4      ; Barometer
+012E     Hin         DS  2      ; Inside humidity
+0130     Hout        DS  2      ; Outside humidity
+0132     Rain        DS  4      ; Rain
+0136     Unused      DS  4      ; Unused bytes sent in the LOOP
+command
+; End of sensor image. (139h) Size = 1Eh = 30 nib = 15 bytes
+
+013A     SamplePer   DS  2      ; Sample Period = 256 - "Data"
+seconds
+013C     ArcPeriod   DS  2      ; Archive interval in minutes.
+0140     PrevRain    DS  4      ; Rain click total at time of
+last archive.
+
+0148     LastArchiveTime  DS  4 ; Time in min. since midnight of
+last archive.
+
+015E     WDirs       ds 32      ; Histogram of wind directions.
+
+; Archive Image begins here: (188h)-(1B1h)
+0188     ArchiveImage
+0188     Barom       Ds  4      ; Barometer reading at archive
+time.
+018C     Hin         Ds  2      ; Inside humidity at archive
+time.
+018E     Hout        Ds  2      ; Outside humidity at archive
+time.
+0190     Rain        Ds  4      ; Rainfall in period.
+0194     TinAvg      Ds  4      ; Average inside temperature.
+0198     TOutAvg     Ds  4      ; Average outside temperature.
+019C     WspAvg      Ds  2      ; Average wind speed in period.
+019E     Wdir        Ds  2  ; Dominant wind direction in archive
+period. (0-15)
+01A0     THiOut      Ds  4      ; Hi Tout in period.
+01A4     Gust        Ds  2      ; Hi wind speed in period.
+01A6     TimeStamp   Ds  8      ; Archive entry time and date.
+01AE     TLowOut     Ds  4      ; Low Tout in period.
+;End of Archive Image (1DF) Size = 2Ah = 42 Nibbles = 21 Bytes
+
+
+C.   GroWeather Station
+Bank 0
+Address Data     Data Size (nibbles)
+000E     LWReg       DS  1      ; Leaf Wetness Enabled Register
+         LWEnabled     Equ LWEnabled.2  ; 0 = Soil Temp, 1 = Leaf Wetness
+
+0036     AlarmReg:   DS  5      ; Bit flags for each alarm. See
+Appendix G1
+003B     AOMStat:    DS  1      ; AOM Load Status report.  See
+Appendix B
+
+003D     DirFlags:   DS  1
+         BadDirF       Equ DirFlags.2   ; Is current Dir Bad?
+1=bad, 0=good
+         BadHiDir      Equ DirFlags.3   ; Is Hi Dir Bad?
+1=bad,0=good
+
+004D     Model:      DS  1      ; Weather Station type.  See
+Appendix C
+
+0049     HiTHIFlags: DS  1      ; Hi THI status Flags
+         HiTHILowFl    Equ HiTHIFlags.2 ; Hi THI Value is >= 125
+         HiTHIHiFl     Equ HiTHIFlags.3 ; Hi THI Value is below
+range
+
+005F     THIFlags:   DS  1      ; THI status flags
+         THILowFl      Equ THIFlags.2   ; 1 = Air Temp < 68
+degrees
+         THIHiFl       Equ THIFlags.3   ; 1 = THI >= 125 degrees
+
+0060     SpdDta:     DS  2      ; # of pulses in 2.25 seconds,
+equiv. to MPH
+0062     SpdHi:      DS  2      ; High Wind speed (MPH)
+0064     SpdHTime:   DS  4      ; Time of High Wind Speed
+0068     SpdAHi:     DS  2      ; High Wind Speed alarm (MPH)
+
+006A     SpdCal:     DS  4      ; Wind Speed Calibration Number
+0075     HiDir:      DS  1      ; Compass Rose Direction of Hi
+wind speed
+                                ;  0=N, 1=NNE, 2=NE, etc.
+                                ;  See Appendix F
+007A     BarFlag:    DS  1      ; Indicates the status of the bar
+trend arrows
+         BarSteady     Equ BarFlag.0  ; If BarSteady = 1, then
+Ignore BarRise
+         BarRise       Equ BarFlag.1  ; and BarFall Bits
+         BarFall       Equ BarFlag.2
+
+007B     PwrFlags:   DS  1
+         BattLow       Equ PwrFlags.2  ; 1 = the Battery Voltage
+is low
+         PowLow        Equ PwrFlags.3  ; 1 = the primary power
+voltage is low
+
+008A     DewDta:     DS  3      ; Current Dewpoint Data (Degrees
+F*10)
+008D     DewAHi:     DS  1      ; Dew point alarm stored here.
+
+008E     ChlDta:     DS  3      ; Current Wind Chill Data
+(Degrees F*10)
+0091     ChlLo:      DS  3      ; Low Wind Chill
+0094     ChlLTime:   DS  4      ; Time/Date of Low Wind Chill
+0098     ChlALo:     DS  3      ; Wind Chill Low Alarm Threshold
+
+009E     RunDta:     DS  4      ; Daily Wind Run Data (Miles *10)
+00A2     RunTDta:    DS  5      ; Total (Period) Wind Run
+Data(Miles *10)
+
+00A7     ETDDta:     DS  3      ; Daily ET (Inches *100)
+00AA     ETDAl:      DS  3      ; Daily ET Alarm Threshold
+(Inches *100)
+00AD     ETTDta:     DS  4      ; Total ET (Inches *100)
+00B1     ETTAl:      DS  4      ; Total ET Alarm Threshold
+(Inches *100)
+
+Bank 1
+Address Data     Data Size (nibbles)
+0100     BarDta:     DS  4      ; Current Barometer Data (Inches
+*1000)
+0118     BarSto:     DS  4      ; Stored Bar Data
+011C     BarStoT:    DS  4      ; Stored Bar Time and Date
+0120     StnDrd:     DS  4      ; Bar Calibration Offset
+                                ; LCD Display = BarDta - StnDrd
+0124     BarAlm:     DS  2      ; Bar Trend Alarm Threshold
+
+0130     Tp1Dta:     DS  3      ; Current Soil Temperature Data
+(Degrees F*10)
+0133     Tp1Hi:      DS  3      ; Hi Soil Temp Data
+0136     Tp1Lo:      DS  3      ; Low Soil Temp Data
+0139     Tp1AHi:     DS  3      ; Soil Temp Hi Alarm Threshold
+013C     Tp1ALo:     DS  3      ; Soil Temp Low Alarm Threshold
+013F     Tp1Cal:     DS  3      ; Soil Temp Cal Number
+
+0142     Tp2Dta:     DS  3      ; Current Air Temp Data(Degrees
+F*10)
+0145     Tp2Hi:      DS  3      ; Hi Air Temp Data
+0148     Tp2Lo:      DS  3      ; Low Air Temp Data
+014B     Tp2AHi:     DS  3      ; Air Temp Hi Alarm Threshold
+014E     Tp2ALo:     DS  3      ; Air Temp Low Alarm Threshold
+0151     Tp2Cal:     DS  3      ; Air Temp Cal Number
+0154     Tp2HTime:   DS  4      ; Time/Date of Hi Air Temp
+0158     Tp2LTime:   DS  4      ; Time/Date of Low Air Temp
+
+015C     DDDDta:     DS  3      ; Daily Degree-Day Data (Degrees
+F*10)
+015F     DDTDta:     DS  5      ; Total Degree-Day Data (Degrees
+F*10)
+0164     DDBase:     DS  3      ; Degree-Day Base temp (Degrees
+F*10)
+0167     DDTAHi:     DS  5      ; Degree-Day Total Alarm
+Threshold
+016C     DDMax:      DS  3      ; Degree-Day Max temp (Degrees
+F*10)
+
+0173     Hm2Dta:     DS  2      ; Current Outside Humidity Data
+(0-100%)
+0175     Hm2Hi:      DS  2      ; Hi Outside Hum Data
+0177     Hm2Lo:      DS  2      ; Low Outside Hum Data
+0179     Hm2HTime:   DS  4      ; Time/Date of Hi Outside Hum
+017D     Hm2LTime:   DS  4      ; Time/Date of Low Outside Hum
+0181     Hm2AHi:     DS  2      ; Outside Hum Hi Alarm Threshold
+0183     Hm2ALo:     DS  2      ; Outside Hum Low Alarm Threshold
+0185     Hm2Cal:     DS  2      ; Outside Hum Cal Number
+
+018B     DirDta:     DS  3      ; Current Wind Direction Data (0-
+360)
+
+0194     Time:       DS  6      ; Current Station Time(HH:MM:SS)
+0194     Hour       (DS  2)     ; BCD Hours (00 - 23)
+0196     Minute     (DS  2)     ; BCD Minutes
+0198     Second     (DS  2)     ; BCD Seconds
+019A     TimeAlm:    DS  4      ; Station Time Alarm (HH:MM)
+019A     HrAlm      (DS  2)     ; BCD Time alarm Hours (00 - 23)
+019C     MinAlm     (DS  2)     ; BCD Time alarm Minutes
+
+019E     Date:       DS  5      ; Current Station Date (DD:M:YY)
+019E     Day        (DS  2)     ; BCD Day of the month
+01A0     Month      (DS  1)     ; stored in binary 1-12
+01A1     Year       (DS  2)     ; Year = 1900+binary data
+
+01A3     THIDta:     DS  3      ; Current THI Data (Degrees F*10)
+01A6     THIHi:      DS  3      ; Hi THI Data
+01A9     THIHTime:   DS  4      ; Time/Date of Hi THI
+01AD     THIAHi:     DS  3      ; THI Hi Alarm Threshold
+
+01B0     PerLen:     DS  4      ; Length of Period that tracks
+Total values
+                           ; Low order nibble is in 1/16'ths of a
+day (90 min)
+01B1     PerDay     (DS 3)      ; Upper 3 nibbles are the number
+of Whole days
+                                ; in the period
+01B4     ACTime:     DS  4      ; AutoClear Time (Same format as
+Time) (HH:MM)
+
+01B8     SradDta:    DS  3      ; Current Solar Radiation Data
+                                ;      (Watts per square Meter)
+01BB     SEngDDta:   DS  4      ; Daily Solar Energy Data
+(Langleys *10)
+01BF     SEngTDta:   DS  6      ; Total Solar Energy Data
+(Langleys *10)
+
+01C5     YRnDta:     DS  4      ; Total Rain Data
+01C9     DRnDta:     DS  3      ; Daily Rain Data
+01CC     DRnAHi:     DS  3      ; Daily Rain Alarm Threshold
+01CF     RnCal:      DS  4      ; Rain Cal Number (Number of
+clicks in 1 inch)
+
+01D3     RateDta:    DS  3      ; Current Rain Rate in 1/2
+seconds per click
+01D6     RateHi:     DS  3      ; Hi Rain Rate Data
+01D9     RateHTime:  DS  4      ; Time/Data of Hi Rain Rate
+
+01DD     PowVolt:    DS  1      ; Voltage of the primary power
+source
+                                ;  See Appendix D
+01DE     LeafDta:    DS  1      ; Current Leaf Wetness Data
+
+D.   GroWeather Link
+; Memory Bank 0 AT 0h
+Address Data     Data Size (nibbles)
+004F     Model:      DS 1       ; Weather Station type  See
+Appendix C
+
+; ET data input registers. used to calculate hourly data for ET
+calculation.
+0080     ETTemp      ds 5       ; ET Temperature accumulator
+0085     ETSun       ds 5       ; ET Solar Rad accumulator
+008A     ETHum       ds 4       ; ET Humidity accumulator
+008E     ETWind      ds 4       ; ET Wind Speed accumulator
+0092     ETTSamp     ds 2       ; Count of ET Temp samples
+0094     ETSSamp     ds 2       ; Count of ET Sun samples
+0096     ETHSamp     ds 2       ; Count of ET Hum samples
+0098     ETWSamp     ds 2       ; Count of ET Wind samples
+009A     ETSampCnt   ds 2       ; Count of ET Sample readings
+009E     ETDay       ds 3       ; Shadow of Station Daily ET Data
+00A1     ETTot100    ds 5       ; Shadow of Station Total ET Data
+
+; Memory Bank 1 AT 100h
+Address Data     Data Size (nibbles)
+0106     OldPtr      ds 4       ; Points to oldest entry in
+archive memory.
+
+; Sensor image begins here. (10Ah) - (14Fh)
+; Each Field is in full bytes for ease of PC Loop mode
+interpretation
+010A     NewPtr      ds 4       ; Points to next free archive
+memory location.
+010E     SIStatus    ds 2       ; Bar trend and Power flags  See
+Appendix A
+0110     GTSoil      ds 4       ; Current Soil temperature.
+0114     GTAir       ds 4       ; Current Air temperature.
+0118     GWSp        ds 2       ; Current wind speed.
+011A     GWDir       ds 4       ; Current Wind direction in
+degrees.
+011E     GBarom      ds 4       ; Current Barometer reading.
+0122     GRate       ds 2       ; Current Rain Rate
+0124     GHout       ds 2       ; Current outside humidity.
+0126     GTRain      ds 4       ; Total rainfall.
+012A     GSun        ds 4       ; Current Solar Rad in W/m^2
+012E     GTRun       ds 6       ; Total Wind Run
+0134     TET         ds 4       ; Total ET
+0138     GTDegDay    ds 6       ; Total Degree-Days
+013E     GTEnrgy     ds 6       ; Total Solar Energy
+0144     Galarms     ds 6       ; Current Alarm Bits  See
+Appendix G1 and B
+0146     LWData      ds 2       ; Current Leaf Wetness Data and
+Status
+                                ;   See Appendix G3
+; End of sensor image. (14Ah) Size = 42h = 66nib = 33bytes
+
+0150     SamplePer   ds 2       ; Sample Period = 256 - "Data"
+seconds
+0152     ArcPeriod   ds 2       ; Archive period in minutes.
+0154     LastArchiveTime  ds 4  ; Time of last archive in min.
+since midnight.
+
+; Accumulation registers.
+0158     WspAccum    ds 4       ; Sum of wind speed samples in
+archive per.
+015C     TinAccum    ds 5       ; Sum of Soil temp samples in
+archive per.
+0161     ToutAccum   ds 5       ; Sum of out temp samples in
+archive per.
+0166     SunAccum    ds 5       ; Sum of Solar Rad samples in
+archive per.
+0178     Samples     ds 2       ; Number of samples taken in
+period.
+
+017C     LnkRnCal    ds 4       ; Link copy of the Station's Rain
+Cal
+
+0180     WDirs       ds 32      ; Histogram of wind directions.
+
+; Archive Image begins here: (1A0h)-(1DFh)
+01A0     ArchiveImage
+01A0     Barom       Ds 4       ; Barometer reading at archive
+time.
+01A4     Hout        Ds 2       ; Outside humidity at archive
+time.
+01A6     WspAvg      Ds 2       ; Average wind speed in period.
+01A8     Gust        Ds 2       ; Hi wind speed in period.
+01AA     Wdir        Ds 2  ; Dominant wind direction in archive
+period. (0-15)
+01AC     Rain        Ds 4       ; Rainfall in period.
+01B0     TinAvg      Ds 4       ; Average Soil temperature.
+                           ; If Leaf Wetness is enabled, holds LW
+data instead
+01B4     TOutAvg     Ds 4       ; Average outside temperature.
+01B8     TimeStamp   Ds 8       ; Archive entry time and date.
+01C0     THiOut      Ds 4       ; Hi Tout in period.
+01C4     TLowOut     Ds 4       ; Low Tout in period.
+01C8     DegDays     Ds 4       ; Degree-Days in period
+01CC     ETArc       Ds 2       ; ET in period
+01CE     ETStat      ds 2       ; bitmapped ET Calc. flags
+See Appendix G2
+01D0     Wind Run    Ds 4       ; Wind run in period
+01D4     Sun         Ds 4       ; Average Solar Radiation in
+period
+01D8     Energy      Ds 4       ; Solar energy in period
+01DC     HiRate      Ds 2       ; Hi Rain Rate in period
+01DE     GArcPowV    DS 2       ; Station Power voltage at
+archive time
+                                ;   See Appendix D
+;End of Archive Image (1DF) Size = 40h = 64 Nibbles = 32 Bytes
+
+; previous values registers:  These registers contain the value
+; of accumulated values at the beginning of the archive period
+01E0     PrevRun     ds 6
+01E6     PrevDD      ds 6
+01EC     PrevEnrg    ds 6
+01F2     PrevRain    ds 4
+
+01FF     WindThresh  ds 1       ; Wind Direction statistics are
+made when the
+                                ; wind speed is greater than
+WindThresh.
+E.   Energy Station
+Bank 0
+Address Data     Data Size (nibbles)
+0036     AlarmReg:   DS  5      ; Bit flags for each alarm.  See
+Appendix G1
+003B     AOMStat:    DS  1      ; AOM Load Status report.  See
+Appendix B
+
+003D     DirFlags:   DS 1
+         BadDirF       Equ DirFlags.2    ; Is current Dir Bad?
+1=bad,0=good
+         BadHiDir      Equ DirFlags.3    ; Is Hi Dir Bad
+1=bad,0=good
+
+0049     HiTHIFlags: DS 1       ; Hi THI Flags
+         HiTHILowFl    Equ HiTHIFlags.2  ; Hi THI Value is >= 125
+         HiTHIHiFl     Equ HiTHIFlags.3  ; Hi THI Value is below
+range
+
+004D     Model:      DS  1      ; Weather Station type  See
+Appendix C
+
+005F     THIFlags:   DS  1      ; THI Flags
+         THILowFl      Equ THIFlags.2    ; 1 = Air Temp < 68
+degrees
+         THIHiFl       Equ THIFlags.3    ; 1 = THI >= 125 degrees
+
+0060     SpdDta:     DS  2      ; # of pulses in 2.25 seconds =.
+to MPH
+0062     SpdHi:      DS  2      ; High Wind speed (MPH)
+0064     SpdHTime:   DS  3      ; Time of High Wind Speed
+0067     HiDir:      DS  1      ; Compass Rose Direction of Hi
+wind speed
+                                ;  0=N, 1=NNE, 2=NE, etc.
+                                ;  See Appendix F
+
+0068     SpdAHi:     DS  2      ; High Wind Speed alarm (MPH)
+
+006A     SpdCal:     DS  4      ; Wind Speed Calibration Number
+
+007A     BarFlag:    DS 1       ; Indicates the status of the bar
+trend arrows
+         BarSteady     Equ BarFlag.0  ; If BarSteady = 1, then
+Ignore BarRise
+         BarRise       Equ BarFlag.1  ; and BarFall Bits
+         BarFall       Equ BarFlag.2
+
+007B     PwrFlags:   DS 1
+         BattLow       Equ PwrFlags.2 ; 1 = the Battery Voltage
+is low
+         PowLow        Equ PwrFlags.3 ; 1 = the primary power
+voltage is low
+
+008A     DewDta:     DS  3      ; Current Dewpoint Data (Degrees
+F*10)
+
+008D     ChlDta:     DS  3      ; Current Wind Chill Data
+(Degrees F*10)
+0090     ChlLo:      DS  3      ; Low Wind Chill Data
+0093     ChlLTime:   DS  3      ; Time of Low Wind Chill
+0096     ChlALo:     DS  3      ; Wind Chill Low Alarm Threshold
+
+0099     THIDta:     DS  3      ; Current THI Data (Degrees F*10)
+009C     THIHi:      DS  3      ; Hi THI Data
+009F     THIHTime:   DS  3      ; Time of Hi THI
+00A2     THIAHi:     DS  3      ; THI Hi Alarm Threshold
+
+00A5     RunDta:     DS  4      ; Daily Wind Run Data (Miles *10)
+00A9     RunTDta:    DS  5      ; Total (Period) Wind Run Data
+(Miles *10)
+
+00B2     DirDta:     DS  3      ; Current Wind Direction Data (0-
+360)
+
+00B5     DewAHi:     DS  1      ; Dew point alarm stored here
+
+Bank 1
+Address Data     Data Size (nibbles)
+0100     BarDta:     DS  4      ; Current Barometer Data (Inches
+*1000)
+0118     StnDrd:     DS  4      ; Bar Calibration Offset
+                                ; LCD Display = BarDta - StnDrd
+011C     BarAlm:     DS  2      ; Bar Trend Alarm Threshold
+
+0124     Tp1Dta:     DS  3      ; Current Inside Temp. Data
+(Degrees F*10)
+0127     Tp1Hi:      DS  3      ; Hi Inside Temperature Data
+012A     Tp1Lo:      DS  3      ; Low Inside Temperature Data
+012D     Tp1HTime:   DS  3      ; Time of Hi Inside Temperature
+Data
+0130     Tp1LTime:   DS  3      ; Time of Low Inside Temperature
+Data
+0133     Tp1Cal:     DS  3      ; Inside Temperature Cal Number
+
+0136     Tp2Dta:     DS  3      ; Current Outside Temp. Data
+(Degrees F*10)
+0139     Tp2Hi:      DS  3      ; Hi Outside Temperature Data
+013C     Tp2Lo:      DS  3      ; Low Outside Temperature Data
+013F     Tp2HTime:   DS  3      ; Time of Hi Outside Temperature
+Data
+0142     Tp2LTime:   DS  3      ; Time of Low Outside Temperature
+Data
+0145     Tp2Cal:     DS  3      ; Outside Temperature Cal Number
+0148     Tp2AHi:     DS  3      ; Outside Temperature Hi Alarm
+Threshold
+014B     Tp2ALo:     DS  3      ; Outside Temperature Low Alarm
+Threshold
+
+0151     HtDDDDta:   DS  3      ; Heating Degree-Day Daily
+(Degrees F*10)
+0154     HtDDTDta:   DS  5      ; Heating Degree-Day Total
+(Degrees F*10)
+
+015C     ChDDDDta:   DS  3      ; Wind Chill Degree-Day Daily
+(Degs F*10)
+015F     ChDDTDta:   DS  5      ; Wind Chill Degree-Day Total
+(Degs F*10)
+
+0164     HtDDBase:   DS  3      ; Heating/Wind Chill Degree-Day
+Base temp
+                                ;(Degrees F*10)
+
+016A     CoDDDDta:   DS  3      ; Cooling Degree-Day Daily
+(Degrees F*10)
+016D     CoDDTDta:   DS  5      ; Cooling Degree-Day Total
+(Degrees F*10)
+
+0175     THDDDDta:   DS  3      ; THI Degree-Day Daily (Degrees
+F*10)
+0178     THDDTDta:   DS  5      ; THI Degree-Day Total (Degrees
+F*10)
+
+017D     CoDDBase:   DS  3      ; Cooling/THI Degree-Day Base
+temp
+                                ; (Degrees F*10)
+
+0184     Hm2Dta:     DS  2      ; Current Outside Humidity Data
+(0-100%)
+0186     Hm2Hi:      DS  2      ; Hi Outside Hum Data
+0188     Hm2Lo:      DS  2      ; Low Outside Hum Data
+018A     Hm2HTime:   DS  3      ; Time of Hi Outside Hum Data
+018D     Hm2LTime:   DS  3      ; Time of Low Outside Hum Data
+0190     Hm2AHi:     DS  2      ; Outside Hum Hi Alarm Threshold
+0192     Hm2ALo:     DS  2      ; Outside Hum Low Alarm Threshold
+0194     Hm2Cal:     DS  2      ; Outside Hum Cal Number
+
+019C     Time:       DS  6      ; Current Station Time (HH:MM:SS)
+019C     Hour       (DS  2)     ; BCD Hours (00 - 23)
+019E     Minute     (DS  2)     ; BCD Minutes
+01A0     Second     (DS  2)     ; BCD Seconds
+
+01A2     TimeAlm:    DS  4      ; Station Time Alarm (HH:MM)
+01A2     HrAlm      (DS  2)     ; BCD Time Alarm Hours (00 - 23)
+01A4     MinAlm     (DS  2)     ; BCD Time Alarm Minutes
+
+01A6     PerLen:     DS  4      ; Length of Period that tracks
+Total values
+                           ; Low order nibble is in 1/16'ths of a
+day (90 min)
+01A7     PerDay     (DS  3)     ; Upper 3 nibbles are the number
+of Whole days
+                                ; in the period.
+
+01AA     ACTime:     DS  4      ; AutoClear Time (Same format as
+Time) (HH:MM)
+
+01AE     Date:       DS  5      ; Current Station Date (DD:M:YY)
+01AE     Day        (DS 2)      ; BCD Day of the month
+01B0     Month      (DS 1)      ; stored in binary 1-12
+01B1     Year       (DS 2)      ; Year = 1900+binary data
+
+01B3     SRadDta:    DS  3      ; Solar Radiation(Watts per
+square Meter)
+01B6     SEngDDta:   DS  4      ; Daily Solar Energy (Langleys
+*10)
+01BA     SEngTDta:   DS  6      ; Total Solar Energy (Langleys
+*10)
+
+01C0     YRnDta:     DS  4      ; Total Rain Data
+01C4     DRnDta:     DS  3      ; Daily Rain Data
+01C7     DRnAHi:     DS  3      ; Daily Rain Alarm Threshold
+01CA     RnCal:      DS  4      ; Rain Cal Number (Number of
+clicks in 1 inch)
+
+01D1     RateDta:    DS  3      ; Current Rain Rate in 1/2
+seconds per click
+01D4     RateHi:     DS  3      ; Hi Rain Rate Data
+01D7     RateHTime:  DS  3      ; Time of Hi Rain Rate
+
+01DD     PowVolt:    DS  1      ; Voltage code of the primary
+power source
+                                ;   See Appendix D
+
+F.   Energy Link
+Bank 0
+Address Data     Data Size (nibbles)
+004F     Model:      DS  1      ; Weather Station type  See
+Appendix C
+
+0080     PrevChDD    ds  6      ; previous Wind Chill Degree-Days
+Total
+0086     PrevCoDD    ds  6      ; previous Cooling Tot Degree-
+Days Total
+008C     PrevTHDD    ds  6      ; previous THI Degree-Days Total
+
+Bank 1
+Address Data     Data Size (nibbles)
+0106     OldPtr      ds  4      ; Points to oldest entry in
+archive memory.
+
+; Sensor image begins here. (10Ah) - (14Fh)
+; Each Field is in full bytes for ease of PC Loop mode
+interpretation
+010A     NewPtr      ds  4      ; Points to next free archive
+memory location.
+010E     SIStatus    ds  2      ; Bar trend and Power flags  See
+Appendix A
+0110     TIn         ds  4      ; Current Inside temperature.
+0114     TAir        ds  4      ; Current Air temperature.
+0118     WSp         ds  2      ; Current wind speed.
+011A     WDir        ds  4      ; Wind direction in degrees.
+011E     Barom       ds  4      ; Current Barometer reading.
+0122     Rate        ds  2      ; Current Rain Rate
+0124     Hout        ds  2      ; Current outside humidity.
+0126     TRain       ds  4      ; Total rain.
+012A     Sun         ds  4      ; Current Solar Rad in W/m^2
+012E     TRun        ds  6      ; Total Wind Run
+0134     TEnrgy      ds  6      ; Total Solar Energy
+013A     Alarms      ds  6      ; Current Alarm Bits  See
+Appendix E1 & B
+; End of sensor image. (13Fh) Size = 36h = 54 nibbles = 27 bytes
+
+0150     SamplePer   ds  2      ; Sample Period = 256 - "Data"
+seconds
+0152     ArcPeriod   ds  2      ; Archive period in minutes.
+0154     LastArchiveTime  ds  4 ; Time of last archive in min.
+since midnight
+
+; Accumulation registers.
+0158     WspAccum    ds  4      ; Sum of wind speed samples in
+archive per.
+015C     TinAccum    ds  5      ; Sum of Soil temp samples in
+archive per.
+0161     ToutAccum   ds  5      ; Sum of out temp samples in
+archive per.
+0166     SunAccum    ds  5      ; Sum of Solar Rad samples in
+archive per.
+0178     Samples     ds  2      ; Number of samples taken in
+period.
+
+017C     LnkRnCal    ds  4      ; Link copy of the Station's Rain
+Cal
+
+0180     WDirs       ds 32      ; Histogram of wind directions.
+
+; Archive Image begins here: (1A0h)-(1DFh)
+01A0     ArchiveImage
+01A0     Barom       Ds  4      ; Barometer reading at archive
+time.
+01A4     Hout        Ds  2      ; Outside humidity at archive
+time.
+01A6     WspAvg      Ds  2      ; Average wind speed in period.
+01A8     Gust        Ds  2      ; Hi wind speed in period.
+01AA     Wdir        Ds  2 ; Dominant wind direction in archive
+period. (0-15)
+01AC     Rain        Ds  4      ; Rainfall in period.
+01B0     TinAvg      Ds  4      ; Average inside temperature.
+01B4     TOutAvg     Ds  4      ; Average outside temperature.
+01B8     Time        Ds  4      ; Archive entry time in BCD
+(HH:MM).
+01BC     Date        Ds  4      ; Archive entry date in BCD
+(MM:DD)
+01C0     THiOut      Ds  4      ; Hi Tout in period.
+01C4     TLowOut     Ds  4      ; Low Tout in period.
+01C8     HtDegDays   Ds  2      ; Heating Degree-Days in period
+01CA     ChDegDays   Ds  2      ; Wind Chill Degree-Days in
+period
+01CC     CoDegDays   Ds  2      ; Cooling Degree-Days in period
+01CE     THDegDays   Ds  2      ; THI Degree-Days in period
+01D0     Wind Run    Ds  4      ; Wind run in period
+01D4     Sun         Ds  4      ; Average Solar Radiation in
+period
+01D8     Energy      Ds  4      ; Solar energy in period
+01DC     HiRate      Ds  2      ; Hi Rain Rate in period
+01DE     PowerVolt   Ds  2      ; Station Power Voltage at
+archive time
+                                ;  See Appendix D
+;End of Archive Image (1DF).  Size = 40h = 64 Nibbles = 32 Bytes
+
+; previous values registers
+01E0     PrevRun     ds  6      ; Previous Total Wind Run
+01E6     PrevHtDD    ds  6      ; Previous Heating DD
+01EC     PrevEnrg    ds  6      ; Previous Total Solar Energy
+01F2     PrevRain    ds  4      ; Used to archive Previous Rain
+amount.
+
+01FF     WindThresh  ds  1      ; Wind Direction statistics are
+made when the
+                                ; wind speed is greater than
+WindThresh.
+
+G.   Health Station
+Bank 0
+Address Data     Data Size (nibbles)
+000A     BarFlag:    DS  1      ; Indicates the status of the bar
+trend arrows
+         BarSteady     Equ BarFlag.0  ; If BarSteady = 1, then
+Ignore BarRise
+         BarRise       Equ BarFlag.1  ; and BarFall Bits
+         BarFall       Equ BarFlag.2
+
+000B     PwrFlags:   DS  1
+         BattLow       Equ PwrFlags.2  ; 1 = the Battery Voltage
+is low
+         PowLow        Equ PwrFlags.3  ; 1 = the primary power
+voltage is low
+
+000D     OTHIRange:  DS  1      ; Range bits for Outside THI
+         OTHILowFl      Equ OTHIRange.0  ; 1 = Outside Temp < 68
+degrees
+         OTHIHiFl       Equ OTHIRange.1  ; 1 = THI >= 125 degrees
+         HiOTHILowFl    Equ OTHIRange.2  ; 1 = Hi THI Value is
+below range
+         HiOTHIHiFl     Equ OTHIRange.3  ; 1 = Hi THI Value is >=
+125
+
+000E     THSWIRange: DS  1      ; Range bits for Outside THSWI
+         THSWILoFl      Equ THSWIRange.0  ; 1 = Outside Temp < 68
+degrees
+         THSWIHiFl      Equ THSWIRange.1  ; 1 = THSWI >= 125
+degrees
+         HiTHSWILoFl    Equ THSWIRange.2  ; 1 = Hi THSWI Value is
+below range
+         HiTHSWIHiFl    Equ THSWIRange.3  ; 1 = Hi THSWI Value is
+>= 125
+
+000F     ITHIRange:  DS  1      ; Range bits for Inside THI
+         ITHILowFl      Equ ITHIRange.0  ; 1 = Inside Temp < 68
+degrees
+         ITHIHiFl       Equ ITHIRange.1  ; 1 = THI >= 125 degrees
+         HiITHILowFl    Equ ITHIRange.2  ; 1 = Hi THI Value is >=
+125
+         HiITHIHiFl     Equ ITHIRange.3  ; 1 = Hi THI Value is
+below range
+
+0037     LatCode:    DS  1      ; Code for the current Latitude
+zone
+                                ;  See Appendix E
+
+0038     AlarmReg:   DS  5      ; Bit flags for each alarm  See
+Appendix H1
+003D     AOMStat:    DS  1      ; AOM Load Status report  See
+Appendix B
+
+003E     DirFlags:   DS  1
+         BadDirF       Equ DirFlags.2    ; Is current Dir Bad?
+1=bad,0=good
+         BadHiDir      Equ DirFlags.3    ; Is Hi Dir Bad
+1=bad,0=good
+
+004D     Model:      DS  1      ; Weather Station type  See
+Appendix C
+
+0060     SpdDta:     DS  2      ; # of pulses in 2.25 seconds =
+MPH
+0062     SpdHi:      DS  2      ; High Wind speed (MPH)
+0064     SpdHTime:   DS  3      ; Time of High Wind Speed
+0067     HiDir:      DS  1      ; Compass Rose Direction of Hi
+wind speed
+                                ;  0=N, 1=NNE, 2=NE, etc.
+                                ;  See Appendix F
+
+0068     SpdAHi:     DS  2      ; High Wind Speed alarm (MPH)
+006A     SpdCal:     DS  4      ; Wind Speed Calibration Number
+
+008A     DewDta:     DS  3      ; Current Dewpoint Data (Degrees
+F*10)
+008D     DewAHi:     DS  1      ; Dewpoint Alarm is stored here
+
+008E     ChlDta:     DS  3      ; Current Wind Chill Data
+(Degrees F*10)
+0091     ChlLo:      DS  3      ; Low Wind Chill
+0094     ChlLTime:   DS  3      ; Time of Low Wind Chill
+0097     ChlALo:     DS  3      ; Wind Chill Low Alarm Threshold
+009A     ITHIDta:    DS  3      ; Current Inside THI Data
+(Degrees F*10)
+009D     ITHIHi:     DS  3      ; Hi Inside THI
+00A0     ITHIHTime:  DS  3      ; Time of Hi Inside THI
+00A3     ITHIAHi:    DS  3      ; Inside THI Hi Alarm Threshold
+
+00AA     DirDta:     DS  3      ; Current Wind Direction Data (0-
+360)
+
+00AD     SRadDta:    DS  3      ; Current Solar Radiation Data
+                                ;  (Watts per square Meter)
+00B0     SRadHDta:   DS  3      ; Hi Solar Radiation
+00B3     SRadHTim:   DS  3      ; Time of Hi Solar Rad
+
+Bank 1
+Address Data     Data Size (nibbles)
+0100     BarDta:     DS  4      ; Current Barometer Data (Inches
+*1000)
+0118     StnDrd:     DS  4      ; Bar Calibration Offset
+                                ; LCD Display = BarDta - StnDrd
+011C     BarAlm:     DS  2      ; Bar Trend Alarm Threshold
+
+0124     Tp1Dta:     DS  3      ; Current Inside Temperature Data
+0127     Tp1Hi:      DS  3      ; Hi Inside Temperature
+012A     Tp1Lo:      DS  3      ; Low Inside Temperature
+012D     Tp1HTime:   DS  3      ; Time of Hi Inside Temp
+0130     Tp1LTime:   DS  3      ; Time of Low Inside Temp
+0133     Tp1AHi:     DS  3      ; Inside Temp Hi Alarm Threshold
+0136     Tp1ALo:     DS  3      ; Inside Temp Low Alarm Threshold
+0139     Tp1Cal:     DS  3      ; Inside Temp Cal Number
+
+013C     Tp2Dta:     DS  3      ; Current outside Temp
+Data(Degrees F*10)
+013F     Tp2Hi:      DS  3      ; Hi Outside Temp
+0142     Tp2Lo:      DS  3      ; Low Outside Temp
+0145     Tp2HTime:   DS  3      ; Time of Hi Outside Temp
+0148     Tp2LTime:   DS  3      ; Time of Low Outside Temp
+014B     Tp2AHi:     DS  3      ; Outside Temp Hi Alarm Threshold
+014E     Tp2ALo:     DS  3      ; Outside Temp Low Alarm
+Threshold
+0151     Tp2Cal:     DS  3      ; Outside Temp Cal Number
+
+0154     OTHIDta:    DS  3      ; Current Outside THI Data
+(Degrees F*10)
+0157     OTHIHi:     DS  3      ; Hi Outside THI
+015A     OTHIHTime:  DS  3      ; Time of Hi Outside THI
+015D     OTHIAHi:    DS  3      ; Outside THI Hi Alarm Threshold
+
+0160     THSWDta:    DS  3      ; Current Outside THSWI Data
+(Degrees F*10)
+0163     THSWHi:     DS  3      ; Hi THSWI
+0166     THSWHTime:  DS  3      ; Time of Hi THSWI
+0169     THSWAHi:    DS  3      ; THSWI Hi Alarm Threshold
+
+0170     Hm1Dta:     DS  2      ; Current Inside Humidity Data (0-
+100%)
+0172     Hm1Hi:      DS  2      ; Hi Inside Hum Data
+0174     Hm1Lo:      DS  2      ; Low Inside Hum Data
+0176     Hm1HTime:   DS  3      ; Time of Hi Inside Hum
+0179     Hm1LTime:   DS  3      ; Time of Low Inside Hum
+017C     Hm1AHi:     DS  2      ; Inside Hum Hi Alarm Threshold
+017E     Hm1ALo:     DS  2      ; Inside Hum Low Alarm Threshold
+
+0180     Hm2Dta:     DS  2      ; Current Outside Humidity Data
+(0-100%)
+0182     Hm2Hi:      DS  2      ; Hi Outside Hum Data
+0184     Hm2Lo:      DS  2      ; Low Outside Hum Data
+0186     Hm2HTime:   DS  3      ; Time of Hi Outside Hum
+0189     Hm2LTime:   DS  3      ; Time of Low Outside Hum
+018C     Hm2AHi:     DS  2      ; Outside Hum Hi Alarm Threshold
+018E     Hm2ALo:     DS  2      ; Outside Hum Low Alarm Threshold
+0190     Hm2Cal:     DS  2      ; Outside Hum Calibration Number
+
+0198     Time:       DS  6      ; Current Station Time (HH:MM:SS)
+0198     Hour       (DS  2)     ; BCD Hour (00 - 23)
+019A     Minute     (DS  2)     ; BCD Minutes
+019C     Second     (DS  2)     ; BCD Seconds
+
+019E     TimeAlm:    DS  4      ; Station Time Alarm (HH:MM)
+019E     HrAlm      (DS  2)     ; BCD Hour (00 - 23)
+01A0     MinAlm     (DS  2)     ; BCD Minutes
+
+01A2     PerLen:     DS  4      ; Length of Period that tracks
+Total values
+                           ; Low order nibble is in 1/16'ths of a
+day
+01A3     PerDay     (DS  3)     ; Upper 3 nibbles are the number
+of Whole days
+                                ; in the period
+
+01A6     Date:       DS  5      ; Current Station Date (DD:M:YY)
+01A6     Day        (DS  2)     ; BCD Day of the month
+01A8     Month      (DS  1)     ; stored in binary 1-12
+01A9     Year       (DS  2)     ; Year = 1900 + binary
+
+01AB     ACTime:     DS  4      ; AutoClear Time (Same format at
+Time) (HH:MM)
+
+01AF     YRnDta:     DS  4      ; Total Rain Data
+01B3     DRnDta:     DS  3      ; Daily Rain Data
+01B6     DRnAHi:     DS  3      ; Daily Rain Alarm Threshold
+01B9     RnCal:      DS  4      ; Rain Cal Number (Number of
+clicks in 1 inch)
+
+01C0     RateDta:    DS  3      ; Rain Rate in 1/2 seconds per
+click
+01C3     RateHi:     DS  3      ; Hi Rain Rate Data
+01C6     RateHTime:  DS  3      ; Time of Hi Rain Rate
+
+01C9     UVIdxDta:   DS  2      ; Current UV Intensity Data
+(Index*10)
+01CB     UVIdxHDta:  DS  2      ; Hi UV Intensity
+01CD     UVIdxHTim:  DS  3      ; Time of Hi UV Intensity
+01D0     UVIdxHAlm:  DS  2      ; UV Intensity Hi Alarm Threshold
+
+01D2     UVTDose:    DS  4      ; Total UV Dose
+01D6     UVDDose:    DS  3      ; Daily UV Dose
+01D9     UVDHAlm:    DS  3      ; Daily UV Dose Hi Alarm
+
+01DC     UVCal:      DS  2      ; MED's Cal number (x10)
+
+H.   Health Link
+Bank 0
+Address Data     Data Size (nibbles)
+004F     Model:      DS  1      ; Weather Station type  See
+Appendix C
+
+Bank 1
+Address Data     Data Size (nibbles)
+0106     OldPtr      ds  4      ; Points to oldest entry in
+archive memory.
+
+; Sensor image begins here. (10Ah) - (14Fh)
+; Each Field is in full bytes for ease of PC Loop mode
+interpretation
+010A     NewPtr      ds  4      ; Points to next free archive
+memory location.
+010E     SIStatus    ds  2      ; Bar trend and Power flags  See
+Appendix A
+0110     TIn         ds  4      ; Current Inside temperature.
+0114     TAir        ds  4      ; Current Air temperature.
+0118     WSp         ds  2      ; Current wind speed.
+011A     WDir        ds  4      ; Wind direction in degrees.
+011E     Barom       ds  4      ; Current Barometer reading.
+0122     Rate        ds  2      ; Current Rain Rate
+0124     TRain       ds  4      ; Total rainfall.
+0128     Sun         ds  4      ; Current Solar Rad in W/m^2
+012C     HIn         ds  2      ; Current inside humidity.
+012E     Hout        ds  2      ; Current outside humidity.
+0130     UVIdx       ds  2      ; current UV Intensity
+0132     UVDose      ds  4      ; Total UV Dose
+0136     Alarms      ds  6      ; Current Alarm Bits
+; End of sensor image. (13Bh) Size = 32h = 50 nib = 25 bytes
+
+0150     SamplePer   ds  2      ; Sample Period = 256 - "Data"
+seconds
+0152     ArcPeriod   ds  2      ; Archive period in minutes.
+0154     LastArchiveTime  ds  4 ; Time of last archive in minutes
+since midnight
+
+; Accumulation registers.
+0158     WspAccum    ds  4      ; Sum of wind speed samples in
+archive per.
+015C     TinAccum    ds  5      ; Sum of Soil temp samples in
+archive per.
+0161     ToutAccum   ds  5      ; Sum of out temp samples in
+archive per.
+0166     SunAccum    ds  5      ; Sum of Solar Rad samples in
+archive per.
+016B     UVAccum     ds  5      ; Sum of UV Rate samples in
+archive per.
+0178     Samples     ds  2      ; Number of samples taken in
+period.
+
+017C     LnkRnCal    ds  4      ; Link copy of the Station's Rain
+Cal
+
+0180     WDirs       ds 32      ; Histogram of wind directions.
+
+; Archive Image begins here: (1A0h)-(1DFh)
+01A0     ArchiveImage
+01A0     Barom       Ds  4      ; Barometer reading at archive
+time.
+01A4     WspAvg      Ds  2      ; Average wind speed in period.
+01A6     Gust        Ds  2      ; Hi wind speed in period.
+01A8     Wdir        Ds  2 ; Dominant wind direction in archive
+period. (0-15)
+01AA     HiRate      Ds  2      ; Hi Rain Rate in period
+01AC     Rain        Ds  4      ; Rainfall in period.
+01B0     TinAvg      Ds  4      ; Average inside temperature.
+01B4     TOutAvg     Ds  4      ; Average outside temperature.
+01B8     Time        Ds  8      ; Archive entry time and date.
+01C0     THiOut      Ds  4      ; Hi Tout in period.
+01C4     TLowOut     Ds  4      ; Low Tout in period.
+01C8     HIn         Ds  2      ; Inside humidity at archive
+time.
+01CA     Hout        Ds  2      ; Outside humidity at archive
+time.
+01CC     UVIndex     Ds  2      ; Average UV Intensity
+01CE     HHiIdx      ds  2      ; Hi UV Intensity in period
+01D0     UVDose      Ds  4      ; UV Dosage in period
+01D4     Sun         Ds  4      ; Average Solar Radiation in
+period
+01D8     HiSun       Ds  4      ; High Solar Rad in period
+;End of Archive Image (1DB).  Size = 3Ch = 60 Nibbles = 30 Bytes
+
+; Accumulation previous values registers
+01E0     PrevDose    ds 4  Used to archive Previous UV Dose
+amount.
+01F2     PrevRain    ; ds 4  Used to archive Previous Rain
+amount.
+
+01FF     WindThresh  ; ds 1  0-7 Mph for wind direction
+calculations.

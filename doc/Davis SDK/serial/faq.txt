@@ -1,0 +1,402 @@
+                        Programmer's Reference Disk
+                        Frequently Asked Questions
+                             Updated 02-10-96
+
+What do I need to do to talk to my weather station?
+
+     Davis weather stations require a WeatherLink in order to
+communicate. The WeatherLink, in combination with the supplied
+adapters, communicates through an RS-232 serial interface.. You
+must provide the routines to drive the serial port, or use a
+third-party communication library to do it for you. The file
+"techref.txt" describes the commands used to extract data from
+the weather station. . The file "techref.doc" contains the same
+information formatted for MS Word for Windows 6.0. The commands
+used are a combination of ASCII and binary data. Source code
+examples are given in both "C" and Visual Basic.
+
+What is the difference between ASCII and Binary (or hex) data?
+
+     ASCII is an encoding scheme that maps each letter, digit,
+and most punctuation symbols on a standard keyboard into a number
+between 0 and 255 (one byte of data). For example the letter "a"
+is equal to 97 or 0x61; "b" = 98 = 0x62; "A" = 65 = 0x41; "B" =
+66 = 0x42; "1" = 49 = 0x31 "2" = 50 = 0x32; and "+" = 43 = 0x2B.
+     Standard text files (.txt) are ASCII files because when the
+encoding scheme is applied to the data in the file, the result is
+recognizable letters, digits, and punctuation symbols.
+     Binary data, on the other hand, is the actual underling
+number system. Binary data usually does not make any sense when
+treated as if it were ASCII. Hex data refers to binary data
+expressed in hexadecimal notation (base 16). Hex data is
+indicated by the characters "0x" placed in front of the number.
+     As an example, the command for reading the outside
+temperature on the Monitor station can be represented as either
+ASCII or Hex data, but it is most easily understood as a
+combination of the two ("<CR>" is a carriage return character):
+
+ASCII:     "WRDDV"<CR>
+Hex:      0x57, 0x52, 0x44, 0x44, 0x56, 0x0D
+Combined:  "WRD",0x44,0x56,<CR>.
+
+     The description of the "WRD" command is: "WRD n | bank
+address". Further examination of the description reveals that the
+above command will read 4 nibbles (2 bytes) from address 56 hex
+in bank 1 of the weather station's ram.
+
+     All data returned by the WeatherLink is binary data. For
+example if the above command is sent and the temperature was 73.2
+degrees F the following data stream would be returned:
+
+0x06,            (This is ACK to acknowledge the command)
+0xDC,            (The least significant byte of data)
+0x02             (The most significant byte of data)
+
+     The data, in hex, is 0x02DC which is equal to 732 in
+decimal. Since temperatures are stored in tenths of a degree,
+this number should be divided by 10 to get 73.2 degrees F. None
+of the three bytes returned correspond to printable ASCII
+characters.
+
+     It is difficult to use a standard terminal emulation program
+(such as Procomm or the Windows terminal program) for more than
+just verifying the connection. It is possible to create a binary
+download file of the WeatherLink's archive memory with a standard
+terminal program that has the Xmodem file transfer protocol.
+
+Why is the temperature 700 degrees?
+
+     All data and math on the weather station (and link) is done
+with integers (i.e. no fractions). In order for the station to
+display tenths of a degree (for temperatures), or thousandths of
+an inch of mercury (for the barometer), the data stored in memory
+must be divided by 10 (or 1000) using floating point arithmetic.
+Therefore the temperature should be read as 70.0 degrees, not 700
+degrees.
+
+Why doesn't the Barometer data in the LOOP command match what is
+displayed on the station?
+
+     The weather station measures the absolute atmospheric
+pressure. In order to convert this to a Standard Barometric
+pressure, the station subtracts a calibration offset value. This
+is determined by having the user enter the desired Barometric
+reading (derived from some other source i.e. airport, newspaper
+etc.). The station stores the difference between the desired
+reading and the actual reading in the "StnDrd" memory register.
+This calibration number must be subtracted from the current
+Station data and Link data including the sensor interface (LOOP)
+and archived data.
+     Note: since at higher elevations the absolute pressure
+decreases, the barometric pressure is generally larger than the
+atmospheric pressure and since the calibration number is
+subtracted from the data, it is generally a negative number. It
+is 2 bytes long.
+
+     In general, current temperature, current outside humidity,
+and rain displays have a calibration number that needs to be
+taken into account for the LOOP data to match the station's
+displayed value. Please see "Reading Calibrated Data" (section
+VIII-A) in "techref.txt" for more details.
+
+Why isn't there a simple command to get the current wind speed?
+
+     Davis Instruments did not include commands to retrieve
+separate weather data values (such as wind speed, or inside
+temperature) because there are so many different pieces of data
+stored on the weather station, because the newest stations
+(GroWeather, Energy, and Health ) have new features added, and
+because we can't anticipate all the possible desires of
+programmers. The WeatherLink uses a fairly primitive, but very
+flexible, communication protocol. All memory is available for
+examination and modification with a few commands. The LOOP
+command provides compact data packets of the most important data
+values and is the simplest way to get information on the current
+weather conditions.
+
+How often is the data updated?
+
+     Wind speed data on the station is updated every 2 1/4
+seconds on the Monitor, and Wizard stations. On the GroWeather,
+Energy, and Health stations wind speed is updated every 3
+seconds. The wind speed data in the sensor image (and hence the
+LOOP data packets) is updated from the station data at least once
+a second.
+     Wind direction on the weather station is measured
+approximately once a second. These measurements are filtered
+through a low pass filter. The filter has a 2 second time
+constant. The link reads the stations wind direction with the
+same frequency as it reads the wind speed.
+     The rate of update of the other weather variables (inside
+and outside temperature, inside and outside humidity, leaf
+wetness, sun, and UV. Rain is dealt with separately below.)
+depends, in part, on what is being shown on the station's LCD
+display. On the Monitor, Wizard, and Perception stations, the
+sensor from which the displayed data is derived (the primary
+sensor) is read approximately once a second. Other sensors are
+read less frequently: approximately every 20 seconds.
+     If the displayed data does not depend on a sensor (other
+than the anemometer), for example the station time, date, rain,
+wind speed or direction, then all the sensors are read equally
+approximately every 15 seconds.
+     On the GroWeather, Energy, and Health stations the primary
+sensor is read approximately every 6 seconds. Other sensors are
+read approximately every 13 seconds. When there is no primary
+sensor, then all sensors are read approximately every 12 seconds.
+     The Rain value on the station is updated as soon as a rain
+click happens. On the GroWeather, Energy and Health stations the
+rain rate is also updated at the same time.
+     Wind chill, dew point, THI, and THSWI values are
+recalculated whenever one of the sensors that are used in the
+calculation is read. Degree-days, wind run, solar energy, and UV
+dose are calculated every minute. ET is calculated by the
+GroWeather link once an hour.
+     The link updates inside and outside temperatures, rain rate,
+solar rad, and UV intensity from the station data every 10 wind
+speed readings or approximately every 7 seconds. Every time the
+sensor image is sampled the link reads the station's total rain,
+barometer, inside and outside humidity, total wind run, total
+degree days, total ET, solar energy, and leaf wetness. The
+GroWeather, Energy, and Health links also read this data every 16
+seconds in addition to when the sensor image is sampled.
+
+Where is the data I want?
+Which copy should I use?
+
+     There are several places to look to find the information you
+want from the weather station. We will describe them here in
+general, but you must consult the appropriate memory table in
+section IX of "techref.txt" to find the specific address.
+     The first place to look for your data is in the weather
+station processor memory. This is 256 bytes of memory directly
+accessible by the station processor, organized into 2 banks of
+256 nibbles. All the information that is displayed on the
+station's LCD is held in the station's memory. This includes: the
+current value of each sensor, hi and low values of each sensor,
+time and date of each hi or low, calibration numbers, alarm
+settings, calculated data values (dewpoint, wind chill THI etc.),
+and the current station time and date. This information is
+available with the "WRD" & "WWR" commands to read and write data
+to the station processor memory. The GroWeather, Energy, and
+Health stations can also use the "MDMP" command to receive a dump
+of the entire station memory at once.
+     While comprehensive, the station processor memory has the
+important disadvantage of having a slow access speed. When you
+send a "WRD" command to the link, it must pass the command on to
+the station and wait for its reply before sending the data back
+to the PC. The link also has processor memory. The link monitors
+the station's current data values and stores them in its "sensor
+image". It also keeps track of the station's time and date in the
+TimeStamp field of the "archive image". The link processor memory
+is accessed with the "RRD" & "RWD" commands to read and write
+data respectively.
+     There are a few pieces of data that are only found on the
+link. These include:
+  the sample period and archive period registers that control
+     how the data is sampled and archived,
+  the last archive time register that gives the time that the
+     last archive was made (and thus when the next archive will
+     be performed),
+  the archive memory pointers that indicate where in the archive
+     memory the next archive record will go and how full the
+     archive memory is,
+  the previous data registers that hold the value of
+     accumulating data (such as rain or wind run) at the
+     beginning of the current archive period,
+  and the hi and low outside temperature archive fields that
+     show the highest and lowest temperatures recorded in the
+     current archive period.
+     The link does not track "derived" or "calculated" data (i.e.
+dewpoint, wind chill, THI etc.). nor does it track hi and low
+values, except for outside temperature during the current archive
+period.
+     If you want a quick look at the current values, the LOOP
+command sends copies of the sensor image to the PC. See "Using
+the LOOP command" (section VIII-B) in "techref.txt" for more
+details.
+     Finally, the archive memory is a separate 32K storage buffer
+that holds the archived data. This data is organized into equal
+sized archive entries with the same format as the "archive image"
+in the link processor memory. The "SRD" & "SWR" commands are used
+to read and write parts of the archive memory. The "DMP" command
+will download the entire archive memory (32K) using the Xmodem
+protocol.
+     On the GroWeather, Energy, and Health links, the last 256
+bytes of the archive memory (addresses 0x7F00 to 0x7FFF), are
+used to record the memory image from an MDMP command before
+sending it on the computer and is not available for normal
+archive purposes.
+
+How do I get a snapshot of the station memory?
+
+     On the GroWeather, Energy, and Health stations, the MDMP
+command will return a CRC checked block of data that contains an
+image of the entire station memory. It is very useful any time
+you want to examine several station memory locations at once. For
+instance, looking at all the Hi/Lows or all the Alarm thresholds.
+See "Using the MDMP command" (section VIII-C) in techref.txt.
+     There is no easy way to get a snapshot of the Link memory or
+the memory of the Monitor, Wizard, or Perception. You could send
+a series of WRD or RRD command to scan the full memory space, but
+this will not generate an image of simultaneous data, and would
+take a fairly large amount of time to accomplish.
+
+How can I make my own "Bulletin" (Real-time display of the weather)?
+
+     There are two separate parts of the bulletin display as
+implemented in the PC Link program. One part is the continuous
+display of the current weather conditions. The second is keeping
+track of hi and low values as they occur. These are two somewhat
+separate tasks. The hi and low tracking is optional.
+     If hi and low tracking is to be done, you may want to
+retrieve the hi and low values recorded on the station. For the
+Monitor, Wizard, and Perception stations, you will need to issue
+separate WRD commands for each hi, hi time, hi date, low, low
+time, and low date that you wish to track. On the GroWeather,
+Energy, and Health stations, the MDMP command will retrieve a
+copy of the entire station memory from which you may extract the
+desired information.
+     To begin the real-time information stream, issue a LOOP
+command for one packet. (The number of packets requested in one
+command can be increased as you become more confident in your
+programming, but it involves extra work to count the number of
+packets received) The first character received is <ACK>
+acknowledging the LOOP command, then a byte containing 0x01 (the
+packet header byte). If either of these bytes are not correct,
+then there has been some sort of error. Next comes the data and
+CRC checksum bytes. These bytes should be read into a buffer and
+CRC checked (see below).
+     After CRC checking, the data is ready for extraction. The
+description of the LOOP command gives the format of the LOOP data
+packets (see section VI of "techref.txt"). This information is
+also found in the description of the sensor image in the
+appropriate link memory address table (see section IX of
+"techref.txt"). "Using the LOOP command" (section VIII-B) in
+"techref.txt" contains sample code to extract the data from a
+buffer containing a LOOP packet.
+     The data in the LOOP packet is only the current data
+directly measured by sensors. If you would like to display
+"derived" or "calculated" values (i.e. dewpoint, wind chill, THI
+etc.) you should examine "Calculated Data values" (section VIII-
+E) in "techref.txt" for instructions on how to calculate these
+values.
+     You should now have at your disposal the current values of
+the variables you want to display. If you are tracking hi and low
+values, test the current data against your previously recorded
+hi/low values and adjust if necessary. After displaying the data,
+issue another LOOP command and process the returned data.
+     It is a good idea to have some way to monitor the status and
+reliability of the communication channel. If there is an error or
+a time-out condition, you can attempt to restart the data stream
+with the following steps: first stop the stream of LOOP data by
+sending another command (like a read of Link memory). Then wait a
+1 or 2 seconds to let the serial port catch up. Then clear your
+serial port's receive buffer and send the LOOP command again.
+This is especially useful when you are requesting more than one
+packet at a time, and a character is dropped in the middle of a
+packet.
+
+How do I use CRC checking?
+
+     You have two choices. The simplest is to ignore the CRC
+information. Read the CRC bytes off the serial port and throw
+them away. The problem with this approach is that you are giving
+up the opportunity to double check the reliability of the data
+being sent to you. Presumably you would like to know if your
+communication channel is not working correctly.
+     In order to take advantage of CRC checking you will need to
+compute a CRC checksum on the data as it arrives. When the Link's
+CRC checksum is sent, continue processing the CRC checksum. If
+the final resulting checksum is zero, then there was not a CRC
+error in the packet you just received and you can be pretty sure
+that the data received is the same as the data sent. See the code
+for the "fill_crc_buffer()" function in section IV  and "CRC
+Checking" (section VIII-F) in "techref.txt" for more details.
+
+I want to track Degree-days, but my Monitor doesn't have this
+data. Is there any way to get this data with what I have?
+
+     There are several features found on our newest weather
+stations (GroWeather, Energy, and Health) that, while they are
+not available directly on the earlier stations, can be calculated
+by a PC from data available in the archived data. These include
+Degree-days, Temperature-Humidity Index, and Wind Run. Please see
+"Calculated Data Values" (section VIII-E) in "techref.txt" for
+more details.
+
+Why is the maximum wind direction 15 degrees?
+
+     The wind direction data stored in the archive indicates the
+sector from which the most wind direction samples came from
+during the archive period. These sectors correspond to the 16
+direction arrows on the station compass rose: 0 = North, 1 =
+North North East, 2 = North East, etc. On the GroWeather, Energy,
+and Health stations, the direction of the hi wind speed is also
+stored in this same format. See appendix F "Wind Direction Sector
+Codes" in "appendix.txt" for more details.
+     The wind direction in the sensor image (and LOOP packets) is
+in degrees (0 - 359).
+
+How are wind chill, dew point and THI calculated?
+
+     The section "Calculated Data values" (section VIII-E) in
+"techref.txt" contains a description of how to calculate some of
+the "derived" data values found on the station.
+
+What is the story with "Rev E" or "Wireless Ready" WeatherLinks?
+
+     A new version of the WeatherLink hardware module was
+developed in order to provide more reliable data communication
+over potentially noisier communication channels (e.g. radios.).
+Part of the difference involves changes to the WeatherLink
+communication protocol. Specifically, every command sent to the
+link must also include a CRC code so that the link can verify
+that the command was transmitted correctly. Otherwise, the basic
+commands and memory addresses are the same as the corresponding
+Rev D WeatherLink.
+     Because of this extra CRC code, software written for earlier
+versions of the WeatherLink are incompatible with the Rev E
+version.
+     At the present time, Davis Instruments has only upgraded the
+GroWeather software to support Rev E links. This is the only
+model of WeatherLink that Davis currently ships as a Rev E. Rev E
+versions of the Energy and Health EnviroMonitor WeatherLink
+hardware are available through Davis' technical support, which
+can be reached via email at support@davisnet.com.
+     There are two approaches to programming the Rev E link:
+compute CRC codes for each command, or set the WeatherLink into
+"Rev D emulation mode".
+     The sections entitled "Link Types and Revision Levels"
+(section V) and "CRC Checking" (section VIII-F) in "techref.txt"
+contain instructions on how to compute and transmit the necessary
+command CRC codes, and implement the other changes in the
+communication protocol.
+     The commands "CRC0" and "CRC1" control the setting of the
+"Rev D emulation mode". When the "Rev D emulation mode" is turned
+on, the WeatherLink uses the identical communication protocol as
+the Rev D link. The one thing to keep in mind, however, is that
+if the station reboots, it will be as a Rev E link with the new
+protocol until the "CRC0" command is issued.
+
+Why can't I get the "CRC0" command to work?
+Why can't I get the Rev E WeatherLink to go into "Rev D emulation
+mode"?
+
+     In order for the "CRC0" command to be recognized (or the
+"CRC1" command), it must be sent using the active communication
+protocol. The new communication protocol doesn't take effect
+until AFTER the command is received and verified. This usually
+means that you need to send the proper CRC code in addition to
+the command string and return character. The necessary CRC for
+the "CRC0" command has been precomputed and is given in the
+"techref.txt" file. It consists of the two bytes (in decimal): 44
+& 247 sent in this order. Also note that the fourth character of
+the command is a zero character, not a capital 'o'.
+
+Can I customize the WeatherLink's powersaving operation on a Rev E Link?
+
+     No. The built-in powersaving mode operation is not software
+configurable. If you require a different or more flexible
+schedule than the one provided by the Link, you must purchase the
+Timer option.
+
