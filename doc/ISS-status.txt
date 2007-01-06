@@ -1,0 +1,20 @@
+Hi Tom,
+ 
+Byte 86 will contain 8 bits obviously 
+(for each of the eight possible transmitter IDs). 
+Each bit will be represented by a 0 or 1 depending 
+on whether or not the battery voltage is within the 
+threshold value. So, I suspect that bit 0 will 
+represent ID1, bit 1 will represent ID2, etc..
+ 
+The battery threshold for the Vantage Pro I ISS is 2.7v.
+ 
+I hope that this information is helpful, let me know if 
+you need any additional assistance.
+ 
+Best Regards,
+
+Bob Fischer
+Davis Instruments
+Technical Support
+510-732-7814 

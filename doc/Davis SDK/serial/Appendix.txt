@@ -1,0 +1,384 @@
+                         Appendix A
+
+                 Barometer And Power Status Bits
+
+
+     The GroWeather, Energy, and Health systems all include bit-
+mapped flags that indicate the status of the Bar Trend Arrows and
+the Power Level Status located both on the station, and in the
+sensor image. The address on all three links is 0x10E (The start
+of the sensor image) and is 2 nibbles in length. This value is
+updated at least every 16 seconds and at the time the sensor
+image is sampled. Please see the appropriate memory map if you
+would like to access the copy on the station since it is at
+different locations on different stations.
+
+     The Monitor, and Perception stations have the Barometer
+trend information available on the station only.
+
+     The Bit numbers given below refer to the one byte value
+found in the sensor image.
+
+
+         Bit #  Bit Name        Bit #  Bit Name
+          0     Bar Steady       4     ---------
+          1     Bar Rising       5     ---------
+          2     Bar Falling      6     Battery Low
+          3     ----------       7     Primary Power
+                                       Low
+
+     If the Bar Steady bit is set, ignore the value of the Bar
+Rising and Bar Falling bits.
+
+     If the Battery Low bit is set, then the voltage on the
+backup battery input is less than 7.5 volts, If the Primary Power
+Low bit is set, then the voltage on the primary power input is
+less than 9.3 volts. Note that this voltage is less than the
+range used by the Primary Power Voltage Codes, and that the
+station will run with input voltages as low as 6 volts.
+
+
+                         Appendix B
+
+            Control Module communication status codes
+
+     The current Control Module communication status is based on
+statistics measured over the preceding minute. Two values are
+accumulated: the number of unsuccessful loads, and the number of
+unsuccessful loads that were preceded by 2 unsuccessful loads.
+When the second condition is true, the CM-OK light times out.
+Each minute, a status code is determined from the two counts by
+looking up in the following table. The resulting code is the
+higher of the two codes calculated from each value separately.
+
+     The count numbers are based upon 3 seconds between load
+attempts which gives us approximately 20 attempted loads per
+minute.
+
+
+                                        # Load    # Consecutive
+   Code  Condition                      errors       errors
+    0    Excellent - No errors             0            0
+    1    OK - intermittent errors        1-4            0
+    2    Bad - errors more common        5-9          1-4
+    3    Very Bad - errors very common  10-14         5-9
+    4    Not Connected - 3/4+ errors      15+          10+
+
+
+                          Appendix C
+
+                        Model Numbers
+
+
+     The Davis line of weather stations contain a one nibble
+model number to help determine what kind of station you are
+connected to. This code is found at address 0x04D. The
+GroWeather, Energy and Health links will mirror the station's
+model number at the same address, while the Monitor, Wizard, and
+Perception links have the value 0xF
+
+            Model #  Model Name  Model #  Model Name
+              0      Wizard III    8      ----
+              1      Wizard II     9      ----
+              2      Monitor       A      ----
+              3      Perception    B      ----
+              4      GroWeather    C      ----
+              5      Energy        D      ----
+              6      Health        E      ----
+              7      ----          F      Old Link
+
+
+
+                           Appendix D
+
+                       Power Voltage Codes
+
+
+     In the GroWeather and Energy systems, the primary power
+voltage is made available in the station processor memory and in
+the archive image (and archive records) to evaluate the
+performance of solar powered stations. The current value is
+located at address 0x1DD on both stations in a one nibble field.
+The link will contain the value at the most recent archive
+interval at location 0x1DE in a 2 nibble field which may be
+easier to access.
+     The voltage range covered is 10.25-13.75 volts in 1/4 volt
+increments. In the following chart, Range indicates the voltage
+range assigned the given code Value , Voltage gives the voltage
+value that Davis' software reports for the given code Value.
+
+   Value Range        Voltage    Value Range        Voltage
+   0     0-10.24      <10.25 V   8     12.00-12.24   12.00 V
+   1     10.25-10.49   10.25 V   9     12.25-12.49   12.25 V
+   2     10.50-10.74   10.50 V   A     12.50-12.74   12.50 V
+   3     10.75-10.99   10.75 V   B     12.75-12.99   12.75 V
+   4     11.00-11.24   11.00 V   C     13.00-13.24   13.00 V
+   5     11.25-11.49   11.25 V   D     13.25-13.49   13.25 V
+   6     11.50-11.74   11.50 V   E     13.50-13.74   13.50 V
+   7     11.75-11.99   11.75 V   F     13.75--      >13.75 V
+
+
+
+                         Appendix E
+
+                      THSWI Latitude Codes
+
+     The Health station uses the approximate latitude to estimate
+the height of the sun near noon for each month. This values
+influences how the solar rad readings affect the Temperature-
+Humidity-Sun-Wind Index. The number in the Latitude Code column
+is the value stored on the station. The Latitude Display column
+indicates what the LCD displays when setting the Latitude Cal
+number. The Latitude Range is the range of latitudes that should
+use this latitude code.
+
+                Latitude Latitude    Latitude
+                  Code   Display      Range
+                    0     -55      90 S - 50S
+                    1     -45      50 S - 42 S
+                    2     -40      42 S - 37 S
+                    3     -35      37 S - 32 S
+                    4     -30      32 S - 27 S
+                    5     -25      27 S - 22 S
+                    6       0      22 S - 22 N
+                    7     +25      22 N - 27 N
+                    8      30      27 N - 32 N
+                    9      35      32 N - 37 N
+                   10      40      37 N - 42 N
+                   11      45      42 N - 47 N
+                   12      50      47 N - 52 N
+                   13      55      52 N - 57 N
+                   14      60      57 N - 65 N
+                   15      70      65 N - 90 N
+
+
+
+                         Appendix F
+
+                   Wind Direction Sector Codes
+
+     When the WeatherLink reports the prevailing wind direction
+in the archive, and when the direction of the hi wind speed is
+reported on the GroWeather, Energy, and Health stations, it is
+reported as a number between 0 and 15. These correspond to the 16
+compass rose directions. The compass points are numbered
+clockwise starting with North.
+
+       Dir Code   Direction     Dir Code   Direction
+          0           N            8       S
+          1         NNE            9     SSW
+          2          NE            10     SW
+          3         ENE            11    WSW
+          4           E            12      W
+          5         ESE            13    WNW
+          6          SE            14     NW
+          7         SSE            15    NNW
+
+
+     If there is some reason that the wind direction data should
+be ignored (i.e. the anemometer is broken, disconnected, or there
+wasn't any wind during the archive interval), then the archived
+data will have the value 255 instead of a number from the above
+table. To check the validity of the hi wind speed direction on
+the GroWeather, Energy and Health stations, you will need to
+check the "BadHiDir" bit in the "DirFlags" register. If this bit
+is 1, then ignore the value of the "HiDir" register.
+
+
+                         Appendix G1
+
+            Alarm Bit Definitions for the GroWeather
+
+     These tables list the alarm bits for the GroWeather. There
+are 2 different sets of bit assignments. One is the set available
+on the Link in the sensor image. The second set is the bits sent
+to the control module:
+
+                      Alarm bit definitions
+   Bit    Alarm          Bit    Alarm           Bit     Alarm
+   Number Function       Number Function        Number  Function
+   0      Time           8      Soil Temp - Low 16      Hum - Low
+   1      Daily ET       9      Soil Temp - Hi  17      Hum - Hi
+   2      Dew Point      10     User 1          18      Not Used
+   3      Total ET       11     Temp-Hum Index  19      Reserved
+
+   4      Barometer      12     Wind Chill      20      CM Status
+   5   Total Degree Days 13     Wind Speed      21      CM Status
+   6      Air Temp - Low 14     User 2          22      CM Status
+   7      Air Temp - Hi  15     Daily Rain      23      CM Status
+
+
+               Alarm Output module bit definitions
+
+           Bit    Alarm Output     Bit    Alarm Output
+           Number Module Function  Number Module Function
+           1      Daily Rain       9      Air Temp - Hi
+           2      User 2           10     Air Temp - Low
+           3      Wind Speed       11     Hum - Hi
+           4      Wind Chill       12     Hum - Low
+
+           5      Temp-Hum Index   13     Reserved
+           6      User 1           14     Dew Point
+           7      Soil Temp - Hi   15     Daily ET
+           8      Soil Temp - Low  16     Time
+
+                             Notes:
+     User 1 and User 2 are two user controllable bits that can be
+       set through the PC.
+     CM Status is a one nibble code that describes the status of
+       the communication link between the control module and the
+       weather station.
+     Reserved is a bit reserved by Davis Instruments for future
+       use. (for example to control a radio transmitter or solar
+       powered battery charger)
+
+    The Alarm Output Module assignments given above match the pin
+numbers on the AOM board. Besides numbering from 1 instead of 0,
+the order has been reversed, since the first bit sent ends up in
+the high order position of the AOM's shift register.
+
+
+                         Appendix G2
+
+                       ET Error Flag bits
+
+     The upper byte of the Archive Image ET field contains 8
+Error flags that show the quality of the ET Calculation. There
+are 2 types of bits: the first 5 bits correspond to the various
+sensors, the remaining 3 bits indicate whether the station was
+able to compute ET with the available sensors. The rad and wind
+terms are components of the ET calculation that reflect the part
+of the ET generated by solar radiation and wind respectively. If
+neither of these terms can be calculated, then the "Bad ET" bit
+is set.
+     The purpose of these bits is to record what caused an ET
+calculation to fail. Also, if a partial calculation is possible,
+it is done and flagged with the appropriate bits.
+     The Bits are as follows:
+
+Bit #  Bit Name   Type of Error  Bit # Bit Name      Type of Error
+ 0     Bad Wind   Sensor          4    Bad Bar       Sensor
+ 1     Bad Temp   Sensor          5    Bad Rad Term  Computation
+ 2     Bad Sun    Sensor          6    Bad Wind Term Computation
+ 3     Bad Hum    Sensor          7    Bad ET        Computation
+
+
+                         Appendix G3
+
+        Leaf Wetness Data/Status byte in the LOOP packet
+
+     The Leaf Wetness Data/Status byte in the GroWeather's LOOP
+data packet contains both the current Leaf Wetness Data and
+whether or not Leaf Wetness is enabled on the console. If the
+Leaf Wetness sensor is enabled, the lower nibble of the Data/Status
+byte contains the current data (0-15).
+     The value of bit 6 tells whether the Leaf Wetness sensor is
+enabled. This bit can be tested by masking (bitwise AND) the
+Data/Status byte with 0x40. If the result is non-zero (0x40),
+then the Leaf Wetness sensor is enabled. If the result is zero, then
+the Leaf Wetness sensor is disabled and Soil Temperature is enabled.
+
+
+                         Appendix E1
+
+       Alarm Bit Definitions for the Energy EnviroMonitor
+
+     These tables list the alarm bits for the Energy
+EnviroMonitor. There are 2 different sets of bit assignments. One
+is the set available on the Link in the sensor image. The second
+set is the bits sent to the control module:
+
+                      Alarm bit definitions
+
+   Bit    Alarm           Bit     Alarm       Bit     Alarm
+   Number Function        Number  Function    Number  Function
+   0      Time            8       Wind Chill  16      Not Used
+   1      Temp-Hum Index  9       Wind Speed  17      Not Used
+   2      Dew Point       10      User 1      18      Not Used
+   3      Reserved        11      Daily Rain  19      Not Used
+
+   4      Air Temp - Low  12      Not Used    20      CM Status
+   5      Air Temp - Hi   13      Not Used    21      CM Status
+   6      Hum - Low       14      User 2      22      CM Status
+   7      Hum - Hi        15      Barometer   23      CM Status
+
+               Alarm Output module bit definitions
+           Bit    Alarm Output     Bit    Alarm Output
+           Number Module Function  Number Module Function
+           1      Barometer        9      Hum - Hi
+           2      User 2           10     Hum - Low
+           3      Not Used         11     Air Temp - Hi
+           4      Not Used         12     Air Temp - Low
+
+           5      Daily Rain       13     Reserved
+           6      User 1           14     Dew Point
+           7      Wind Speed       15     Temp-Hum Index
+           8      Wind Chill       16     Time
+
+                             Notes:
+     User 1 and User 2 are two user controllable bits that can be
+       set through the PC.
+     CM Status is a one nibble code that describes the status of
+       the communication link between the control module and the
+       weather station.
+     Reserved is a bit reserved by Davis Instruments for future
+       use. (for example to control a radio transmitter or solar
+       powered battery charger)
+
+    The Alarm Output Module assignments given above match the pin
+numbers on the AOM board. Besides numbering from 1 instead of 0,
+the order has been reversed, since the first bit sent ends up in
+the high order position of the AOM's shift register.
+
+
+                         Appendix H1
+
+       Alarm Bit Definitions for the Health EnviroMonitor
+
+     These tables list the alarm bits for the Health EnviroMonitor.
+There are 2 different sets of bit assignments. One is the set
+available on the Link in the sensor image. The second set is the
+bits sent to the control module:
+
+                      Alarm bit definitions
+
+ Bit    Alarm           Bit #  Alarm               Bit #  Alarm
+ Number Function        Number Function            Number Function
+
+ 0      Air Temp - Low  8      Time                16     Barometer
+ 1      Air Temp - Hi   9      Out Temp-Hum Index  17     UV Dose
+ 2      In Temp - Low   10     Dew Point           18     Wind Chill
+ 3      In Temp - Hi    11     Temp-Hum-Sun-Wind   19     Wind Speed
+                                   Index
+
+ 4      Out Hum - Low   12     Daily Rain          20     CM Status
+ 5      Out Hum - Hi    13     In Temp-Hum Index   21     CM Status
+ 6      In Hum - Low    14     Not Used            22     CM Status
+ 7      In Hum - Hi     15     UV Index            23     CM Status
+
+               Alarm Output module bit definitions
+          Bit    Alarm Output        Bit    Alarm Output
+          Number Module Function     Number Module Function
+          1      UV Index Hi         9      In Hum - Hi
+          2      Wind Chill Low      10     In Hum - Low
+          3      In Temp-Hum Index   11     Out Hum - Hi
+          4      Daily Rain          12     Out Hum - Low
+
+          5      Temp-Hum-Sun-Wind   13     In Temp - Hi
+                 Index
+          6      Wind Speed Hi       14     In Temp - Low
+          7      Out Temp-Hum Index  15     Air Temp - Hi
+          8      UV Dose             16     Air Temp - Low
+
+                             Notes:
+     User 1, User 2, and Reserved bits are not available on the
+       Health Station
+     CM Status is a one nibble code that describes the status of
+       the communication link between the control module and the
+       weather station.
+
+    The Alarm Output Module assignments given above match the pin
+numbers on the AOM board. Besides numbering from 1 instead of 0,
+the order has been reversed, since the first bit sent ends up in the
+high order position of the AOM's shift register.
+

@@ -1,0 +1,174 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+<style type="text/css">
+<!--
+  .rollsmall { font-family:Arial; font-size:9pt; font-style:normal; font-weight:normal; text-decoration:none; text-transform:none; color:yellow; }
+  A.rollsmall:hover { text-decoration:underline; color:red; }
+
+  .rolllarge { font-family:Arial; font-size:11pt; font-style:normal; font-weight:normal; text-decoration:none; text-transform:none; color:yellow; }
+  A.rolllarge:hover { text-decoration:underline; color:red; }
+
+--></style>
+<title>Davis Instruments Corp. Software Development - WeatherLink Serial Communication
+Reference</title>
+</head>
+
+<body topmargin="0" leftmargin="0" bgcolor="#FFFFFF" link="#00A400" vlink="#EE9BF0">
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td width="199" bgcolor="#000066"><img src="logo.gif" alt="Software Development"
+    width="199" height="50"></td>
+    <td bgcolor="#000066" valign="middle" align="center"><font
+    face="Arial, Veranda, Helvetica" color="#FFFF99"><strong><big><big>Weather Link Serial
+    Communication Reference</big></big></strong></font></td>
+    <td width="25" bgcolor="#000066" valign="middle" align="right"><img
+    src="endcap.gif" alt="endcap.gif (977 bytes)" width="20" height="50"></td>
+  </tr>
+</table>
+
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="130" valign="top" align="left" bgcolor="#000066"><table border="0" width="159"
+    bgcolor="#000066">
+      <tr>
+        <td width="129"><small><font color="#FFFFFF" face="Arial">Click on the items below to open
+        a page</font></small><hr>
+        <p><img src="yellow_bullet.gif" alt="yellow_bullet.gif (837 bytes)" width="15" height="12"><font
+        face="Arial" color="#FFFF80"><strong>Additional Information</strong><br>
+        <a href="license.htm">License Agreement</a><br>
+        </font><br>
+        <img src="yellow_bullet.gif" alt="yellow_bullet.gif (837 bytes)" width="15" height="12"><font
+        face="Arial" color="#FFFF80"><strong>On the Internet</strong><br>
+        <a href="http://www.davisnet.com/">Davis Home Page</a><br>
+        <a href="http://www.davisnet.com/support/">Product Support </a><br>
+        <a href="http://www.davisnet.com/software/">Additional Software</a><br>
+        </font></td>
+      </tr>
+    </table>
+    </td>
+    <td valign="top" align="left"><table border="0" width="100%" cellspacing="0"
+    cellpadding="0">
+      <tr>
+        <td width="25" bgcolor="#FFFFFF" height="25" valign="top" align="left"><img
+        src="cornner.gif" alt="cornner.gif (923 bytes)" width="25" height="25"></td>
+        <td width="50%" valign="top" align="center"></td>
+      </tr>
+    </table>
+    <table border="0" width="100%" bgcolor="#FFFFFF">
+      <tr>
+        <td width="100%"><p align="left"><em><font face="Times New Roman"><big><strong>Sample Code
+        and Programming Reference</strong></big></font></em></p>
+        <p><font face="Arial">Updated: January, 22, 1999</font></p>
+        <p><font face="Arial">Documentation is provided free of charge and &quot;as is.&quot;
+        Davis Instruments will provide support via e-mail at <strong><a
+        href="mailto:support@davisnet.com">support@davisnet.com</a></strong>. We will not answer
+        questions over the phone. If you have a question, please consult the files contained in
+        this package, especially the frequently asked questions in the file &quot;faq.txt&quot;.
+        If you cannot find answers to your question in &quot;faq.txt,&quot; check the web site for
+        an updated version. If you still cannot find answer(s), you may submit your questions by
+        e-mail. Please explain in as much detail as you can what you are having difficulty with
+        and if possible include a copy of the source code section that is in question. We will do
+        our best to answer your questions within a week. If the questions you have are lengthy or
+        complicated, Davis Instruments is available for PAID support in one hour segments at
+        $100.00 per hour. </font></p>
+        <p><font face="Arial">This documentation provides the information and materials needed to
+        write custom applications for Davis weather stations and the WeatherLink. The current
+        version of this documentation supports all of the weather stations manufactured by Davis
+        as of 1/98 (these are: the Monitor II, Wizard II &amp; III, Perception II, GroWeather,
+        Energy, and Health stations). </font></p>
+        <p><font face="Arial">Documentation is provided in both MS-Word 6.0 (.doc) and ASCII
+        (.txt) file formats. The information contained in one format of a particular file is
+        identical to the information in the other format. Please read the Technical Reference
+        (&quot;techref.txt&quot; or &quot;techref.doc&quot;) file before doing any programming.
+        The Technical Reference describes each command the WeatherLink data logger understands,
+        which are the same commands our WeatherLink Software uses. It also contains many tips and
+        examples of how to use the commands effectively. Included are a series of &quot;C&quot;
+        and Basic source code examples using the WeatherLink commands. We've included source code
+        we have used to exercise the interface. With careful study it should answer questions the
+        technical reference does not. The included source code makes calls to the commercial
+        package &quot;C ASYNCH MANAGER 5.0&quot;, and can not be used to make an .exe file without
+        this library. </font></p>
+        <p><font face="Arial">If you are programming in BASIC, look at the Visual Basic code (16
+        bit) in &quot;comm.bas&quot; which illustrates how to use the &quot;LOOP&quot; command. We
+        suggest if you are after real-time weather data that you use the &quot;LOOP&quot; command.</font></p>
+        <p><font face="Arial">The commands outlined are a combination of ASCII and binary data,
+        can be sent out any RS232 serial port and used to extract from the weather station any
+        data that the station displays (current conditions, highs, lows, etc.) as well as archive
+        data from the WeatherLink.</font></p>
+        <p><font face="Arial">NOTE: Davis Instruments is not responsible for any damages resulting
+        from use or misuse of the information on this disk. </font></p>
+        <hr>
+        <p><big><strong><font face="Arial">What will this disk do for me? </font></strong></big></p>
+        <p><font face="Arial">This library contains the necessary information to enable a
+        programmer to write custom programs using Davis weather stations and the WeatherLink. This
+        consists of libraries documenting commands, source code example.</font></p>
+        <hr>
+        <p><font face="Arial"><strong><big>What does this disk contain? </big></strong></font></p>
+        <p><font face="Arial">readme.htm - This file contains an introduction and explanation of
+        the contents and organization of the Serial Communications Reference. The contents are the
+        same as the contents of this page. </font></p>
+        <p><font face="Arial">techref.txt - This file contains a technical description of the
+        RS232 interface. It describes the primitive commands upon which all higher level
+        functionality must be built. It also contains may examples of &quot;C&quot; code fragments
+        to illustrate how the commands are used. In addition, this file contains tables of the
+        station and link memory addresses. techref.doc - MS Word version of techref.txt </font></p>
+        <p><font face="Arial">appendix.txt - This file contains descriptions of coded numerical
+        and bit-mapped values. appendix.doc - MS Word version of appendix.txt </font></p>
+        <p><font face="Arial">faq.txt - This file contains short answers to may commonly asked
+        questions. faq.doc - MS Word version of faq.txt </font></p>
+        <p><font face="Arial">database.txt - This file contains a description of the database file
+        formats created by the PC Link, GroWeather WinLink, Energy WinLink, and Health WinLink
+        software sold by Davis Instruments. database.doc - MS Word version of database.txt </font></p>
+        <p><font face="Arial">commands.c - This source was included to give you a source code
+        reference of the commands in action. </font></p>
+        <p><font face="Arial">serial.c - Example &quot;C&quot; interface to the chip. </font></p>
+        <p><font face="Arial">serial.h - Header file for serial.c functions. </font></p>
+        <p><font face="Arial">ascii.c - Converts a binary weather data file to ascii form. </font></p>
+        <p><font face="Arial">ccitt.h - Tables used for the CRC checksum calculation. </font></p>
+        <p><font face="Arial">thitable.h - A table for calculating Temperature- Humidity Index
+        from temperature and humidity data. </font></p>
+        <p><font face="Arial">For Visual Basic Programmer's look at the source code in COMM.BAS
+        which illustrates how to use the LOOP command and decode the data packet sent back from
+        the weather station. </font></p>
+        <p><font face="Arial">COMM.BAS - BASIC source code using loop command. Visual Basic
+        programmers should look at the source code in COMM.BAS which illustrates how to use the
+        LOOP command and how to decode the data packet sent back from the weather station.</font><ul
+        TYPE="DISC">
+          <li>CRC.DAT - Data file with tables for CRC calculation. </li>
+          <li>FORM1.FRM - Project file. </li>
+          <li>FORM1.FRX - Project file. </li>
+          <li>VB_LINK.MAK - Make file for VB_LINK.EXE. </li>
+          <li>VB_LINK.EXE - Compiled version of COMM.BAS. </li>
+        </ul>
+        </td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+</table>
+
+<table border="0" width="100%" bgcolor="#000066" cellspacing="0">
+  <tr>
+    <td width="100%"><div align="center"><center><table border="0" width="550">
+      <tr>
+        <td width="100%" valign="top" align="center"><hr width="550" size="3">
+        <p><font face="Arial" color="#FFFF00"><small>Information contained here is provided
+        &quot;as is&quot; without warranty, expressed or implied. Read the <a href="license.htm">license
+        agreement</a> for more information.</small></font><br>
+        <strong><font size="1" face="Arial" color="#FFFF00">©1999 Davis Instruments Corp., All
+        Rights Reserved.</font></strong></td>
+      </tr>
+    </table>
+    </center></div><p align="center"><font face="Arial" color="#FFFF00"><small><br>
+    </small></font></p>
+    <p align="center">&nbsp;</p>
+    <p align="center">&nbsp;</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+</body>
+</html>

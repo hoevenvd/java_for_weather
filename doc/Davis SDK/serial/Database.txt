@@ -1,0 +1,443 @@
+  Database File formats for Davis Instruments Software packages
+
+     This file contains the information about the format of the database
+files for the current Davis Instruments software packages: PCLink 3.01,
+GroWeatherLink 1.0, Energy WeatherLink 1.0, and Health WeatherLink 1.0.
+This information is taken from the readme files included with the
+software.
+
+PC Link 3.01 Data File Format
+
+Data file names.
+
+     Each PCLink data file contains data for one month. Data file
+names have the following format: YYYY-MM.EXT where YYYY represents
+the year (1995 or 2025, for example) and MM represents the month
+(01 = January, ... 12 = December) that the data file contains data for.
+The file extension is derived from the first 3 letters/digits of the
+station directory.
+
+Data file format
+
+     The data file consists of a header block, and a list of data
+records. The header block contains information about the size of the
+record list and indices for locating the records for each day.
+
+// a header_block is written to the beginning
+//      of each monthly data file to locate the
+//      beginning of each day's data
+#define MAX_DAYS_IN_MONTH (31)
+
+struct header_block
+{
+   char idCode[16];  // must be "WDAT1.0\0\0\0\0\0\0\0\01\0"
+               // Last 2 bytes contain the file version # (1.0)
+                  (NOT pclink version # !) ^^^^
+               // in binary
+
+   int num_days;     // in month
+   long tot_recs;    // in file
+   index_records Days[MAX_DAYS_IN_MONTH];
+                     // array of index records for each day in month
+};
+
+// an index_record holds the index info for one day.
+
+struct index_records
+{
+   int num_recs;     // number of records in this day
+   long Index;       // of first record for this day
+};
+
+// After the header block, The file consists of a list of weatherData
+//    records with index numbers starting from 0.
+
+struct weatherData
+{
+   int packedTime;               // minuts since midnight (0-1440)
+   int hiOutsideTemperature;     // in 1/10'ths of a degree F
+   int lowOutsideTemperature;    // in 1/10'ths of a degree F
+   int insideTemperature;        // in 1/10'ths of a degree F
+   int outsideTemperature;       // in 1/10'ths of a degree F
+   int barometer;                // in 1/1000'ths of an inch Hg
+   unsigned char insideHumidity; // in percent (0-100) unsigned char
+   outsideHumidity;              // in percent (0-100)
+   int DewPoint;                 // in 1/10'ths of a degree F
+   int rain;                     // encoded rain clicks, see below
+   unsigned char windSpeed;      // in miles per hour
+   unsigned char windGust;       // in miles per hour
+   int WindChill;                // in 1/10'ths of a degree F
+   unsigned char windDirection;  // encoded wind direction, see below
+   unsigned char archiveInterval;// in minutes
+};
+
+
+Data Types
+
+   char's and unsigned char's are one byte (8 bits) long.
+   int's  are 2 bytes (16 bits) long.
+   long's are 4 bytes (32 bits) long.
+   multi-byte data field are stored in Intel format, least significant
+      byte first.
+
+   header_block is 208 bytes long.
+   index_record is 6 bytes long. weatherData is 24 bytes long.
+
+
+Index consistency
+
+     Each day's data occupies a contiguous segment of the data record
+list, from Index to Index + num_recs-1 of the appropriate index_record
+entry. All index numbers (both day indices and record indices) start
+at 0. The Index number for a given day should be the same as the sum
+of the num_recs numbers of all the days in the database file that
+precede the given day. Days at the end of the datafile without data
+must have their Index number in the index_record array set to the
+total number of records in the database if you intend to use PCLink
+to append data to the file. The data within each day is assumed to be
+in chronological order, and will be plotted in the order they appear
+in the data base.
+
+
+Weather Data formats
+
+TEMPERATURE
+
+     Data is stored as an integer in 1/10ths of a degree Fahrenheit.
+You need to divide the stored value by 10 to get the actual value.
+
+
+BAROMETER
+
+     Data is stored as an integer in 1/1000ths of an inch of mercury.
+You need to divide the stored value by 1000 to get the actual value.
+
+
+WIND SPEED
+
+     Data is stored as an integer in miles per hour.
+
+
+WIND DIRECTION
+
+     Data is stored as an encoded direction. 0 = N, 1 = NNE, 2 = NE,
+..., 14 = NW, 15 = NNE. If there was no wind during the archive interval,
+the value 255 is used.
+
+
+RAIN
+
+     Data is stored as an encoded click count. The lower 3 nibbles
+(12 bits) hold the number of clicks recorded by the station during
+the archive interval. The upper nibble (4 bits) indicate the size of
+the rain collector used.
+
+      0 = .1  inches
+      1 = .01 inches
+      2 = .2  millimeters
+      3 = 1.0 millimeters
+      4 = custom rain increment in inches
+      5 = custom rain increment in millimeters
+
+     You need to multiply the click count by the appropriate scale
+factor to obtain the actual value. The custom increments use the
+increment set in the Setup/Station dialog, and stored in the
+station.cfg file, to scale to a non-standard collector size.
+
+
+INVALID DATA
+
+     You can mark any temperature or barometer data point as invalid
+by storing the number -32768 in the database. You can mark humidity
+data as invalid by storing the number 128 into a humidity field. You
+can mark wind direction data as invalid by storing the number 255.
+
+
+PCLink 3.01 DATABASE ORGANIZATION ON THE DISK
+
+Station Directory
+
+     When you create a new station the software creates a directory
+in the \PCLINK3 directory for that station. The software uses the
+first eight characters of the station name (not including any spaces
+and punctuation) for the directory name. In order to create a separate
+directory for each station, you must make sure that the first eight
+characters (excluding spaces) in any station's name is unique. The
+software will notify you if a station name conflicts with an existing
+station.
+
+     Note: If you use automatic download and/or automatic clear, the
+           station's log file (LOG.TXT) is saved in the station's
+           directory as well.
+
+     The name of the directory will not change if you subsequently
+change the station name. You may only change the directory name from
+DOS. Be aware, however, that if you change your database name, you MUST
+change the file extension for all of your database files in that
+directory. Make sure that the file extension for the database file
+matches the first three letters or numbers in the directory name
+(ignore any punctuation). For example, if you change your directory
+name to \ST-HOME, change all of your file extensions to .STH.
+
+
+Station Configuration File
+
+     When you add a station, the software creates a station
+configuration file (called "station.cfg") in the station directory.
+Each station has its own discrete setup file which saves the following
+program settings for the appropriate station.
+
+
+     - Station Settings: Station model, accessories, rain collector
+                increment, and automatic download time.
+     - Serial Port Settings: COM port, IRQ number, baud rate, modem,
+                modem string, phone number, and rotary dial setting.
+     - Units of Measure: Units of measure, date format.
+     - Printer: Selected printer and parallel port setting.
+     - Plot Settings: Gridlines for all axes, point types, and colors.
+     - Clear: Functions selected to be cleared.
+     - Auto Clear: Functions selected to be cleared, automatic clear
+                time.
+     - Archive Interval: This is actually stored in the Weatherlink
+                itself, though it is a station-specific setting.
+     - Calibration Numbers: For inside and outside temperature, outside
+                humidity, barometric pressure, and rainfall. The
+                calibration number for barometric pressure is
+                automatically set when you set your barometric pressure.
+     - Backup and Restore: The drive to which files are backed up and
+                the drive from which they are restored.
+
+     In order to recognize a station's database files, the station
+configuration file must be present in the same directory. Whenever you
+backup, the software automatically copies the station configuration
+file to the backup disk. If you copy database files (to share or
+transfer data, for example) make sure you copy the station configuration
+file with them.
+
+
+Database Files
+
+     The software stores downloaded data in monthly files. Whenever
+you download, the software saves database files into the active
+station's directory. The file name which the software applies to
+database files indicates the year and month of the data. The three
+character file extension which follows the period indicates the
+directory in which these database file belong (that is, the station
+from which they were downloaded). You must make sure that the file
+extension for the database files matches the first three letters or
+numbers in the directory name (ignore any punctuation). For example,
+the database file for April,1994 from a directory called \HOME (and
+a station called Home) would be named 1994-04.HOM.
+
+     Completely filled database files (that is, containing every
+possible record for the month) saving data stored at the 30 minute
+archive interval will occupy 35K of disk space. The file size changes
+in a linear fashion depending on the archive interval. For example, a
+completely filled file containing data stored at an interval of 1 minute
+will occupy approximately 1.05 MB of disk space while the same file
+containing data stored at an interval of 2 hours will occupy
+approximately 9K.
+
+     You cannot combine database files. For example, if you download
+half of your April data to one directory and the other half to another
+directory, you cannot combine the two database files into a single file
+containing all of your April data. Take extreme care when downloading
+to make sure the correct station is the active station.
+
+     Note: If you do not clear your archive memory, you may be able to
+           download the data into the correct file at a later date.
+
+
+------------------------------------------------------------------
+GroWeatherLink 1.0 Database Structure
+
+     The data for each month is stored in a separate binary file.
+The name of each monthly file has the form YYYY-MM.EXT (ie.
+1996-02.STA).  The beginning of each file has a header which keeps
+track of where in the file a new day begins and how many records
+are in the file.  The "C" code for the database structure is included
+below.  After the header comes the records.  The record structure is
+defined by the WeatherRecord class.
+
+/*
+   Data is stored in monthly files.  Each file has the following header.
+*/
+struct DayIndex
+{
+   int recordsInDay;
+   long startPos;
+};
+
+/*
+   Header for each monthly file.
+*/
+class HeaderBlock
+{
+   public:
+   char idCode [16];
+   int daysInMonth;
+   long totalRecords;
+   DayIndex dayIndex [31];
+};
+
+
+class WeatherRecord
+{
+   public :
+   char day;
+   int packedTime;
+   int airTemp;
+   int highAirTemp;
+   int lowAirTemp;
+   int soilTemp;
+   int barometer;
+   float rain;             // actual rain amount, not # of rain clicks
+   int   et;               // Station et.
+   float pcEt;             // Et calculated on computer. -1000 is out.
+   int degreeDays;
+   int solarRad;
+   int solarEnergy;
+   byte rainRate;
+   byte windSpeed;
+   byte highWindSpeed;
+   byte windDirection;
+   int windChill;
+   int windRun;
+   int dewPoint;
+   int tempHumIndex;
+   byte humidity;
+   byte archiveInterval;
+   int bitFlags;           // Used to indicate a note exists.
+   byte primaryPower;      // Voltage of primary power.
+   byte leafWetness;       // 255 is leaf not installed.
+};
+
+------------------------------------------------------------------
+Energy WeatherLink 1.0 Database Structure
+
+     The data for each month is stored in a separate binary file.
+The name of each monthly file has the form YYYY-MM.EXT (ie.
+1996-02.STA).  The beginning of each file has a header which keeps
+track of where in the file a new day begins and how many records are
+in the file.  The "C" code for the database structure is included below.
+After the header comes the records.  The record structure is defined
+by the WeatherRecord class.
+
+
+/*
+   Data is stored in monthly files.  Each file has the following header.
+*/
+struct DayIndex
+{
+   int recordsInDay;
+   long startPos;
+};
+
+/*
+   Header for each monthly file.
+*/
+class HeaderBlock
+{
+   public:
+   char idCode [16];
+   int daysInMonth;
+   long totalRecords;
+   DayIndex dayIndex [31];
+};
+
+class WeatherRecord
+{
+   public :
+   char day;
+   int packedTime;
+   int airTemp;
+   int highAirTemp;
+   int lowAirTemp;
+   int insideTemp;
+   int barometer;
+   float rain;             // actual rain amount, not # of rain clicks
+   int et;                 // Maybe later we will calc. ET here.
+   int heatingDD;
+   int coolingDD;
+   int chillDD;
+   int thiDD;
+   int solarRad;
+   int solarEnergy;
+   byte rainRate;
+   byte windSpeed;
+   byte highWindSpeed;
+   byte windDirection;
+   int windChill;
+   int windRun;
+   int dewPoint;
+   int tempHumIndex;
+   byte outsideHum;
+   byte archiveInterval;
+   int bitFlags;           // Used to indicate a note exists.
+   byte primaryPower;      // Voltage of primary power.
+};
+
+------------------------------------------------------------------
+Health WeatherLink 1.0 Database Structure
+
+     The data for each month is stored in a separate binary file.
+The name of each monthly file has the form YYYY-MM.EXT (ie.
+1996-02.STA).  The beginning of each file has a header which keeps
+track of where in the file a new day begins and how many records are
+in the file.  The "C" code for the database structure is included below.
+After the header comes the records.  The record structure is defined
+by the WeatherRecord class.
+
+/*
+   Data is stored in monthly files.  Each file has the following header.
+*/
+struct DayIndex
+{
+   int recordsInDay;
+   long startPos;
+};
+
+/*
+   Header for each monthly file.
+*/
+class HeaderBlock
+{
+   public:
+   char idCode [16];
+   int daysInMonth;
+   long totalRecords;
+   DayIndex dayIndex [31];
+};
+
+class WeatherRecord
+{
+   public :
+   char day;
+   int packedTime;
+   int airTemp;
+   int highAirTemp;
+   int lowAirTemp;
+   int insideTemp;
+   int barometer;
+   float rain;             // actual rain amount, not # of rain clicks
+   int et;                 // Maybe later we will calc. ET here.
+   int solarRad;
+   int highSolarRad;
+   byte rainRate;
+   byte windSpeed;
+   byte highWindSpeed;
+   byte windDirection;
+   int windChill;
+   int windRun;
+   int dewPoint;
+   int insideThi;
+   int outsideThi;
+   int thswIndex;
+   byte outsideHum;
+   byte insideHum;
+   byte uvIndex;
+   byte highUvIndex;
+   int  uvDose;
+   byte archiveInterval;
+   byte bitFlags;           // Used to indicate a note exists.
+};
