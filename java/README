@@ -1,0 +1,9 @@
+
+modify log4j.properties for your envuronment
+
+modify poll*.sh for your environment
+
+make sure you have java comm libraries working,
+which can be a pita - see readme.commsetup for some info
+
+the rails web page is in /rails/oldWeather
