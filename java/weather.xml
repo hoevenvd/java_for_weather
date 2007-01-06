@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>jweatherstation.properties</value>
+		</property>
+	</bean>
+	
+	<bean id="weatherMonitor"
+		class="uk.me.jstott.jweatherstation.Main">
+		<property name="station">
+			<ref bean="vantagePro"/>
+		</property>
+		<property name="posterList">
+			<list>
+				<ref bean="wundergroundPoster"/>
+				<ref bean="wsDataPoster"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="wsDataPoster"
+		class="org.tom.weather.posting.WebServiceDataPosterImpl">
+		<property name="password">
+			<value>${ws.password}</value>
+		</property>
+		<property name="location">
+			<value>${ws.location}</value>
+		</property>
+	</bean>
+	
+	<bean id="wundergroundPoster"
+		class="org.tom.weather.posting.WundergroundPosterImpl">
+		<constructor-arg>
+			<value>${weather.wunderground.realtime.uploadUrl}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${weather.wunderground.realtime.enable}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${weather.wunderground.realtime.user}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${weather.wunderground.realtime.password}</value>
+		</constructor-arg>
+	</bean>
+
+	<bean id="dataSource"
+				class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>${db.Driver}</value>
+		</property>
+		<property name="url">
+			<value>${db.Url}</value>
+		</property>
+		<property name="username">
+			<value>${db.Username}</value>
+		</property>
+		<property name="password">
+			<value>${db.Password}</value>
+		</property>
+	</bean>
+		
+	<bean id="dataUploader"
+		class="org.tom.weather.upload.wunderground.DataUploaderImpl">
+		<constructor-arg>
+			<value>${weather.wunderground.uploadUrl}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${weather.wunderground.enable}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${weather.wunderground.user}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${weather.wunderground.password}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${weather.wunderground.interval}</value>
+		</constructor-arg>
+	</bean>
+
+	<bean id="testDataUploader"
+		class="org.tom.weather.upload.wunderground.DataUploaderImpl">
+		<constructor-arg>
+			<value>${weather.wunderground.uploadUrl}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${weather.wunderground.test.enable}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${weather.wunderground.test.user}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${weather.wunderground.test.password}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${weather.wunderground.test.interval}</value>
+		</constructor-arg>
+	</bean>
+
+	<bean id="wsDataUploader"
+		class="org.tom.weather.upload.ws.DataUploaderImpl">
+		<property name="password">
+			<value>${ws.password}</value>
+		</property>
+		<property name="location">
+			<value>${ws.location}</value>
+		</property>
+	</bean>
+	
+	<bean id="vantagePro"
+		class="uk.me.jstott.jweatherstation.VantagePro">
+		<constructor-arg>
+			<value>${portName}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${baudRate}</value>
+		</constructor-arg>
+
+		<property name="uploaderList">
+			<list>
+				<ref bean="dataUploader"/>
+				<ref bean="testDataUploader"/>
+				<ref bean="wsDataUploader"/>
+			</list>
+		</property>
+
+		<property name="location">
+			<value>${ws.location}</value>
+		</property>
+	</bean>
+	
+</beans>
