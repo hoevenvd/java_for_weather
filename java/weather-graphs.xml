@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>jweatherstation.properties</value>
+		</property>
+	</bean>
+	
+	<bean id="graphDataSource"
+				class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>${graph.db.Driver}</value>
+		</property>
+		<property name="url">
+			<value>${graph.db.Url}</value>
+		</property>
+		<property name="username">
+			<value>${graph.db.Username}</value>
+		</property>
+		<property name="password">
+			<value>${graph.db.Password}</value>
+		</property>
+	</bean>
+		
+	<bean id="grapher"
+		class="org.tom.weather.graph.Grapher">
+		<property name="baseDir">
+			<value>${graph.baseDir}</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="graphDataSource"/>
+		</property>
+	</bean>
+	
+</beans>
