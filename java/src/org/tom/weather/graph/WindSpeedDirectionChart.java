@@ -91,7 +91,7 @@ public class WindSpeedDirectionChart extends BaseChart {
     try {
       Connection con = source.getConnection();
       data = new JDBCXYDataset(con);
-      String sql = "SELECT date, prevailing_wind_direction as Direction FROM archive_records"
+      String sql = "SELECT date - INTERVAL  " + Grapher.OFFSET / 1000 + " second, prevailing_wind_direction as Direction FROM archive_records"
           + " where date >= '"
           + start
           + "' and date < '"
@@ -135,7 +135,7 @@ public class WindSpeedDirectionChart extends BaseChart {
     try {
       Connection con = source.getConnection();
       data = new JDBCXYDataset(con);
-      String sql = "SELECT date, average_wind_speed FROM archive_records"
+      String sql = "SELECT date - INTERVAL  " + Grapher.OFFSET / 1000 + " second, average_wind_speed FROM archive_records"
           + " where date >= '" + start + "' and date < '" + end
           + "' order by date desc;";
       data.executeQuery(sql);
