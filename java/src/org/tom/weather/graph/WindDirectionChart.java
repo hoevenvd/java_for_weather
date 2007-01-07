@@ -67,7 +67,7 @@ public class WindDirectionChart extends BaseChart {
       Connection con = source.getConnection();
 
       data = new JDBCXYDataset(con);
-      String sql = "SELECT date, prevailing_wind_direction as Direction FROM archive_records"
+      String sql = "SELECT date - INTERVAL  " + Grapher.OFFSET / 1000 + " second, prevailing_wind_direction as Direction FROM archive_records"
           + " where date >= '" + start + "' and date < '" + end + "' order by date desc;";
       data.executeQuery(sql);
       con.close();

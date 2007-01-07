@@ -1,6 +1,8 @@
 package org.tom.weather.graph;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimerTask;
 
 import javax.sql.DataSource;
@@ -13,6 +15,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 public class Grapher extends TimerTask {
   
   private static final Logger LOGGER = Logger.getLogger(Grapher.class);
+  public static final long OFFSET = (new Date().getTimezoneOffset() * 60 * 1000);
   private java.sql.Timestamp start_2;
   private java.sql.Timestamp start_15;
   private java.sql.Timestamp end;
@@ -53,13 +56,20 @@ public class Grapher extends TimerTask {
   }
 
   private void setDates() {
+    Timestamp ts = null;
     Calendar cal = Calendar.getInstance();
-    setEnd(new java.sql.Timestamp(cal.getTimeInMillis()));
+    ts = new Timestamp(cal.getTime().getTime() + OFFSET);
+    LOGGER.debug("setting end to: " + ts);
+    setEnd(ts);
     cal.add(Calendar.HOUR, -48);
-    setStart_2(new java.sql.Timestamp(cal.getTimeInMillis()));
+    ts = new Timestamp(cal.getTime().getTime() + OFFSET);
+    LOGGER.debug("setting start_2 to: " + ts);
+    setStart_2(ts);
     cal = Calendar.getInstance();
     cal.add(Calendar.DATE, -15);
-    setStart_15(new java.sql.Timestamp(cal.getTimeInMillis()));
+    ts = new Timestamp(cal.getTime().getTime() + OFFSET);
+    LOGGER.debug("setting start_15 to: " + ts);
+    setStart_15(ts);
     
   }
 

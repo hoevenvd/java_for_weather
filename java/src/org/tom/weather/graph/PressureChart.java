@@ -41,7 +41,7 @@ public class PressureChart extends BaseChart {
       Connection con = source.getConnection();
 
       data = new JDBCXYDataset(con);
-      String sql = "SELECT date, pressure FROM archive_records"
+      String sql = "SELECT date - INTERVAL  " + Grapher.OFFSET / 1000 + " second , pressure FROM archive_records"
           + " where date >= '" + start + "' and date < '" + end + "' order by date desc;";
       data.executeQuery(sql);
       con.close();

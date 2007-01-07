@@ -45,7 +45,7 @@ public class WindChart extends BaseChart {
     try {
       Connection con = source.getConnection();
       data = new JDBCXYDataset(con);
-      String sql = "SELECT date, high_wind_speed as Gust FROM archive_records"
+      String sql = "SELECT date - INTERVAL  " + Grapher.OFFSET / 1000 + " second, high_wind_speed as Gust FROM archive_records"
           + " where date >= '" + start + "' and date < '" + end + "' order by date desc;";
       data.executeQuery(sql);
       con.close();
