@@ -150,7 +150,9 @@ This Month Avg Temp: <%= @this_month.avgTemp %></td>
 
 <CENTER>This week: <%= @this_week.rain %> inches</CENTER>
 <CENTER>Last week: <%= @last_week.rain %> inches (Mon - Sun)</CENTER>
+<% if !@last_rain.nil? %>
 <CENTER>Last rain: <%= @last_rain.getlocal.strftime("%a, %b %d %Y %I:%M:%S %p " + Time.new.getlocal.zone)  %></CENTER>
+<% end %>
 </TD>
 </TR>
 <TR>
