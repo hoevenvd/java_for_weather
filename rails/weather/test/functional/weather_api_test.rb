@@ -11,8 +11,6 @@ require 'weather_controller'
 class WeatherController; def rescue_action(e) raise e end; end
 
 class WeatherControllerApiTest < Test::Unit::TestCase
-  @@log = Logger.new(STDOUT)
-  @@log.level = Logger::DEBUG
   
   def setup
     @controller = WeatherController.new

@@ -1,14 +1,8 @@
-require 'logger'
-require 'pp'
-
 class WeatherController < ApplicationController
   wsdl_service_name 'Weather'
   web_service_scaffold :invoke
   before_invocation :authenticate, :except => [:get_current_conditions,
                                                :get_last_archive]
-  
-  @@log = Logger.new(STDOUT)
-  @@log.level = Logger::DEBUG
   
   def get_current_conditions(location)
     sample = CurrentCondition.find_by_location(location)
