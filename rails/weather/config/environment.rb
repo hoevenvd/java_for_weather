@@ -18,7 +18,7 @@ config.frameworks -= [ :action_mailer ]
 
   # Force all environments to use the same logger level 
   # (by default production uses :info, the others :debug)
-  # config.log_level = :debug
+config.log_level = :warn
 
   # Use the database for sessions instead of the file system
   # (create the session table with 'rake create_sessions_table')
