@@ -63,8 +63,6 @@ public class SunClockApplet extends Applet implements ActionListener, Runnable,
    */
   public static final String earthImageName = "EarthImage360.gif";
   public static final String moonImageName = "FullMoon64.gif";
-  public static final String chimeName = "DecClockTower.au";
-  private AudioClip hourBell = null;
   private int currentHour = (int) ((System.currentTimeMillis() / 3600000) % 24);
   /*
    * Define the panel thread and the update (sleep) time.
@@ -239,11 +237,6 @@ public class SunClockApplet extends Applet implements ActionListener, Runnable,
       infoButton.setFont(dialogFont);
       optionButton.setFont(dialogFont);
       getParameters();
-      try {
-        hourBell = getAudioClip(getDocumentBase(), chimeName);
-      } catch (Exception e) {
-        hourBell = null;
-      }
       infoButton.setBackground(Color.white);
       optionButton.setBackground(Color.white);
       Panel buttonPanel = new Panel();
@@ -323,13 +316,6 @@ public class SunClockApplet extends Applet implements ActionListener, Runnable,
         date = new Date(instant);
       }
       sunClockData.setDate(date);
-      int thisHour = (int) ((System.currentTimeMillis() / 3600000) % 24);
-      if (hourBell != null && currentHour != thisHour) {
-        currentHour = thisHour;
-        if (sunClockData.getSilentFlag() == false) {
-          hourBell.play();
-        }
-      }
       /*
        * Round the time down to the update interval, then add the update
        * interval. This makes the time display look better.
