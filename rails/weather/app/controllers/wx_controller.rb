@@ -28,7 +28,11 @@ class WxController < ApplicationController
   def last_rain
     sql = "select date from archive_records where rainfall > 0 and location = " + "\'" + LOC + "\'"
     s = ArchiveRecord.find(:first, :conditions => "rainfall > 0 and location = #{LOC}", :limit => 1, :order => "date desc")
-    s[:date]
+    if !s.nil?
+      s[:date]
+    else
+      nil
+    end
   end
   
   def current_conditions
