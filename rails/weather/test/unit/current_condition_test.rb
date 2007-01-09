@@ -62,14 +62,6 @@ class CurrentConditionTest < Test::Unit::TestCase
     assert_not_nil cond
   end
 
-  def test_nil_outside_temp
-    cond = current_conditions(:good)
-    cond.outside_temperature = nil
-    assert !cond.save
-    assert_equal ActiveRecord::Errors.default_error_messages[:blank], 
-         cond.errors.on(:outside_temperature)
-  end
-  
   def test_is_raining
     cond = current_conditions(:good)
     cond[:rain_rate] = 0.01

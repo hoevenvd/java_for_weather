@@ -18,6 +18,13 @@ class WeatherControllerApiTest < Test::Unit::TestCase
     @response   = ActionController::TestResponse.new
   end
 
+  def test_minimal_current_conditions
+    my_struct = create_a_minimal_struct
+    invoke :put_current_conditions, "wx", "01915-test", my_struct 
+    res = invoke :get_current_conditions, "01915-test"
+    assert_not_equal nil, res
+  end
+  
   def test_get_current_conditions_vp
     my_struct = create_a_good_struct
     invoke :put_current_conditions, "wx", "01915-test", my_struct 
@@ -100,6 +107,18 @@ class WeatherControllerApiTest < Test::Unit::TestCase
     assert_equal entry[:date].getutc.to_s, a[:date].getutc.to_s
   end  
 
+  def test_minimal_archive
+    a = create_minimal_archive_struct
+    location = "basic"
+    password = "wx"
+    invoke :put_archive_entry, password, location, a
+    entry = ArchiveRecord.find_by_location_and_date(location, a[:date])
+    assert_not_nil entry
+    last_entry = invoke :get_last_archive, location
+    assert_not_nil last_entry
+    assert_equal entry[:date].getutc.to_s, a[:date].getutc.to_s
+  end  
+
   def create_a_good_struct
     my_struct = InputSampleStruct.new( 
        :sample_date => Time.now, 
@@ -111,6 +130,11 @@ class WeatherControllerApiTest < Test::Unit::TestCase
        :rain_rate => 1.01,
        :ten_min_avg_wind => 2,
        :wind_direction => 270)
+  end
+  
+  def create_a_minimal_struct
+    my_struct = InputSampleStruct.new( 
+       :sample_date => Time.now)
   end
   
   def create_a_good_struct_wm2
@@ -155,5 +179,9 @@ class WeatherControllerApiTest < Test::Unit::TestCase
       :inside_temp => 68,
       :inside_humidity => 45,
       :number_of_wind_samples => 20)
+  end
+
+  def create_minimal_archive_struct
+    a = ArchiveStruct.new(:date => Time.now.getutc)
   end
 end

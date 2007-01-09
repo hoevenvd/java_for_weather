@@ -10,7 +10,7 @@ class WeatherController < ApplicationController
     new_sample = 
       SampleStruct.new(
         :sample_date => sample[:sample_date],
-        :temp => Round.round_f(sample[:outside_temperature], 1),
+        :temp => sample[:outside_temperature],
         :humidity => sample[:outside_humidity],
         :dewpoint => sample[:dewpoint],
         :pressure => sample[:pressure],
@@ -32,13 +32,13 @@ class WeatherController < ApplicationController
     last_entry = 
       ArchiveStruct.new(
         :date => entry[:date],
-        :outside_temp => Round.round_f(entry[:outside_temp], 1),
-        :high_outside_temp => Round.round_f(entry[:high_outside_temp], 1),
-        :low_outside_temp => Round.round_f(entry[:low_outside_temp], 1),
-        :pressure => Round.round_f(entry[:pressure], 3),
+        :outside_temp => entry[:outside_temp],
+        :high_outside_temp => entry[:high_outside_temp],
+        :low_outside_temp => entry[:low_outside_temp],
+        :pressure => entry[:pressure],
         :outside_humidity => entry[:outside_humidity],
-        :rainfall => Round.round_f(entry[:rainfall], 2),
-        :high_rain_rate => Round.round_f(entry[:high_rain_rate], 2),
+        :rainfall => entry[:rainfall],
+        :high_rain_rate => entry[:high_rain_rate],
         :average_wind_speed => entry[:average_wind_speed],
         :high_wind_speed => entry[:high_wind_speed],
         :direction_of_high_wind_speed => entry[:direction_of_high_wind_speed],
