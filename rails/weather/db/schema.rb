@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define() do
+ActiveRecord::Schema.define(:version => 1) do
 
   create_table "archive_records", :force => true do |t|
     t.column "date", :datetime, :null => false
@@ -74,5 +74,15 @@ ActiveRecord::Schema.define() do
   end
 
   add_index "current_conditions", ["location"], :name => "locations", :unique => true
+
+  create_table "statuses", :force => true do |t|
+    t.column "location", :string, :limit => 10, :default => "", :null => false
+    t.column "sample_date", :datetime
+    t.column "archive_date", :datetime
+    t.column "created_at", :datetime
+    t.column "updated_at", :datetime
+  end
+
+  add_index "statuses", ["location"], :name => "locations", :unique => true
 
 end
