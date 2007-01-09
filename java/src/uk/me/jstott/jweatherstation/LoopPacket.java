@@ -92,6 +92,9 @@ public class LoopPacket implements SnapShot {
     if (getOutsideTemperature().getTemperatureFahrenheit() > 130.0) {
       valid = false;
     }
+    if (rainRate > 100.0) {
+      valid = false;
+    }
   }
 
   public Date getDate() {
