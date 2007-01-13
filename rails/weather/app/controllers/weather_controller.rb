@@ -1,4 +1,7 @@
+require 'sphere'
+
 class WeatherController < ApplicationController
+  RADS_CONVERSION = 57.29577951 # divide degrees by this to use ruby-sphere
   wsdl_service_name 'Weather'
   web_service_scaffold :invoke
   before_invocation :authenticate, :except => [:get_current_conditions,
@@ -88,6 +91,16 @@ class WeatherController < ApplicationController
     if !rec.save
       raise rec.errors.full_messages.to_s
     end
+  end
+  
+  def get_rise_set(password, date, lat, long)
+    raise ArgumentError if lat.nil? || long.nil?
+    date = Time.now unless date != nil
+    lat /= RADS_CONVERSION
+    long /= RADS_CONVERSION
+    rise = Sphere.sunrise(date, long, lat)
+    set = Sphere.sunset(date, long, lat)
+    AstroStruct.new(:sunrise => rise, :sunset => set)
   end
 
   def authenticate(name, params)

@@ -37,7 +37,6 @@ class Period
   def Period.yesterday
   	end_tm = Time.now.at_midnight # midnight today
   	start_tm = end_tm.ago(1.day)
-  	pp start_tm
   	return Period.new(start_tm, end_tm)
   end
   
