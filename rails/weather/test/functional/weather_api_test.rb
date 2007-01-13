@@ -11,6 +11,8 @@ require 'weather_controller'
 class WeatherController; def rescue_action(e) raise e end; end
 
 class WeatherControllerApiTest < Test::Unit::TestCase
+
+  PASSWORD = "wx"
   
   def setup
     @controller = WeatherController.new
@@ -20,14 +22,14 @@ class WeatherControllerApiTest < Test::Unit::TestCase
 
   def test_minimal_current_conditions
     my_struct = create_a_minimal_struct
-    invoke :put_current_conditions, "wx", "01915-test", my_struct 
+    invoke :put_current_conditions, PASSWORD, "01915-test", my_struct 
     res = invoke :get_current_conditions, "01915-test"
     assert_not_equal nil, res
   end
   
   def test_get_current_conditions_vp
     my_struct = create_a_good_struct
-    invoke :put_current_conditions, "wx", "01915-test", my_struct 
+    invoke :put_current_conditions, PASSWORD, "01915-test", my_struct 
     res = invoke :get_current_conditions, "01915-test"
 
     assert_not_equal nil, res
@@ -43,7 +45,7 @@ class WeatherControllerApiTest < Test::Unit::TestCase
   
   def test_get_current_conditions_wm2
     my_struct = create_a_good_struct_wm2
-    invoke :put_current_conditions, "wx", "01915-test", my_struct 
+    invoke :put_current_conditions, PASSWORD, "01915-test", my_struct 
     res = invoke :get_current_conditions, "01915-test"
 
     assert_not_equal nil, res
@@ -97,7 +99,7 @@ class WeatherControllerApiTest < Test::Unit::TestCase
   def test_basic_archive
     a = create_complete_archive_struct
     location = "basic"
-    password = "wx"
+    password = PASSWORD
     invoke :put_archive_entry, password, location, a
     invoke :put_archive_entry, password, location, a
     entry = ArchiveRecord.find_by_location_and_date(location, a[:date])
@@ -110,7 +112,7 @@ class WeatherControllerApiTest < Test::Unit::TestCase
   def test_minimal_archive
     a = create_minimal_archive_struct
     location = "basic"
-    password = "wx"
+    password = PASSWORD
     invoke :put_archive_entry, password, location, a
     entry = ArchiveRecord.find_by_location_and_date(location, a[:date])
     assert_not_nil entry
@@ -118,6 +120,20 @@ class WeatherControllerApiTest < Test::Unit::TestCase
     assert_not_nil last_entry
     assert_equal entry[:date].getutc.to_s, a[:date].getutc.to_s
   end  
+
+  def test_get_rise_set
+    password = PASSWORD
+    latitude = 42.5
+    longitude = -72.5
+#    date = Time.now
+    date = nil
+    struct = invoke :get_rise_set, password, date, latitude, longitude
+    assert_not_nil struct
+    latitude = 52.5
+    longitude = 5.5
+    struct = invoke :get_rise_set, password, date, latitude, longitude
+    assert_not_nil struct
+  end
 
   def create_a_good_struct
     my_struct = InputSampleStruct.new( 
