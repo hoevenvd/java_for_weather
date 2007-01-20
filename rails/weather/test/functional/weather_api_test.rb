@@ -123,8 +123,8 @@ class WeatherControllerApiTest < Test::Unit::TestCase
 
   def test_get_rise_set
     password = PASSWORD
-    latitude = 42.5
-    longitude = -72.5
+    latitude = AppConfig.latitude
+    longitude = AppConfig.longitude
 #    date = Time.now
     date = nil
     struct = invoke :get_rise_set, password, date, latitude, longitude
@@ -133,6 +133,7 @@ class WeatherControllerApiTest < Test::Unit::TestCase
     longitude = 5.5
     struct = invoke :get_rise_set, password, date, latitude, longitude
     assert_not_nil struct
+    100.times do | i | struct = invoke :get_rise_set, password, date, latitude, longitude end
   end
 
   def create_a_good_struct
