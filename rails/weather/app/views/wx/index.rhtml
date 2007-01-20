@@ -25,6 +25,10 @@
   The SimpleSun Applet is displayed here if your browser supports Java.
 </applet>
 <!-- insert magic here -->
+<% if @current.nil? %>
+<p>
+<b>Current Conditions Currently Unavailable</b>
+<% else %>
 <div id="current_conditions">
 
 <%= render(:partial => "current_conditions", :layout => false  ) %>
@@ -34,13 +38,15 @@
 <%= periodically_call_remote(:update => 'current_conditions',
 														 :url => { :action => :current_conditions },
 														 :frequency => 10 ) %>
+														 
+<% end %>														 
 <TABLE BORDER=1 ALIGN="CENTER" WIDTH="50%" >
 <BR>
 <BR>
 <TR>
 <TD ALIGN=CENTER COLSPAN="2" WIDTH="100%">
 <p><font face="Arial">This page features up to the second weather from the 
- <a href="http://maps.google.com/?t=k&ll=42.555641,-70.850959&spn=0.025701,0.036135&t=k">Beverly Cove neighborhood of
+ <a href="http://maps.google.com/?t=k&ll=<%= AppConfig.latitude %>,<%= AppConfig.longitude %>&spn=0.025701,0.036135&t=k">Beverly Cove neighborhood of
  Beverly, Mass</a> which is about 20 miles Northeast of downtown Boston.<p>
  With the exception of the radar image thanks to 
  <a href="http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=KMASTONE1">Weather Underground</a>,
@@ -66,6 +72,7 @@ Comments or suggestions: <A HREF="mailto:tom@tom.org">Tom Mitchell</A>
 <TD VALIGN=TOP COLSPAN="2">
 <TABLE BORDER=0 WIDTH="100%" >
 <TR>
+<% if !@today.nil? %>
 <TD ALIGN=CENTER  VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's Low: </FONT><%= @today.lowTemp %></TD>
 </TR>
 <TR>
@@ -74,24 +81,29 @@ Comments or suggestions: <A HREF="mailto:tom@tom.org">Tom Mitchell</A>
 
 <TR>
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's Low Wind Chill: </FONT><%= @today.lowWindchill %></TD>
+<% end %>
+<% if !@yesterday.nil? %>
 <tr>
-
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Yesterday's Low: <%= @yesterday.lowTemp %></td>
 </tr>
-
 <tr>
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Yesterday's High: <%= @yesterday.hiTemp %></td>
 </tr>
-
+<% end %>
+<% if !@this_week.nil? %>
 <tr>
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
 This Week Avg Temp: <%= @this_week.avgTemp %></td>
 </tr>
+<% end %>
+<% if !@last_week.nil? %>
 
 <tr>
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
 Last Week Avg Temp: <%= @last_week.avgTemp %></td>
 </tr>
+<% end %>
+<% if !@last_month.nil? %>
 
 <tr>
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
@@ -101,7 +113,7 @@ This Month Avg Temp: <%= @this_month.avgTemp %></td>
 <tr>
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Last Month Avg Temp: <%= @last_month.avgTemp %></td>
 </tr>
-
+<% end %> 
 </TABLE>
 </TD>
 </TR>
@@ -124,11 +136,18 @@ This Month Avg Temp: <%= @this_month.avgTemp %></td>
 </TR>
 
 <TD ALIGN=CENTER VALIGN=CENTER >
-
+<% if !@today.nil? %>
 <FONT FACE="Arial">Today's High Gust: </FONT><%= @today.hiWindspeed %> mph 
+<% end %>
+<% if !@this_hour.nil? %>
 <br>This Hour Avg. WindSpeed: <%= @this_hour.avgWindspeed %> mph
+<% end %>
+<% if !@last_hour.nil? %>
 <br>Last Hour Avg. WindSpeed: <%= @last_hour.avgWindspeed %> mph
+<% end %>
+<% if !@today.nil? %>
 <br>Today's Avg. WindSpeed: <%= @today.avgWindspeed %> mph
+<% end %>
 
 </TD>
 </TR>
@@ -136,20 +155,40 @@ This Month Avg Temp: <%= @this_month.avgTemp %></td>
 </TR>
 <TR>
 <TD COLSPAN="2" WIDTH="292">
-<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Barometer</FONT></FONT></B></CENTER>
-<CENTER><%= @current.pressure %> and  <%= @current.bar_status %></CENTER>
-<CENTER>Today's High: <%= @today.hiPressure %></CENTER>
-<CENTER>Today's Low:  <%= @today.lowPressure %>
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Sunrise / Sunset</FONT></FONT></B></CENTER>
+<CENTER>Today's Sunrise: <%= @sunrise.strftime("%I:%M %p") %></CENTER>
+<CENTER>Today's Sunset:  <%= @sunset.strftime("%I:%M %p") %></CENTER>
 </TD>
 </TR>
+
+<TR>
+<TD COLSPAN="2" WIDTH="292">
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Barometer</FONT></FONT></B></CENTER>
+<% if !@current.nil? %>
+<CENTER><%= @current.pressure %> and  <%= @current.bar_status %></CENTER>
+<% end %>
+<% if !@today.nil? %>
+<CENTER>Today's High: <%= @today.hiPressure %></CENTER>
+<CENTER>Today's Low:  <%= @today.lowPressure %>
+<% end %>
+</TD>
+</TR>
+
 <TR>
 <TD COLSPAN="2" WIDTH="292">
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Precipitation</FONT></FONT></B></CENTER>
+<% if !@today.nil? %>
 <CENTER>Today: <%= @today.rain %></CENTER>
+<% end %>
+<% if !@yesterday.nil? %>
 <CENTER>Yesterday: <%= @yesterday.rain %> inches</CENTER>
-
+<% end %>
+<% if !@this_week.nil? %>
 <CENTER>This week: <%= @this_week.rain %> inches</CENTER>
+<% end %>
+<% if !@last_week.nil? %>
 <CENTER>Last week: <%= @last_week.rain %> inches (Mon - Sun)</CENTER>
+<% end %>
 <% if !@last_rain.nil? %>
 <CENTER>Last rain: <%= @last_rain.getlocal.strftime("%a, %b %d %Y %I:%M:%S %p " + Time.new.getlocal.zone)  %></CENTER>
 <% end %>

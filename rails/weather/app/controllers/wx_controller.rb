@@ -3,12 +3,8 @@
 class WxController < ApplicationController
   include REXML
 
-  LON = -1.23660504
-  LAT = 0.742841626
-  LOC = "01915"
-  
   def index
-    @current = CurrentCondition.find_by_location(LOC)
+    @current = CurrentCondition.find_by_location(AppConfig.location)
     @today = WxPeriod.today_summary[0]
     @yesterday = WxPeriod.yesterday_summary[0]
     @this_hour = WxPeriod.this_hour_summary[0]
@@ -23,11 +19,13 @@ class WxController < ApplicationController
     @conditions = ApplicationHelper.observed_conditions
     @conditions_date = ApplicationHelper.observed_conditions_date
     @visibility = ApplicationHelper.observed_visibility
+    astro = sunrise_set
+    @sunrise = astro[:sunrise].getlocal
+    @sunset = astro[:sunset].getlocal
   end
   
   def last_rain
-    sql = "select date from archive_records where rainfall > 0 and location = " + "\'" + LOC + "\'"
-    s = ArchiveRecord.find(:first, :conditions => "rainfall > 0 and location = #{LOC}", :limit => 1, :order => "date desc")
+    s = ArchiveRecord.find(:first, :conditions => "rainfall > 0 and location = #{AppConfig.location}", :limit => 1, :order => "date desc")
     if !s.nil?
       s[:date]
     else
@@ -42,6 +40,11 @@ class WxController < ApplicationController
     @current = CurrentCondition.find_by_location(LOC)
     render(:template => "wx/_current_conditions",
            :layout => false)
+  end
+  
+  def sunrise_set
+    s = WeatherController.new.get_rise_set(AppConfig.service_password, nil, AppConfig.latitude, AppConfig.longitude)
+    return s
   end
   
   def minutes_to_hhmm(start_tm, end_tm)
