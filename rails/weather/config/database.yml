@@ -9,7 +9,7 @@ development:
   adapter: mysql
   database: weather_development
   username: wx
-  password: wx
+  password: wx4all
   host: localhost
   port: 3306
 	
@@ -20,7 +20,7 @@ test:
   adapter: mysql
   database: weather_test
   username: wx
-  password: wx
+  password: wx4all
   host: localhost
   port: 3306
 
