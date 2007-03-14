@@ -125,7 +125,6 @@
 		<property name="uploaderList">
 			<list>
 				<ref bean="dataUploader"/>
-				<ref bean="testDataUploader"/>
 				<ref bean="wsDataUploader"/>
 			</list>
 		</property>
