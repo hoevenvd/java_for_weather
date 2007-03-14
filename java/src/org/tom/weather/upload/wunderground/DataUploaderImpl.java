@@ -147,7 +147,7 @@ public class DataUploaderImpl implements DataUploader {
     if (enabled) {
       for (int i = 0; i < entries.length; i++) {
         if (entries[i] != null) {
-          if (entries[i].isValid() && (entries[i].getDate().getTime() < new Date().getTime())) {
+          if (entries[i].isValid()) {
             updateHourlyRain(entries[i]);
             uploadData(entries[i]);
           }
