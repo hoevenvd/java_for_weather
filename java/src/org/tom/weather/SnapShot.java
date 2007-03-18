@@ -40,4 +40,8 @@ public interface SnapShot extends Serializable {
   public float getDayRain();
   
   public int getTenMinAvgWind();
+  
+  public int getUV();
+  
+  public int getSolarRadiation();
 }

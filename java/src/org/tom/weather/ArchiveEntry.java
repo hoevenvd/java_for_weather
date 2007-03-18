@@ -43,4 +43,14 @@ public interface ArchiveEntry extends Serializable {
   public Date getDate(TimeZone tz);
   
   public boolean isValid();
+
+  public int getAverageUVIndex();
+
+  public int getHighUVIndex();
+  
+  public int getAverageSolarRadiation();
+
+  public int getHighSolarRadiation();
+  
+  public int getNumberOfWindSamples();
 }

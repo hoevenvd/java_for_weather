@@ -48,7 +48,11 @@ class WeatherController < ApplicationController
         :prevailing_wind_direction => entry[:prevailing_wind_direction],
         :inside_temp => entry[:inside_temp],
         :inside_humidity => entry[:inside_humidity],
-        :number_of_wind_samples => entry[:number_of_wind_samples]
+        :number_of_wind_samples => entry[:number_of_wind_samples],
+        :average_uv_index => entry[:average_uv_index],
+        :high_uv_index => entry[:high_uv_index],
+        :average_solar_radiation => entry[:solar_radiation],
+        :high_solar_radiation => entry[:high_solar_radiation]
       )
   end
   
@@ -64,6 +68,9 @@ class WeatherController < ApplicationController
     cond[:wind_direction] = sample[:wind_direction]
     cond[:rain_rate] = sample[:rain_rate]
     cond[:ten_min_avg_wind] = sample[:ten_min_avg_wind]
+    cond[:uv] = sample[:uv]
+    cond[:solar_radiation] = sample[:solar_radiation]
+    cond[:daily_rain] = sample[:daily_rain]
     if !cond.save
       raise cond.errors.full_messages.to_s
     end
@@ -88,6 +95,10 @@ class WeatherController < ApplicationController
     rec[:inside_temp] = entry[:inside_temp]
     rec[:inside_humidity] = entry[:inside_humidity]
     rec[:number_of_wind_samples] = entry[:number_of_wind_samples]
+    rec[:average_uv_index] = entry[:average_uv_index]
+    rec[:high_uv_index] = entry[:high_uv_index]
+    rec[:solar_radiation] = entry[:average_solar_radiation]
+    rec[:high_solar_radation] = entry[:high_solar_radiation]
     if !rec.save
       raise rec.errors.full_messages.to_s
     end

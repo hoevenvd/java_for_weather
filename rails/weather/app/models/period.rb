@@ -14,6 +14,12 @@ class Period
     @end_time_sql = @end_time.getutc.strftime(SQL_FORMAT)
   end
   
+  def Period.rolling_hour
+    end_tm = Time.now
+    start_tm = 1.hour.ago
+  	return Period.new(start_tm, end_tm)
+  end
+  
   def Period.this_hour
     end_tm = Time.now
     start_tm = end_tm.change(:min => 0)

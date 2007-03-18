@@ -24,5 +24,10 @@ class ArchiveRecord < ActiveRecord::Base
     errors.add(:pressure, "invalid") if !pressure.nil? && 
          (pressure < 27 || pressure > 32)
   end
+  
+  def self.last_rolling_hour_rain
+    start_tm = 1.hour.ago
+    rain = ArchiveRecord.sum(:rainfall, :conditions => "date > \'#{start_tm.to_s(:db)}\'")
+  end
                             
 end

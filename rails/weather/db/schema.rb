@@ -71,6 +71,9 @@ ActiveRecord::Schema.define(:version => 1) do
     t.column "ten_min_avg_wind", :integer, :limit => 6
     t.column "created_at", :datetime
     t.column "updated_at", :datetime
+    t.column "uv", :integer
+    t.column "solar_radiation", :integer
+    t.column "daily_rain", :float, :limit => 4
   end
 
   add_index "current_conditions", ["location"], :name => "locations", :unique => true

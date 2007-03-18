@@ -8,7 +8,7 @@ archive_records_797:
   leaf_temp_2: 
   forecastRule: 
   average_apparent_temp: "37"
-  solar_radiation: 
+  solar_radiation: 100
   high_rain_rate: "0.000"
   low_outside_temp: "37.9"
   date: 2006-12-31 15:20:00
@@ -18,7 +18,7 @@ archive_records_797:
   prevailing_wind_direction: "0"
   high_outside_temp: "37.9"
   extra_humidity2: 
-  high_solar_radation: 
+  high_solar_radation: 101
   inside_temp: "70.1"
   direction_of_high_wind_speed: 
   pressure: "30.377"
@@ -54,7 +54,7 @@ archive_records_401:
   leaf_temp_2: 
   forecastRule: 
   average_apparent_temp: "19"
-  solar_radiation: 
+  solar_radiation: 100
   high_rain_rate: "0.000"
   low_outside_temp: "19.5"
   date: 2006-12-31 07:49:00
@@ -64,7 +64,7 @@ archive_records_401:
   prevailing_wind_direction: "0"
   high_outside_temp: "19.5"
   extra_humidity2: 
-  high_solar_radation: 
+  high_solar_radation: 101 
   inside_temp: "69.7"
   direction_of_high_wind_speed: 
   pressure: "30.399"

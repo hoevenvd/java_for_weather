@@ -35,6 +35,9 @@ public class WebServiceDataPosterImpl implements DataPoster {
     sample.setRain_rate(snap.getRainRate());
     sample.setWindspeed(snap.getWindspeed());
     sample.setHumidity((int)snap.getOutsideHumidity());
+    sample.setUv((int)snap.getUV());
+    sample.setSolar_radiation((int)snap.getSolarRadiation());
+    sample.setDaily_rain(snap.getDayRain());
     
     try {
       WxWsClient.postSample(password, location, sample);
