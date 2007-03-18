@@ -74,6 +74,8 @@ import org.tom.weather.upload.DataUploader;
 import org.tom.weather.ws.client.generated.ArchiveStruct;
 import org.tom.weather.ws.client.WxWsClient;
 
+import uk.me.jstott.jweatherstation.util.Process;
+
 public class DataUploaderImpl implements DataUploader {
   private static final Logger LOGGER = Logger.getLogger(DataUploaderImpl.class);
 
@@ -120,6 +122,11 @@ public class DataUploaderImpl implements DataUploader {
     struct.setRainfall(entry.getRain());
     struct.setPrevailing_wind_direction(entry.getWindDirection().getDegrees());
     struct.setHigh_wind_speed(entry.getWindGust());
+    struct.setAverage_uv_index(entry.getAverageUVIndex());
+    struct.setHigh_uv_index(entry.getHighUVIndex());
+    struct.setAverage_solar_radiation(entry.getAverageSolarRadiation());
+    struct.setHigh_solar_radiation(entry.getHighSolarRadiation());
+    struct.setNumber_of_wind_samples(entry.getNumberOfWindSamples());
     if (entry.isValid()) {
       WxWsClient.postArchiveEntry(password, getLocation(), struct);
     }

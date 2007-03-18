@@ -94,4 +94,28 @@ public class ArchiveEntryImpl implements ArchiveEntry {
   public boolean isValid() {
     return true;
   }
+
+  public int getAverageUVIndex() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  public int getHighUVIndex() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  public int getAverageSolarRadiation() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  public int getHighSolarRadiation() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  public int getNumberOfWindSamples() {
+    return 0;
+  }
 }

@@ -14,4 +14,8 @@ class ArchiveStruct < ActionWebService::Struct
 	member	:inside_temp,			  	          :float
 	member	:inside_humidity, 	      	    :int
   member  :number_of_wind_samples,        :int
+  member  :average_uv_index,              :int
+  member  :high_uv_index,                 :int
+  member  :average_solar_radiation,       :int
+  member  :high_solar_radiation,          :int
 end

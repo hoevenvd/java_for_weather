@@ -199,4 +199,12 @@ public class LoopPacket implements SnapShot {
   public int getTenMinAvgWind() {
     return wind.getTenMinAverage();
   }
+
+  public int getUV() {
+    return uv;
+  }
+
+  public int getSolarRadiation() {
+    return solarRadiation;
+  }
 }

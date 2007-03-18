@@ -21,7 +21,7 @@ CREATE TABLE archive_records (
  `solar_radiation` int default null,
  `average_uv_index` int default null,
  `et` int default null,
- `high_solar_radation` int,
+ `high_solar_radation` int, // FIXME! --> radiation, not radation
  `high_uv_index` int default null,
  `forecastRule` int default null,
  `leaf_temp_1` int default null,
@@ -67,6 +67,9 @@ CREATE TABLE current_conditions (
   is_raining tinyint(1) default null,
   rain_rate float (5,3) default null,
   ten_min_avg_wind smallint default null,
+  uv smallint default null,
+  solar_radiation smallint default null,
+  daily_rain float (5,2) default null,
  `created_at` datetime,
  `updated_at` datetime,
   primary key (id)

@@ -422,4 +422,24 @@ public class DmpRecord implements ArchiveEntry {
   private List getInvalidReasons() {
     return invalidReasons;
   }
+
+  public int getAverageUVIndex() {
+    return averageUVIndex;
+  }
+
+  public int getHighUVIndex() {
+    return highUVIndex;
+  }
+
+  public int getHighSolarRadiation() {
+    return highSolarRadiation;
+  }
+
+  public int getAverageSolarRadiation() {
+    return solarRadiation;
+  }
+
+  public int getNumberOfWindSamples() {
+    return numberOfWindSamples;
+  }
 }

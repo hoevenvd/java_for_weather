@@ -48,6 +48,9 @@ public class Grapher extends TimerTask {
     new PressureChart(getDataSource(), getBaseDir() + "/pressure24.jpg", getStart_2(), getEnd());
     new PressureChart(getDataSource(), getBaseDir() + "/pressureweek.jpg", getStart_15(), getEnd());
 
+    new SolarRadiationChart(getDataSource(), getBaseDir() + "/solar24.jpg", getStart_2(), getEnd());
+    new SolarRadiationChart(getDataSource(), getBaseDir() + "/solarweek.jpg", getStart_15(), getEnd());
+
     new WindSpeedDirectionChart(getDataSource(), getBaseDir() + "/windspddir24.jpg", getStart_2(), getEnd());
     new WindSpeedDirectionChart(getDataSource(), getBaseDir() + "/windspddirweek.jpg", getStart_15(), getEnd());
 

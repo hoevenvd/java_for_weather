@@ -47,7 +47,19 @@
 	    </classpath>
 	 </javac>
 </target>
-
+	
+<target name="pollVp" depends="main">	
+	<java classname="uk.me.jstott.jweatherstation.Main" fork="no" >
+	    <arg value="-Dlog4j.configuration=./log4j.properites"/>
+	    <!-- <jvmarg value=""/> -->
+		  <classpath>
+		     <fileset dir="lib">
+		        <include name="**/*.jar"/>
+		      </fileset>
+	      <pathelement location="${build}"/>
+		 </classpath>
+	</java>
+</target>
 
   <target name="init" depends="">
     <!-- Create the time stamp -->

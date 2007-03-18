@@ -13,6 +13,9 @@ good:
   ten_min_avg_wind: "2"
   dewpoint: 
   location: good
+  daily_rain: 0.25
+  uv: 255
+  solar_radiation: 5
 current_conditions_001: 
   rain_rate: 
   updated_at: 
@@ -24,9 +27,12 @@ current_conditions_001:
   outside_temperature: "31.1"
   pressure: "30.002"
   id: "1"
+  daily_rain: 0.25
   outside_humidity: "43"
   ten_min_avg_wind: "2"
   dewpoint: 
+  uv: 255
+  solar_radiation: 5
   created_at: 
   location: loc1
 current_conditions_002: 
@@ -40,8 +46,11 @@ current_conditions_002:
   outside_temperature: "31.1"
   pressure: "30.002"
   id: "2"
+  daily_rain: 0.25
   outside_humidity: "85"
   ten_min_avg_wind: 
+  uv: 255
+  solar_radiation: 5
   dewpoint: 
   created_at: 
   location: loc2

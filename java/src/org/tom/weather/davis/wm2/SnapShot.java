@@ -275,4 +275,12 @@ public class SnapShot implements org.tom.weather.SnapShot {
   public boolean isValid() {
     return valid;
   }
+
+  public int getUV() {
+    return 0;
+  }
+
+  public int getSolarRadiation() {
+    return 0;
+  }
 }
