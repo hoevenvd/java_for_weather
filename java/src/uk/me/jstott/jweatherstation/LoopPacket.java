@@ -63,7 +63,16 @@ public class LoopPacket implements SnapShot {
         + unsignedPacket[7].getByte(), pressureTrend);
     outsideTemperature = new Temperature((unsignedPacket[13].getByte() * 256)
         + unsignedPacket[12].getByte());
+    solarRadiation = (unsignedPacket[45].getByte() * 256)
+        + unsignedPacket[44].getByte();
+    if (solarRadiation > 32000) { // garbage (no sensor) is shown as 32767
+      solarRadiation = 0;
+    }
     outsideHumidity = new Humidity(unsignedPacket[33].getByte());
+    uv = unsignedPacket[43].getByte();
+    if (uv == 255) {
+      uv = 0;
+    }
     wind = new Wind(unsignedPacket[14].getByte(), unsignedPacket[15].getByte(),
         (unsignedPacket[17].getByte() * 256) + unsignedPacket[16].getByte());
     rainRate = ((((unsignedPacket[42].getByte() * 256) + unsignedPacket[41]
