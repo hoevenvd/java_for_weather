@@ -19,9 +19,6 @@ class WxController < ApplicationController
     @conditions = ApplicationHelper.observed_conditions
     @conditions_date = ApplicationHelper.observed_conditions_date
     @visibility = ApplicationHelper.observed_visibility
-    astro = sunrise_set
-    @sunrise = astro[:sunrise].getlocal
-    @sunset = astro[:sunset].getlocal
   end
   
   def last_rain
@@ -40,11 +37,6 @@ class WxController < ApplicationController
     @current = CurrentCondition.find_by_location(AppConfig.location)
     render(:template => "wx/_current_conditions",
            :layout => false)
-  end
-  
-  def sunrise_set
-    s = WeatherController.new.get_rise_set(AppConfig.service_password, nil, AppConfig.latitude, AppConfig.longitude)
-    return s
   end
   
   def minutes_to_hhmm(start_tm, end_tm)
