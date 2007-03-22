@@ -50,11 +50,13 @@ Observed (Beverly Airport)<br/>
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Wind</b><br><%= @current.wind_str %></FONT></FONT></B></CENTER>
 </TD>
 
+<% if @current.solar_radiation > 0 %>
 <TR>
 <TD COLSPAN="2" WIDTH="292">
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Solar Output</b><br><%= @current.solar_radiation %> watts / sq. meter</FONT></FONT></B></CENTER>
 </TD>
 </TR>
+<% end # if @current.solar_radiation > 0 %>
 
 <!--
 <TR>
