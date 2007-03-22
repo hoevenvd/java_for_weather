@@ -27,7 +27,7 @@ public class SolarRadiationChart extends BaseChart {
     // create the chart...
     JFreeChart chart = 
       ChartFactory.createTimeSeriesChart("Solar Radiation",
-        "Date", "in Watt/Sq. Meter", data, // data
+        "Date", "W/sq. m", data, // data
         true, // include legend
         true, false);
     
@@ -42,7 +42,7 @@ public class SolarRadiationChart extends BaseChart {
 
       data = new JDBCXYDataset(con);
       String sql = "SELECT date - INTERVAL  " + Grapher.OFFSET / 1000 + " second , solar_radiation FROM archive_records"
-          + " where date >= '" + start + "' and date < '" + end + "' order by date desc;";
+          + " where date >= '" + start + "' and date < '" + end + "' and solar_radiation != null order by date desc;";
       data.executeQuery(sql);
       con.close();
     }
