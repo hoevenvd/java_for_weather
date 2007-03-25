@@ -151,24 +151,22 @@ This Month Avg Temp: <%= @this_month.avgTemp %></td>
 
 </TD>
 </TR>
-&nbsp;</TD>
-</TR>
 
 <TR>
-<TD COLSPAN="2" WIDTH="292">
+<TD COLSPAN="2" align="center" >
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Barometer</FONT></FONT></B></CENTER>
 <% if !@current.nil? %>
 <CENTER><%= @current.pressure %> and  <%= @current.bar_status %></CENTER>
 <% end %>
 <% if !@today.nil? %>
 <CENTER>Today's High: <%= @today.hiPressure %></CENTER>
-<CENTER>Today's Low:  <%= @today.lowPressure %>
+<CENTER>Today's Low:  <%= @today.lowPressure %></center>
 <% end %>
 </TD>
 </TR>
 
 <TR>
-<TD COLSPAN="2" WIDTH="292">
+<TD COLSPAN="2" align="center" >
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Precipitation</FONT></FONT></B></CENTER>
 <% if !@today.nil? %>
 <CENTER>Today: <%= @today.rain %></CENTER>
