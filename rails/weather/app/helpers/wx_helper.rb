@@ -1,6 +1,4 @@
 require 'parsedate'
-require 'pp'
-#require 'Sphere'
 
 module WxHelper
   def self.apparent_temp (temp, rh, wind)
@@ -15,6 +13,14 @@ module WxHelper
     end
   end
     
+  def minutes_to_hhmm(start_tm, end_tm)
+    interval = ((end_tm - start_tm) / 60).to_i # get minutes
+    tmp = interval.divmod(60)
+    hours = tmp[0]
+    minutes = tmp[1]
+    return sprintf("%d:%02d", hours, minutes)
+  end
+  
   
   def self.heat_index (temp, rh)
     # http://en.wikipedia.org/wiki/Heat_index
@@ -80,8 +86,3 @@ module WxHelper
   end
   
 end
-
-#pp Time.now
-#pp Sphere.sunrise(Time.now, -70.85225, 42.56169).getlocal
-#pp Sphere.sunrise(Time.now, -1.23660504, 0.742841626).getlocal
-#pp Sphere.sunset(Time.now, -1.23660504, 0.742841626).getlocal

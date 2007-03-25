@@ -1,18 +1,8 @@
 <TABLE BORDER WIDTH="303" BGCOLOR="#C0C0C0" >
-<tr>														 
-<TD ALIGN=CENTER VALIGN=center COLSPAN=2 WIDTH="100%"><B>
-<FONT FACE="Arial"><%= @conditions %><br>Visibility <%= @visibility %> miles</FONT></B><br/>
-Observed (Beverly Airport)<br/>
- <%= @conditions_date %>
-</TD>
-</tr>
-
 <TR>
 <TD ALIGN=CENTER VALIGN=TOP COLSPAN=2 WIDTH="100%"><B>
 <FONT FACE="Arial">Live Conditions<br><%= @current.sample_date.getlocal.strftime("%a, %b %d %Y %I:%M:%S %p ") + Time.new.getlocal.zone %></FONT></B></TD>
 </tr>
-
-<TR>
 
 <% if @current.is_raining %>
 <TR>
@@ -53,7 +43,7 @@ Observed (Beverly Airport)<br/>
 <% if @current.solar_radiation > 0 %>
 <TR>
 <TD COLSPAN="2" WIDTH="292">
-<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Solar Output</b><br><%= @current.solar_radiation %> watts / sq. meter</FONT></FONT></B></CENTER>
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Solar Radiation</b><br><%= @current.solar_radiation %> watts / sq. meter</FONT></FONT></B></CENTER>
 </TD>
 </TR>
 <% end # if @current.solar_radiation > 0 %>
@@ -65,8 +55,15 @@ Observed (Beverly Airport)<br/>
 <BR><%= @current.sample_date.strftime("%a %b %d %I:%M:%S %p") %></TD>
 </tr>
 -->
+<tr>														 
+<TD ALIGN=CENTER VALIGN=center COLSPAN=2 WIDTH="100%"><B>
+<FONT FACE="Arial"><%= @conditions %><br>Visibility <%= @visibility %> miles</FONT></B><br/>
+Observed (Beverly Airport)<br/>
+ <%= @conditions_date %>
+</TD>
+</tr>
 
-<TR>
+
 <TD ALIGN=CENTER VALIGN=TOP COLSPAN=2 WIDTH="100%"><B>
 <FONT FACE="Arial">Current conditions are updated every 10 seconds!</FONT></B></TD>
 </tr>
@@ -77,12 +74,4 @@ Observed (Beverly Airport)<br/>
 <TABLE BORDER=0 WIDTH="100%" >
 <TR>
 </TR>
-<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
-</script>
-<script type="text/javascript">
-_uacct = "UA-838235-1";
-urchinTracker();
-</script>
-
-
 </TABLE>
