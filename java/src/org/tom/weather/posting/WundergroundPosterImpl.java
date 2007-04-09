@@ -70,7 +70,6 @@ public class WundergroundPosterImpl implements DataPoster {
       sb.append("&weather=");
       sb.append("&clouds=");
       sb.append("&softwaretype=org.tom.weather");
-      sb.append("&archive=0");
       sb.append("&action=updateraw&realtime=1&rtfreq=3.0");
     } catch (NumberFormatException e) {
     } catch (UnsupportedEncodingException e) {
