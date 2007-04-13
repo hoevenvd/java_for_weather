@@ -298,7 +298,7 @@ public class VantagePro extends Station {
     UnsignedByte[] datetime;
     Timestamp dbLastDate = null;
     try {
-      dbLastDate = new Timestamp(WxWsClient.getLatestArchiveRecordDate(getLocation()).getTime());
+      dbLastDate = new Timestamp(WxWsClient.getLatestArchiveRecordDate(getLocation()));
     } catch (RemoteException e) {
       LOGGER.warn(e);
       dbLastDate = new Timestamp(new Date().getTime() - 172800); // use two days ago

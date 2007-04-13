@@ -27,7 +27,6 @@ public class WxWsClient {
     } catch (javax.xml.rpc.ServiceException jre) {
       if (jre.getLinkedCause() != null)
         LOGGER.error(jre);
-        jre.getLinkedCause().printStackTrace();
       throw new junit.framework.AssertionFailedError(
           "JAX-RPC ServiceException caught: " + jre);
     }
@@ -78,8 +77,8 @@ public class WxWsClient {
     while (true) {
       try {
 
-        Date d = getLatestArchiveRecordDate("01915");
-        Timestamp ts = new Timestamp(d.getTime());
+        long d = getLatestArchiveRecordDate("01915");
+        Timestamp ts = new Timestamp(d);
         LOGGER.debug(ts);
         LOGGER.debug(d);
         
@@ -122,9 +121,9 @@ public class WxWsClient {
 //    }
   }
   
-  public static Date getLatestArchiveRecordDate(String location) throws RemoteException {
+  public static long getLatestArchiveRecordDate(String location) throws RemoteException {
     ArchiveStruct s = binding.getLastArchive(location);
-    return s.getDate().getTime();
+    return s.getDate().getTimeInMillis();
   }
 
   public static void postArchiveEntry(String password, String location,
