@@ -21,7 +21,7 @@ CREATE TABLE archive_records (
  `solar_radiation` int default null,
  `average_uv_index` int default null,
  `et` int default null,
- `high_solar_radation` int, // FIXME! --> radiation, not radation
+ `high_solar_radation` int,
  `high_uv_index` int default null,
  `forecastRule` int default null,
  `leaf_temp_1` int default null,
