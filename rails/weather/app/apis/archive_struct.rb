@@ -1,4 +1,5 @@
 class ArchiveStruct < ActionWebService::Struct
+  member  :location,                      :string
 	member	:date,      				            :time
 	member	:outside_temp,			            :float
 	member	:high_outside_temp,	            :float

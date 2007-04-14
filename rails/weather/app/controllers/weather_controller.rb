@@ -31,6 +31,7 @@ class WeatherController < ApplicationController
     raise ArgumentError if entry.nil?
     last_entry = 
       ArchiveStruct.new(
+        :location => location,
         :date => entry[:date],
         :outside_temp => entry[:outside_temp],
         :high_outside_temp => entry[:high_outside_temp],
