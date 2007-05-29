@@ -10,7 +10,7 @@ development:
   database: weather_development
   username: wx
   password: wx4all
-  host: localhost
+  host: wx
   port: 3306
 	
 # Warning: The database defined as 'test' will be erased and
