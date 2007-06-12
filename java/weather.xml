@@ -17,7 +17,6 @@
 		</property>
 		<property name="posterList">
 			<list>
-				<ref bean="wundergroundPoster"/>
 				<ref bean="wsDataPoster"/>
 			</list>
 		</property>
