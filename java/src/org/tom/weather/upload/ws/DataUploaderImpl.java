@@ -110,6 +110,7 @@ public class DataUploaderImpl implements DataUploader {
     ArchiveStruct struct = new ArchiveStruct();
     Calendar cal = Calendar.getInstance();
     cal.setTime(entry.getDate());
+    struct.setLocation(getLocation());
     struct.setDate(cal);
     struct.setAverage_wind_speed(entry.getAvgWindSpeed());
     struct.setInside_temp(entry.getAvgInTemp());
