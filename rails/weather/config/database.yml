@@ -10,7 +10,7 @@ development:
   database: weather_development
   username: wx
   password: wx4all
-  host: db
+  host: music
   port: 3306
 	
 # Warning: The database defined as 'test' will be erased and
@@ -21,7 +21,7 @@ test:
   database: weather_test
   username: wx
   password: wx4all
-  host: db
+  host: music
   port: 3306
 
 production:
@@ -29,7 +29,7 @@ production:
   database: weather_production
   username: weather
   password: wx4all
-  host: db
+  host: music
   port: 3306
 
 old_weather:
