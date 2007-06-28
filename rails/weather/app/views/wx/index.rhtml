@@ -155,9 +155,6 @@ This Month Avg Temp: <%= @this_month.avgTemp %></td>
 <TR>
 <TD COLSPAN="2" align="center" >
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Barometer</FONT></FONT></B></CENTER>
-<% if !@current.nil? %>
-<CENTER><%= @current.pressure %> and  <%= @current.bar_status %></CENTER>
-<% end %>
 <% if !@today.nil? %>
 <CENTER>Today's High: <%= @today.hiPressure %></CENTER>
 <CENTER>Today's Low:  <%= @today.lowPressure %></center>
