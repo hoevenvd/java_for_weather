@@ -195,7 +195,11 @@ public class VantagePro extends Station {
   
     byte[] header = new byte[bytes];
     int bytesRead = getInputStream().read(header);
-  
+    if (bytesRead == 0) { // header must be null - give up and try again
+      LOGGER.warn("got zero bytes from serial stream when more were expected");
+      return false;
+    }
+ 
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug(bytesRead + " bytes actually read from stream");
     }
