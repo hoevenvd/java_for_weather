@@ -1,8 +1,6 @@
 class CurrentCondition < ActiveRecord::Base
   validates_uniqueness_of :location
   validates_presence_of   :location
-  validates_inclusion_of  :wind_direction, :in => 0..359, 
-                          :allow_nil => true, :message => "invalid"
   validates_inclusion_of  :outside_humidity, :in => 1..100, 
                           :allow_nil => true, :message => "invalid"
 
