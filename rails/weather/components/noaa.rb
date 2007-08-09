@@ -14,7 +14,7 @@ class CacheWriter
 	PORT = 80
 	POSTFIX = ".xml"
 	STATION = "KBVY"
-  CACHE_URL = '192.168.1.10:11211'
+  CACHE_URL = '192.168.1.3:11211'
   CACHE_DEBUG = false
 
   def CacheWriter.get_cache

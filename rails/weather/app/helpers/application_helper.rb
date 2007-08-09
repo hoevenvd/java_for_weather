@@ -4,7 +4,7 @@ module ApplicationHelper
 
   def ApplicationHelper.init_cache
     if (@cache == nil)
-      @cache = MemCache::new '192.168.1.10:11211', :debug => false
+      @cache = MemCache::new '192.168.1.3:11211', :debug => false
     end
   end
   
