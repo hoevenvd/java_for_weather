@@ -72,27 +72,9 @@ class WeatherController < ApplicationController
     if !cond.save
       raise cond.errors.full_messages.to_s
     end
+    WeatherHelper.post_to_wunderground(location)
   end
   
-  def get_wunderground(location)
-    sample = CurrentCondition.find_by_location(location)
-    raise ArgumentError if sample == nil
-    new_sample = 
-      WundergroundStruct.new(
-        :dateutc => sample[:sample_date],
-        :winddir => sample[:wind_direction],
-        :windspeed => sample[:windspeed],
-#		:windgustmph = tbd
-        :humidity => sample[:outside_humidity],
-        :tempf => sample[:outside_temperature],
-#		:rainin = tbd
-#		:dailyrainin = tbd        
-        :baromin => sample[:pressure],
-        :dewptf => sample[:dewpoint],
-#       :solarradiation = tbd
-        :softwaretype => "org.tom.weather")
-  end
-
   def put_archive_entry(password, location, entry)
     date = entry[:date].getutc    
     rec = ArchiveRecord.find_or_create_by_location_and_date(location, date)

@@ -3,6 +3,10 @@ common:
   latitude:          42.56212
   longitude:         -70.84997
   location:          01915
+  wunderground:
+    01915:
+      id: KMABEVER3
+      password: wx2005
 development:
   service_password: wx
 test:
