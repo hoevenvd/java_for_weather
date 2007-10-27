@@ -1,7 +1,9 @@
 class WundergroundStruct < ActionWebService::Struct
+	member	:id,		:text
+	member	:password,		:text
 	member 	:dateutc,			:time 
 	member	:winddir,		  	:int
-	member	:windspeed,			:int
+	member	:windspeedmph,			:int
 	member	:windgustmph,		:int
 	member	:humidity,			:int
 	member	:tempf,				:int
@@ -10,5 +12,6 @@ class WundergroundStruct < ActionWebService::Struct
 	member	:baromin,			:float
 	member	:dewptf,			:float
 	member  :solarradiation, 	:int
+	member	:weather,		:text
 	member	:softwaretype,		:text
 end
