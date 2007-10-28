@@ -19,6 +19,7 @@ module WeatherHelper
           :dateutc => sample.sample_date,
           :winddir => sample.wind_direction,
           :windspeedmph => sample.windspeed,
+          :windgustmph => sample.gust,
 #         :windgustmph = sample.windspeed,
           :humidity => sample.outside_humidity,
           :tempf => sample.outside_temperature,
@@ -36,6 +37,7 @@ module WeatherHelper
     post_url += "&dateutc=" + CGI::escape(new_sample[:dateutc].to_s(:db))
     post_url += "&winddir=" + CGI::escape(new_sample[:winddir].to_s)
     post_url += "&windspeedmph=" + CGI::escape(new_sample[:windspeedmph].to_s)
+    post_url += "&windgustmph=" + CGI::escape(new_sample[:windgustmph].to_s)
     post_url += "&humidity=" + CGI::escape(new_sample[:humidity].to_s)
     post_url += "&tempf=" + CGI::escape(new_sample[:tempf].to_s)
     post_url += "&rainin=" + CGI::escape(new_sample[:rainin].to_s)

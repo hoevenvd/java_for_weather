@@ -12,6 +12,11 @@ class CurrentCondition < ActiveRecord::Base
   def wind
   end
 
+  def gust
+    start_tm = 10.minutes.ago.utc
+    ArchiveRecord.maximum(:high_wind_speed, :conditions => "date > \'#{start_tm.to_s(:db)}\'")
+  end
+
   def hourly_rain
     start_tm = 1.hour.ago.utc
     ArchiveRecord.sum(:rainfall, :conditions => "date > \'#{start_tm.to_s(:db)}\'")
