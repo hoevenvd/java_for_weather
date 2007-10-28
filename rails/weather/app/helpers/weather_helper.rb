@@ -3,9 +3,10 @@ require 'net/http'
 #      sb.append("&action=updateraw&realtime=1&rtfreq=3.0");
 # weather.wunderground.realtime.uploadUrl=http://rtupdate.wunderground.com/weatherstation/updateweatherstation.php
 
+URL = "rtupdate.wunderground.com"
+
 module WeatherHelper
 
-  URL = "rtupdate.wunderground.com"
 
   def self.post_to_wunderground(location)
     conf = AppConfig.wunderground[location]
