@@ -50,7 +50,6 @@ module WeatherHelper
     post_url += "&action=updateraw&realtime=1&rtfreq=3.0"
 
     response = Net::HTTP.get_response(URL, post_url)
-    puts(response.code)
   end
 
 
