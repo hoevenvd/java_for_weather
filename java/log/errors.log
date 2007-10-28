@@ -1,0 +1,1 @@
+2007-10-28 16:25:25,794 [main] WARN org.apache.axis.utils.JavaUtils (1305)  - Unable to find required classes (javax.activation.DataHandler and javax.mail.internet.MimeMultipart). Attachment support is disabled.
