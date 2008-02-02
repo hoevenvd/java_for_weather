@@ -24,6 +24,7 @@
 <PARAM NAME = bgcolor VALUE ="#FFFFFF" >
   The SimpleSun Applet is displayed here if your browser supports Java.
 </applet>
+
 <!-- insert magic here -->
 <% if @current.nil? %>
 <p>
@@ -60,8 +61,6 @@
 </table>
 Comments or suggestions: <A HREF="mailto:tom@tom.org">Tom Mitchell</A>
 <p>
-
-
 
 <TABLE BORDER WIDTH="303" BGCOLOR="#C0C0C0" >
 
@@ -192,9 +191,17 @@ This Month Avg Temp: <%= @this_month.avgTemp %></td>
 </center>
 <p>
 
-<center><b><h2>Forecast Graphs</h2></b></center>
+<center><b><h2>Forecast</h2></b></center>
+<TABLE BORDER=1 ALIGN="CENTER" WIDTH="50%" >
+<% @forecast.each do | pd | %>
+  <tr>
+   <td><%= pd.name %></td>
+   <td><img border=0 src="<%= pd.icon_url %>"></td>
+   <td><%= pd.text %></td>
+  </tr>
+<% end %>
 
-<p align="center"><font face="Arial"><img width=600 height=430 border=1 src="http://www.wunderground.com/data/images/KBVYMOS.gif" alt="Today's forecast"></font></p>
+</table>
 
 <center><b><h2>48 Hour Temperatures</h2></b></center>
 

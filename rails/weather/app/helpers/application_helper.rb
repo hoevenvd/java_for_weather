@@ -28,4 +28,8 @@ module ApplicationHelper
     cache["01915-obs"]["visibility_mi"]
   end
 
+  def ApplicationHelper.forecast
+    cache["01915-forecast"]
+  end
+
 end

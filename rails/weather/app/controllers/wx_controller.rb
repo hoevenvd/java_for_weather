@@ -1,4 +1,4 @@
-
+require 'noaa_forecast'
 
 class WxController < ApplicationController
   include REXML
@@ -19,6 +19,8 @@ class WxController < ApplicationController
     @conditions = ApplicationHelper.observed_conditions
     @conditions_date = ApplicationHelper.observed_conditions_date
     @visibility = ApplicationHelper.observed_visibility
+    @forecast = ApplicationHelper.forecast
+    puts @forecast
   end
   
   def last_rain
