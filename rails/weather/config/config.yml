@@ -4,14 +4,12 @@ common:
   longitude:         -70.84997
   location:          01915
   wunderground:
-    01915:                    # location
-      id: KMABEVER3           # wunderground id
+    01915:
+      id: KMASTONE1
       password: wx2005
 development:
-  service_password: wx        # web service passwd
+  service_password: wx
 test:
   service_password: wx
 production:
   service_password: wx
-
-
