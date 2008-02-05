@@ -21,9 +21,24 @@ class CurrentCondition < ActiveRecord::Base
     start_tm = 1.hour.ago.utc
     ArchiveRecord.sum(:rainfall, :conditions => "date > \'#{start_tm.to_s(:db)}\'")
   end
-           
+
+  def temp_trend
+    if trend_record == nil or outside_temperature == trend_record.outside_temp then
+      return nil
+    else 
+      outside_temperature > trend_record.outside_temp ? "Rising" : "Falling"
+    end
+  end
+          
   protected
     
+  def trend_record
+    bt = Time.now - 2.hours
+    et = Time.now - 1.hour
+    @trend_record = ArchiveRecord.find(:first,:conditions => "date > \'#{bt.to_s(:db)} and date < #{et.to_s(:db)}\'", :order => 'date') unless @trend_record != nil
+    @trend_record
+  end
+
   def before_save    
     if  !(outside_temperature.nil? || outside_humidity.nil?)
       self.dewpoint = Round.round_f(WxHelper.dewpoint(outside_temperature, 
