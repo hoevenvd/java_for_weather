@@ -30,6 +30,14 @@ class CurrentCondition < ActiveRecord::Base
     end
   end
           
+  def dewpoint_trend
+    if trend_record == nil or dewpoint == trend_record.average_dewpoint then
+      return nil
+    else 
+      dewpoint > trend_record.average_dewpoint ? "Rising" : "Falling"
+    end
+  end
+          
   protected
     
   def trend_record
