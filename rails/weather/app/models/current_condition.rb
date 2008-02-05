@@ -35,7 +35,7 @@ class CurrentCondition < ActiveRecord::Base
   def trend_record
     bt = Time.now - 2.hours
     et = Time.now - 1.hour
-    @trend_record = ArchiveRecord.find(:first,:conditions => "date > \'#{bt.to_s(:db)} and date < #{et.to_s(:db)}\'", :order => 'date') unless @trend_record != nil
+    @trend_record = ArchiveRecord.find(:first,:conditions => "date > \'#{bt.utc.to_s(:db)} and date < #{et.utc.to_s(:db)}\'", :order => 'date') unless @trend_record != nil
     @trend_record
   end
 
