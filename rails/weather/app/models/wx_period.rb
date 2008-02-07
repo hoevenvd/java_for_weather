@@ -40,7 +40,7 @@ class WxPeriod < Period
 
   def temp_date(pd, temp)
     a = ArchiveRecord.find(:first, :conditions => "date >= '#{@start_time_sql}' and date <= '#{@end_time_sql}' and outside_temp = '#{temp}'", :order => "date desc")
-    a.date
+    a.date != nil ? a.date : nil
   end
   
   def WxPeriod.query(pd)
