@@ -38,9 +38,31 @@ class WxPeriod < Period
     return WxPeriod.query(last_month)
   end
 
-  def temp_date(pd, temp)
-    a = ArchiveRecord.find(:first, :conditions => "date >= '#{@start_time_sql}' and date <= '#{@end_time_sql}' and outside_temp = '#{temp}'", :order => "date desc")
-    a.date != nil ? a.date : nil
+  def hi_temp_date(pd, temp)
+    a = ArchiveRecord.find(:first, :conditions => "date >= '#{@start_time_sql}' and date <= '#{@end_time_sql}' and high_outside_temp = '#{temp}'", :order => "date desc")
+    if (a != nil) then
+      a.date != nil ? a.date : nil
+    else
+      nil
+    end
+  end
+  
+  def low_temp_date(pd, temp)
+    a = ArchiveRecord.find(:first, :conditions => "date >= '#{@start_time_sql}' and date <= '#{@end_time_sql}' and low_outside_temp = '#{temp}'", :order => "date desc")
+    if (a != nil) then
+      a.date != nil ? a.date : nil
+    else
+      nil
+    end
+  end
+  
+  def gust_date(pd, gust)
+    a = ArchiveRecord.find(:first, :conditions => "date >= '#{@start_time_sql}' and date <= '#{@end_time_sql}' and high_wind_speed = '#{gust}'", :order => "date desc")
+    if (a != nil) then
+      a.date != nil ? a.date : nil
+    else
+      nil
+    end
   end
   
   def WxPeriod.query(pd)
@@ -57,8 +79,9 @@ class WxPeriod < Period
                                     where d.date > '#{pd.start_time_sql}' and d.date <= '#{pd.end_time_sql}';");
     #FIXME - needs massive refactoring of this class to get rid of the statics
     my_pd = WxPeriod.new(pd.start_time, pd.end_time)
-    rs[0]["hiTempDate"] = my_pd.temp_date(my_pd, rs[0]["hiTemp"])
-    rs[0]["lowTempDate"] = my_pd.temp_date(my_pd, rs[0]["lowTemp"])
+    rs[0]["hiTempDate"] = my_pd.hi_temp_date(my_pd, rs[0]["hiTemp"])
+    rs[0]["lowTempDate"] = my_pd.low_temp_date(my_pd, rs[0]["lowTemp"])
+    rs[0]["gustDate"] = my_pd.gust_date(my_pd, rs[0]["hiWindspeed"])
     rs
   end
 end
