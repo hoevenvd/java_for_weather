@@ -83,10 +83,10 @@ Comments or suggestions: <A HREF="mailto:tom@tom.org">Tom Mitchell</A>
 <% end %>
 <% if !@yesterday.nil? %>
 <tr>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Yesterday's Low: <%= @yesterday.lowTemp %></td>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Yesterday's Low: <%= @yesterday.lowTemp %> (<%= @yesterday.lowTempDate.localtime.strftime "%I:%M %p" %>)</td>
 </tr>
 <tr>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Yesterday's High: <%= @yesterday.hiTemp %></td>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Yesterday's High: <%= @yesterday.hiTemp %> (<%= @yesterday.hiTempDate.localtime.strftime "%I:%M %p" %>)</td>
 </tr>
 <% end %>
 <% if !@this_week.nil? %>
