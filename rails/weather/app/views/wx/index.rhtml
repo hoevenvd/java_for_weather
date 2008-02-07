@@ -72,10 +72,10 @@ Comments or suggestions: <A HREF="mailto:tom@tom.org">Tom Mitchell</A>
 <TABLE BORDER=0 WIDTH="100%" >
 <TR>
 <% if !@today.nil? %>
-<TD ALIGN=CENTER  VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's Low: </FONT><%= @today.lowTemp %></TD>
+<TD ALIGN=CENTER  VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's Low: </FONT><%= @today.lowTemp %> (<%= @today.lowTempDate.localtime.strftime "%I:%M %p" %>)</TD>
 </TR>
 <TR>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's High: </FONT><%= @today.hiTemp %></TD>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's High: </FONT><%= @today.hiTemp %> (<%= @today.hiTempDate.localtime.strftime "%I:%M %p" %>)</TD>
 <tr>
 
 <TR>

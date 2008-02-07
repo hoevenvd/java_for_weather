@@ -1,6 +1,6 @@
 require 'pp'
 require "rubygems"
-require_gem "activerecord"
+gem "activerecord"
 	
 class Period
   SQL_FORMAT = "%Y-%m-%d %H:%M:%S"
@@ -10,7 +10,7 @@ class Period
   def initialize(pd_start, pd_end)
     @start_time = pd_start
     @start_time_sql = @start_time.getutc.strftime(SQL_FORMAT)
-  	@end_time = pd_end
+    @end_time = pd_end
     @end_time_sql = @end_time.getutc.strftime(SQL_FORMAT)
   end
   
