@@ -12,9 +12,23 @@ class CurrentCondition < ActiveRecord::Base
   def wind
   end
 
+#  class Event
+#    read_attr :date, :value
+#    def initialize(date, value)
+#      @date = date
+#      @value = value
+#    end
+#  end
+
   def gust
     start_tm = 10.minutes.ago.utc
-    ArchiveRecord.maximum(:high_wind_speed, :conditions => "date > \'#{start_tm.to_s(:db)}\'")
+    value = ArchiveRecord.maximum(:high_wind_speed, :conditions => "date > \'#{start_tm.to_s(:db)}\'")
+    value #todo build an Event object here
+  end
+
+  def gust_time
+    a = ArchiveRecord.find(:first, :conditions => "high_wind_speed = #{gust}", :order => "date desc")
+    a.date
   end
 
   def hourly_rain
