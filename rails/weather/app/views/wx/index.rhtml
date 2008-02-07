@@ -70,57 +70,66 @@ Comments or suggestions: <A HREF="mailto:tom@tom.org">Tom Mitchell</A>
 <TR>
 <TD VALIGN=TOP COLSPAN="2">
 <TABLE BORDER=0 WIDTH="100%" >
-<TR>
 <% if !@today.nil? %>
+<TR>
 <TD ALIGN=CENTER  VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's Low: </FONT><%= @today.lowTemp %>
 <% if @today.lowTempDate != nil then %>
-  (<%= @today.lowTempDate.localtime.strftime "%I:%M %p" %>)</TD>
+  (<%= @today.lowTempDate.localtime.strftime "%I:%M %p" %>)
 <% end %>
+</TD>
 </TR>
 <TR>
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's High: </FONT><%= @today.hiTemp %>
 <% if @today.hiTempDate != nil then %>
- (<%= @today.hiTempDate.localtime.strftime "%I:%M %p" %>)</TD>
+ (<%= @today.hiTempDate.localtime.strftime "%I:%M %p" %>)
 <% end %>
-<tr>
-
+</TD>
+</tr>
 <TR>
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's Low Wind Chill: </FONT><%= @today.lowWindchill %></TD>
 <% end %>
+
 <% if !@yesterday.nil? %>
 <tr>
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Yesterday's Low: <%= @yesterday.lowTemp %>
 <% if @yesterday.lowTempDate != nil then %>
- (<%= @yesterday.lowTempDate.localtime.strftime "%I:%M %p" %>)</td>
+ (<%= @yesterday.lowTempDate.localtime.strftime "%I:%M %p" %>)
 <% end %>
+</td>
 </tr>
 <tr>
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Yesterday's High: <%= @yesterday.hiTemp %> 
 <% if @yesterday.hiTempDate != nil then %>
- (<%= @yesterday.hiTempDate.localtime.strftime "%I:%M %p" %>)</td>
+ (<%= @yesterday.hiTempDate.localtime.strftime "%I:%M %p" %>)
 <% end %>
+</td>
 </tr>
 <% end %>
+
 <% if !@this_week.nil? %>
 <tr>
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
-This Week Avg Temp: <%= @this_week.avgTemp %></td>
+This Week Avg Temp: <%= @this_week.avgTemp %>
+</td>
 </tr>
 <% end %>
-<% if !@last_week.nil? %>
 
+<% if !@last_week.nil? %>
 <tr>
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
 Last Week Avg Temp: <%= @last_week.avgTemp %></td>
 </tr>
 <% end %>
-<% if !@last_month.nil? %>
 
+<% if !@this_month.nil? %>
 <tr>
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
-This Month Avg Temp: <%= @this_month.avgTemp %></td>
+This Month Avg Temp: <%= @this_month.avgTemp %>
+</td>
 </tr>
+<% end %> 
 
+<% if !@last_month.nil? %>
 <tr>
 <TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Last Month Avg Temp: <%= @last_month.avgTemp %></td>
 </tr>
@@ -145,21 +154,36 @@ This Month Avg Temp: <%= @this_month.avgTemp %></td>
 
 </TD>
 </TR>
+</table>
 
+<p><p><p>
+
+<TABLE BORDER BGCOLOR="#C0C0C0" >
 <TD ALIGN=CENTER VALIGN=CENTER >
+<tr>
 <% if !@today.nil? %>
-<FONT FACE="Arial">Today's High Gust: </FONT><%= @today.hiWindspeed %> mph 
+<td  ALIGN=CENTER VALIGN=CENTER >
+  <% if @today.hiWindspeed != nil then %>
+    <FONT FACE="Arial">Today's High Gust: </FONT><%= @today.hiWindspeed %> mph 
+   (<%= @today.gustDate.localtime.strftime "%I:%M %p" %>)
+  <% end %>
+</td>
 <% end %>
+</tr>
+
+<tr>
+<TD COLSPAN="2" align="center" >
 <% if !@this_hour.nil? %>
-<br>This Hour Avg. WindSpeed: <%= @this_hour.avgWindspeed %> mph
-<% end %>
-<% if !@last_hour.nil? %>
-<br>Last Hour Avg. WindSpeed: <%= @last_hour.avgWindspeed %> mph
-<% end %>
-<% if !@today.nil? %>
-<br>Today's Avg. WindSpeed: <%= @today.avgWindspeed %> mph
+<Center>This Hour Avg. WindSpeed: <%= @this_hour.avgWindspeed %> mph</Center>
 <% end %>
 
+<% if !@last_hour.nil? %>
+<Center>Last Hour Avg. WindSpeed: <%= @last_hour.avgWindspeed %> mph</Center>
+<% end %>
+
+<% if !@today.nil? %>
+<Center>Today's Avg. WindSpeed: <%= @today.avgWindspeed %> mph</center>
+<% end %>
 </TD>
 </TR>
 
@@ -203,8 +227,8 @@ This Month Avg Temp: <%= @this_month.avgTemp %></td>
 </center>
 <p>
 
-<center><b><h2>Forecast</h2></b></center>
 <TABLE BORDER=1 ALIGN="CENTER" WIDTH="50%" >
+<tr><td colspan="3" align="center"><center><b><h2>Forecast</h2></b></center></td></tr>
 <% @forecast.each do | pd | %>
   <tr>
    <td><%= pd.name %></td>
