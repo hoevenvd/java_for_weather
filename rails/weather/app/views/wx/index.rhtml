@@ -159,20 +159,16 @@ This Month Avg Temp: <%= @this_month.avgTemp %>
 <p><p><p>
 
 <TABLE BORDER BGCOLOR="#C0C0C0" >
-<TD ALIGN=CENTER VALIGN=CENTER >
-<tr>
-<% if !@today.nil? %>
-<td  ALIGN=CENTER VALIGN=CENTER >
-  <% if @today.hiWindspeed != nil then %>
-    <FONT FACE="Arial">Today's High Gust: </FONT><%= @today.hiWindspeed %> mph 
-   (<%= @today.gustDate.localtime.strftime "%I:%M %p" %>)
-  <% end %>
-</td>
-<% end %>
-</tr>
-
 <tr>
 <TD COLSPAN="2" align="center" >
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Wind</FONT></FONT></B></CENTER>
+<% if !@today.nil? %>
+  <% if @today.hiWindspeed != nil then %>
+    <Center>Today's High Gust: <%= @today.hiWindspeed %> mph</Center>
+   (<%= @today.gustDate.localtime.strftime "%I:%M %p" %>)
+  <% end %>
+<% end %>
+
 <% if !@this_hour.nil? %>
 <Center>This Hour Avg. WindSpeed: <%= @this_hour.avgWindspeed %> mph</Center>
 <% end %>
@@ -210,10 +206,10 @@ This Month Avg Temp: <%= @this_month.avgTemp %>
 <CENTER>This week: <%= @this_week.rain %> inches</CENTER>
 <% end %>
 <% if !@last_week.nil? %>
-<CENTER>Last week: <%= @last_week.rain %> inches (Mon - Sun)</CENTER>
+<CENTER>Last week: <%= @last_week.rain %> inches </CENTER>
 <% end %>
 <% if !@last_rain.nil? %>
-<CENTER>Last rain: <%= @last_rain.getlocal.strftime("%a, %b %d %Y %I:%M:%S %p " + Time.new.getlocal.zone)  %></CENTER>
+<CENTER>Last rain: <%= @last_rain.getlocal.to_s(:short)  %></CENTER>
 <% end %>
 </TD>
 </TR>
@@ -231,7 +227,7 @@ This Month Avg Temp: <%= @this_month.avgTemp %>
 <tr><td colspan="3" align="center"><center><b><h2>Forecast</h2></b></center></td></tr>
 <% @forecast.each do | pd | %>
   <tr>
-   <td><%= pd.name %></td>
+   <td><b><%= pd.name %></b></td>
    <td><img border=0 src="<%= pd.icon_url %>"></td>
    <td><%= pd.text %></td>
   </tr>
