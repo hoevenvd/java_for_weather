@@ -39,7 +39,7 @@ class WxPeriod < Period
   end
 
   def hi_temp_date(pd, temp)
-    a = ArchiveRecord.find(:first, :conditions => "date >= '#{@start_time_sql}' and date <= '#{@end_time_sql}' and high_outside_temp = '#{temp}'", :order => "date desc")
+    a = ArchiveRecord.find(:first, :conditions => "date >= '#{@start_time_sql}' and date < '#{@end_time_sql}' and high_outside_temp = '#{temp}'", :order => "date desc")
     if (a != nil) then
       a.date != nil ? a.date : nil
     else
@@ -48,7 +48,7 @@ class WxPeriod < Period
   end
   
   def low_temp_date(pd, temp)
-    a = ArchiveRecord.find(:first, :conditions => "date >= '#{@start_time_sql}' and date <= '#{@end_time_sql}' and low_outside_temp = '#{temp}'", :order => "date desc")
+    a = ArchiveRecord.find(:first, :conditions => "date >= '#{@start_time_sql}' and date < '#{@end_time_sql}' and low_outside_temp = '#{temp}'", :order => "date desc")
     if (a != nil) then
       a.date != nil ? a.date : nil
     else
@@ -57,7 +57,7 @@ class WxPeriod < Period
   end
   
   def gust_date(pd, gust)
-    a = ArchiveRecord.find(:first, :conditions => "date >= '#{@start_time_sql}' and date <= '#{@end_time_sql}' and high_wind_speed = '#{gust}'", :order => "date desc")
+    a = ArchiveRecord.find(:first, :conditions => "date >= '#{@start_time_sql}' and date < '#{@end_time_sql}' and high_wind_speed = '#{gust}'", :order => "date desc")
     if (a != nil) then
       a.date != nil ? a.date : nil
     else
