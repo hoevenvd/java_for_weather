@@ -58,14 +58,14 @@
 <tr>														 
 <TD ALIGN=CENTER VALIGN=center COLSPAN=2 WIDTH="100%"><B>
 <FONT FACE="Arial"><%= @conditions %><br>Visibility <%= @visibility %> miles</FONT></B><br/>
-Observed (Beverly Airport)<br/>
- <%= @conditions_date %>
+Beverly Airport<br/>
+ <%= Time.parse(@conditions_date).to_s(:short) %>
 </TD>
 </tr>
 
 
 <TD ALIGN=CENTER VALIGN=TOP COLSPAN=2 WIDTH="100%"><B>
-<FONT FACE="Arial">Current conditions are updated every 10 seconds!</FONT></B></TD>
+<FONT FACE="Arial">Refreshes every 10 seconds</FONT></B></TD>
 </tr>
 
 <TR>

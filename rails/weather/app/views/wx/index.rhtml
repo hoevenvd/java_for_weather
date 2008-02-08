@@ -70,6 +70,7 @@ Comments or suggestions: <A HREF="mailto:tom@tom.org">Tom Mitchell</A>
 <TR>
 <TD VALIGN=TOP COLSPAN="2">
 <TABLE BORDER=0 WIDTH="100%" >
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Temperature</FONT></FONT></B></CENTER>
 <% if !@today.nil? %>
 <TR>
 <TD ALIGN=CENTER  VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's Low: </FONT><%= @today.lowTemp %>
@@ -164,21 +165,20 @@ This Month Avg Temp: <%= @this_month.avgTemp %>
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Wind</FONT></FONT></B></CENTER>
 <% if !@today.nil? %>
   <% if @today.hiWindspeed != nil then %>
-    <Center>Today's High Gust: <%= @today.hiWindspeed %> mph</Center>
-   (<%= @today.gustDate.localtime.strftime "%I:%M %p" %>)
+    <Center>Today's High Gust: <%= @today.hiWindspeed %> mph (<%= @today.gustDate.localtime.strftime "%I:%M %p" %>)</Center>
   <% end %>
 <% end %>
 
 <% if !@this_hour.nil? %>
-<Center>This Hour Avg. WindSpeed: <%= @this_hour.avgWindspeed %> mph</Center>
+<Center>This Hour: <%= @this_hour.avgWindspeed %> mph</Center>
 <% end %>
 
 <% if !@last_hour.nil? %>
-<Center>Last Hour Avg. WindSpeed: <%= @last_hour.avgWindspeed %> mph</Center>
+<Center>Last Hour: <%= @last_hour.avgWindspeed %> mph</Center>
 <% end %>
 
 <% if !@today.nil? %>
-<Center>Today's Avg. WindSpeed: <%= @today.avgWindspeed %> mph</center>
+<Center>Today: <%= @today.avgWindspeed %> mph</center>
 <% end %>
 </TD>
 </TR>
