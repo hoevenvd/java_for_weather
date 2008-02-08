@@ -20,7 +20,6 @@ class WxController < ApplicationController
     @conditions_date = ApplicationHelper.observed_conditions_date
     @visibility = ApplicationHelper.observed_visibility
     @forecast = ApplicationHelper.forecast
-    puts @forecast
   end
   
   def last_rain
