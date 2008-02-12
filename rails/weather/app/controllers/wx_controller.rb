@@ -36,6 +36,16 @@ class WxController < ApplicationController
     @conditions_date = ApplicationHelper.observed_conditions_date
     @visibility = ApplicationHelper.observed_visibility
     @current = CurrentCondition.find_by_location(AppConfig.location)
+    @today = WxPeriod.today_summary[0]
+    if (@current.outside_temperature.to_f >= @today.hiTemp.to_f) 
+      puts "high!"
+      @highlo = "(daily high)"
+    else
+      if (@current.outside_temperature.to_f <= @today.lowTemp.to_f) 
+        puts "low"
+        @highlo = "(daily low)"
+      end
+    end 
     render(:template => "wx/_current_conditions",
            :layout => false)
   end
