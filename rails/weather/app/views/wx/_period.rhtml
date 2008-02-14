@@ -1,0 +1,73 @@
+<TABLE BORDER WIDTH="303" BGCOLOR="#C0C0C0" >
+
+
+<TR>
+<TD VALIGN=TOP COLSPAN="2">
+<TABLE BORDER=0 WIDTH="100%" >
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Temperature</FONT></FONT></B></CENTER>
+<% if !@today.nil? %>
+<TR>
+<TD ALIGN=CENTER  VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's Low: </FONT><%= @today.lowTemp %>
+<% if @today.lowTempDate != nil then %>
+  (<%= @today.lowTempDate.localtime.strftime "%I:%M %p" %>)
+<% end %>
+</TD>
+</TR>
+<TR>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's High: </FONT><%= @today.hiTemp %>
+<% if @today.hiTempDate != nil then %>
+ (<%= @today.hiTempDate.localtime.strftime "%I:%M %p" %>)
+<% end %>
+</TD>
+</tr>
+<TR>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's Low Wind Chill: </FONT><%= @today.lowWindchill %></TD>
+<% end %>
+
+<% if !@yesterday.nil? %>
+<tr>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Yesterday's Low: <%= @yesterday.lowTemp %>
+<% if @yesterday.lowTempDate != nil then %>
+ (<%= @yesterday.lowTempDate.localtime.strftime "%I:%M %p" %>)
+<% end %>
+</td>
+</tr>
+<tr>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Yesterday's High: <%= @yesterday.hiTemp %> 
+<% if @yesterday.hiTempDate != nil then %>
+ (<%= @yesterday.hiTempDate.localtime.strftime "%I:%M %p" %>)
+<% end %>
+</td>
+</tr>
+<% end %>
+
+<% if !@this_week.nil? %>
+<tr>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
+This Week Avg Temp: <%= @this_week.avgTemp %>
+</td>
+</tr>
+<% end %>
+
+<% if !@last_week.nil? %>
+<tr>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
+Last Week Avg Temp: <%= @last_week.avgTemp %></td>
+</tr>
+<% end %>
+
+<% if !@this_month.nil? %>
+<tr>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
+This Month Avg Temp: <%= @this_month.avgTemp %>
+</td>
+</tr>
+<% end %> 
+
+<% if !@last_month.nil? %>
+<tr>
+<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Last Month Avg Temp: <%= @last_month.avgTemp %></td>
+</tr>
+<% end %> 
+</TABLE>
+
