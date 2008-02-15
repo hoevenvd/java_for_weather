@@ -19,11 +19,10 @@
   </tr>
 </table>
 
+
 <p>
-<applet CODE = "org.tom.weather.astro.SimpleSunApplet.class" codebase="java" WIDTH = 360 HEIGHT = 168 NAME = "SimpleSun">
-<PARAM NAME = bgcolor VALUE ="#FFFFFF" >
-  The SimpleSun Applet is displayed here if your browser supports Java.
-</applet>
+
+<%= render(:partial => "sunapplet", :layout => false  ) %>
 
 <!-- insert magic here -->
 <% if @current.nil? %>
@@ -38,13 +37,13 @@
 				 :frequency => 10 ) %>
 														 
 <% end %>														 
-
+<table>
+<tr align="center">
+<td>
 <!-- include here -->
 <%= render(:partial => "period", :layout => false  ) %>
-
-<td>
-</TD>
-</TR>
+</td>
+</tr>
 <TR>
 <TD COLSPAN="2" >
 
@@ -63,188 +62,23 @@
 </TD>
 </TR>
 </table>
-<!-- enclosing table -->
-</tr>
-</table>
-<p><p><p>
-<TABLE BORDER=1 ALIGN="CENTER" WIDTH="50%" >
-<BR>
-<BR>
-<TR>
-<TD ALIGN=CENTER COLSPAN="2" WIDTH="100%">
-<p><font face="Arial">This page features up to the second weather from the 
- <a href="http://maps.google.com/?t=k&ll=<%= AppConfig.latitude %>,<%= AppConfig.longitude %>&spn=0.025701,0.036135&t=k">Beverly Cove neighborhood of
- Beverly, Mass</a> which is about 20 miles Northeast of downtown Boston.<p>
- With the exception of the radar image thanks to 
- <a href="http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=KMASTONE1">Weather Underground</a>,
-  all of this information comes from sensors mounted on my house.<p>
-   The current conditions are updated <b>every 10 seconds</b> and the page reloads itself every 10 minutes.  The graphs are built every 10 minutes too.<p>
-  This iteration of this site has been built with Ruby on Rails for presentation and Java polling the device and saving
-  to a MySQL database.  Everything runs on Linux.<p>
-</font>
-</TD>
-</TR>
-</table>
-Comments or suggestions: <A HREF="mailto:tom@tom.org">Tom Mitchell</A>
-<p>
 
+<p><p><p>
 
 
 <TABLE BORDER BGCOLOR="#C0C0C0" >
-<tr>
-<TD COLSPAN="2" align="center" >
-<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Wind</FONT></FONT></B></CENTER>
-<% if !@today.nil? %>
-  <% if @today.hiWindspeed != nil then %>
-    <Center>Today's High Gust: <%= @today.hiWindspeed %> mph (<%= @today.gustDate.localtime.strftime "%I:%M %p" %>)</Center>
-  <% end %>
-<% end %>
-
-<% if !@this_hour.nil? %>
-<Center>This Hour: <%= @this_hour.avgWindspeed %> mph</Center>
-<% end %>
-
-<% if !@last_hour.nil? %>
-<Center>Last Hour: <%= @last_hour.avgWindspeed %> mph</Center>
-<% end %>
-
-<% if !@today.nil? %>
-<Center>Today: <%= @today.avgWindspeed %> mph</center>
-<% end %>
-</TD>
-</TR>
-
-<TR>
-<TD COLSPAN="2" align="center" >
-<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Barometer</FONT></FONT></B></CENTER>
-<% if !@today.nil? %>
-<CENTER>Today's High: <%= @today.hiPressure %></CENTER>
-<CENTER>Today's Low:  <%= @today.lowPressure %></center>
-<% end %>
-</TD>
-</TR>
-
-<TR>
-<TD COLSPAN="2" align="center" >
-<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Precipitation</FONT></FONT></B></CENTER>
-<% if !@today.nil? %>
-<CENTER>Today: <%= @today.rain %></CENTER>
-<% end %>
-<% if !@yesterday.nil? %>
-<CENTER>Yesterday: <%= @yesterday.rain %> inches</CENTER>
-<% end %>
-<% if !@this_week.nil? %>
-<CENTER>This week: <%= @this_week.rain %> inches</CENTER>
-<% end %>
-<% if !@last_week.nil? %>
-<CENTER>Last week: <%= @last_week.rain %> inches </CENTER>
-<% end %>
-<% if !@last_rain.nil? %>
-<CENTER>Last rain: <%= @last_rain.getlocal.to_s(:short)  %></CENTER>
-<% end %>
-</TD>
-</TR>
-<TR>
-<TD>
-<CENTER>N 42&deg;33'41.54, W 70&deg;50'58.28</CENTER>
-</TD>
-</TR>
-
 </TABLE>
 </center>
 <p>
 
-<TABLE BORDER=1 ALIGN="CENTER" WIDTH="50%" >
-<tr><td colspan="3" align="center"><center><b><h2>Forecast</h2></b></center></td></tr>
-<% @forecast.each do | pd | %>
-  <tr>
-   <td><b><%= pd.name %></b></td>
-   <td><img border=0 src="<%= pd.icon_url %>"></td>
-   <td><%= pd.text %></td>
-  </tr>
-<% end %>
+<%= render(:partial => "forecast", :layout => false  ) %>
 
-</table>
+<%= render(:partial => "graphs", :layout => false  ) %>
 
-<center><b><h2>48 Hour Temperatures</h2></b></center>
+<%= render(:partial => "tides", :layout => false  ) %>
 
-<p align="center">
-    <font face="Arial">
-        <img width=600 height=300 border=1 src="http://www.tom.org:8083/weather/images/temp24.jpg" alt="temp24.gif"></font></p>
+<%= render(:partial => "info", :layout => false  ) %>
 
-<center><b><h2>48 Hour Pressure</h2></b></center>
-
-<p align="center">
-    <font face="Arial">
-        <img width=600 height=300 border=1 src="http://www.tom.org:8083/weather/
-images/pressure24.jpg" alt="pressure24.jpg"></font></p>
-
-<center><b><h2>48 Hour Wind Speed</h2></b></center>
-<p align="center"><font face="Arial"><img width=600 height=300 border=1 src="http://www.tom.org:8083/weather/images/wind24.jpg" alt="windspeed24.gif"></font></p>
-
-<center><b><h2>48 Hour Wind Direction</h2></b></center>
-<p align="center"><font face="Arial"><img width=600 height=300 border=1 src="http://www.tom.org:8083/weather/images/winddir24.jpg" alt="winddir24.gif"></font></p>
-
-<center><b><h2>14 Day Temperatures</h2></b></center>
-<p align="center"><font face="Arial"><img width=600 height=300 border=1 src="http://www.tom.org:8083/weather/images/tempweek.jpg" alt="tempweek.gif"></font></p>
-
-<center><b><h2>14 Day Pressure</h2></b></center>
-<p align="center"><font face="Arial"><img width=600 height=300 border=1 src="http://www.tom.org:8083/weather/images/pressureweek.jpg" alt="pressure24.gif"></font></p>
-
-<center><b><h2>14 Day Wind Direction</h2></b></center>
-<p align="center"><font face="Arial"><img width=600 height=300 border=1 src="http://www.tom.org:8083/weather/images/winddirweek.jpg" alt="winddirweek.gif"></font></p>
-
-<center><b><h2>48 Hour Solar Radiation</h2></b></center>
-<p align="center"><font face="Arial"><img width=600 height=300 border=1 src="http://www.tom.org:8083/weather/images/solar24.jpg" alt="solar24.gif"></font></p>
-
-<center><b><h2>14 Day Solar Radiation</h2></b></center>
-<p align="center"><font face="Arial"><img width=600 height=300 border=1 src="http://www.tom.org:8083/weather/images/solarweek.jpg" alt="solarweek.gif"></font></p>
-
-
-<p>
-<center><b>
-<h2>3 Day Tide Predictions - <a href="http://www.tom.org:9999/locations/473.html">Complete Tide Info</a>
-</h2></b></center>
-
-<p align="center">
-    <font face="Arial">
-        <img src="http://www.tom.org:8083/weather/images/tides.png" alt="tides.png">
-    </font>
-</p>
-
-<br>
-<TABLE BORDER=1 ALIGN="CENTER" WIDTH="50%" >
-
-<TR>
-<TD ALIGN=CENTER COLSPAN="2" WIDTH="100%"><B><FONT FACE="Arial">Long-term average Temperatures</FONT></b>
-</TD>
-</TR>
-
-<TR>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">This Week: </FONT><%= @this_week.avgTemp %></TD>
-</TR>
-
-<TR>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Last Week: </FONT><%= @last_week.avgTemp %></TD>
-</TR>
-
-<TR>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">This Month: </FONT><%= @this_month.avgTemp %></TD>
-</TR>
-
-<TR>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Last Month: </FONT><%= @last_month.avgTemp %></TD>
-</TR>
-
-</TABLE>
-<center>
-<img src="http://www.tom.org:8083/weather/images/rails.png">
-</center>
-<br>
-<center>
-<a href="http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=KMASTONE1">
-<img border=0 src="http://banners.wunderground.com/cgi-bin/banner/ban/wxBanner?bannertype=WeatherStationCount&weatherstationcount=KMASTONE1" width=160 height=163>
-</center>
 <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
 </script>
 <script type="text/javascript">

@@ -1,73 +1,111 @@
-<TABLE BORDER WIDTH="303" BGCOLOR="#C0C0C0" >
-
-
+<TABLE BORDER WIDTH="480" BGCOLOR="#C0C0C0" >
 <TR>
-<TD VALIGN=TOP COLSPAN="2">
-<TABLE BORDER=0 WIDTH="100%" >
-<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Temperature</FONT></FONT></B></CENTER>
-<% if !@today.nil? %>
-<TR>
-<TD ALIGN=CENTER  VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's Low: </FONT><%= @today.lowTemp %>
-<% if @today.lowTempDate != nil then %>
-  (<%= @today.lowTempDate.localtime.strftime "%I:%M %p" %>)
-<% end %>
-</TD>
-</TR>
-<TR>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's High: </FONT><%= @today.hiTemp %>
-<% if @today.hiTempDate != nil then %>
- (<%= @today.hiTempDate.localtime.strftime "%I:%M %p" %>)
-<% end %>
-</TD>
-</tr>
-<TR>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%"><FONT FACE="Arial">Today's Low Wind Chill: </FONT><%= @today.lowWindchill %></TD>
-<% end %>
-
-<% if !@yesterday.nil? %>
-<tr>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Yesterday's Low: <%= @yesterday.lowTemp %>
-<% if @yesterday.lowTempDate != nil then %>
- (<%= @yesterday.lowTempDate.localtime.strftime "%I:%M %p" %>)
-<% end %>
+<TD COLSPAN="4" align="center" >
+<CENTER><B><FONT FACE="Arial">Temperature</FONT></B></CENTER>
 </td>
 </tr>
+
 <tr>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Yesterday's High: <%= @yesterday.hiTemp %> 
+<td colspan="4" align="center">
+<% if !@today.nil? %>
+<center><FONT FACE="Arial">Today's Low: </FONT><%= @today.lowTemp %>
+<% if @today.lowTempDate != nil then %>
+  (<%= @today.lowTempDate.localtime.strftime "%I:%M %p" %>)
+<% end %></center>
+<center>Today's High: <%= @today.hiTemp %>
+<% if @today.hiTempDate != nil then %>
+ (<%= @today.hiTempDate.localtime.strftime "%I:%M %p" %>)
+<% end %></center>
+<center>Today's Low Wind Chill: </FONT><%= @today.lowWindchill %>
+<% end %></center>
+
+<% if !@yesterday.nil? %>
+<center>Yesterday's Low: <%= @yesterday.lowTemp %>
+<% if @yesterday.lowTempDate != nil then %>
+ (<%= @yesterday.lowTempDate.localtime.strftime "%I:%M %p" %>)</center>
+<% end %>
+<center>Yesterday's High: <%= @yesterday.hiTemp %> 
 <% if @yesterday.hiTempDate != nil then %>
  (<%= @yesterday.hiTempDate.localtime.strftime "%I:%M %p" %>)
 <% end %>
-</td>
-</tr>
-<% end %>
+<% end %></center>
 
 <% if !@this_week.nil? %>
-<tr>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
-This Week Avg Temp: <%= @this_week.avgTemp %>
-</td>
-</tr>
+<center>This Week Avg.: <%= @this_week.avgTemp %></center>
 <% end %>
 
 <% if !@last_week.nil? %>
-<tr>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
-Last Week Avg Temp: <%= @last_week.avgTemp %></td>
-</tr>
+<center>Last Week Avg.: <%= @last_week.avgTemp %></center>
 <% end %>
 
 <% if !@this_month.nil? %>
-<tr>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">
-This Month Avg Temp: <%= @this_month.avgTemp %>
-</td>
-</tr>
+<center>This Month Avg.: <%= @this_month.avgTemp %></center>
 <% end %> 
 
 <% if !@last_month.nil? %>
-<tr>
-<TD ALIGN=CENTER VALIGN=TOP WIDTH="100%">Last Month Avg Temp: <%= @last_month.avgTemp %></td>
-</tr>
+<center>Last Month Avg.: <%= @last_month.avgTemp %></center>
 <% end %> 
+
+</td>
+</tr>
+<tr>
+<TD  align="center" >
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Wind</FONT></FONT></B></CENTER>
+<% if !@this_hour.nil? %>
+<Center>This Hour: <%= @this_hour.avgWindspeed %> mph</Center>
+<% end %>
+
+<% if !@last_hour.nil? %>
+<Center>Last Hour: <%= @last_hour.avgWindspeed %> mph</Center>
+<% end %>
+
+<% if !@today.nil? %>
+<Center>Today: <%= @today.avgWindspeed %> mph</center>
+<% end %>
+<% if !@today.nil? %>
+  <% if @today.hiWindspeed != nil then %>
+    <Center>Today's High: <%= @today.hiWindspeed %> mph (<%= @today.gustDate.localtime.strftime "%I:%M %p" %>)</Center>
+  <% end %>
+<% end %>
+
+</TD>
+</tr>
+<tr>
+<TD COLSPAN="4" align="center" >
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Precipitation</FONT></FONT></B></CENTER>
+<% if !@today.nil? %>
+<CENTER>Today: <%= @today.rain %></CENTER>
+<% end %>
+<% if !@yesterday.nil? %>
+<CENTER>Yesterday: <%= @yesterday.rain %> inches</CENTER>
+<% end %>
+<% if !@this_week.nil? %>
+<CENTER>This week: <%= @this_week.rain %> inches</CENTER>
+<% end %>
+<% if !@last_week.nil? %>
+<CENTER>Last week: <%= @last_week.rain %> inches </CENTER>
+<% end %>
+<% if !@last_rain.nil? %>
+<CENTER>Last rain: <%= @last_rain.getlocal.to_s(:short)  %></CENTER>
+<% end %>
+</TD>
+</TR>
+
+<TR>
+<TD COLSPAN="4" align="center" >
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Barometer</FONT></FONT></B></CENTER>
+<% if !@today.nil? %>
+<CENTER>Today's High: <%= @today.hiPressure %></CENTER>
+<CENTER>Today's Low:  <%= @today.lowPressure %></center>
+<% end %>
+</TD>
+
+</TR>
+
+<TR>
+<TD COLSPAN="4" align="center" >
+<CENTER>N 42&deg;33'41.54, W 70&deg;50'58.28</CENTER>
+</td></TR>
+
 </TABLE>
 

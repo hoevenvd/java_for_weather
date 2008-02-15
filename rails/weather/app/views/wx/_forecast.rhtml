@@ -1,0 +1,12 @@
+<TABLE BORDER=1 ALIGN="CENTER" WIDTH="50%" >
+<tr><td colspan="3" align="center"><center><b><h2>Forecast</h2></b></center></td></tr>
+<% @forecast.each do | pd | %>
+  <tr>
+   <td><b><%= pd.name %></b></td>
+   <td><img border=0 src="<%= pd.icon_url %>"></td>
+   <td><%= pd.text %></td>
+  </tr>
+<% end %>
+
+</table>
+
