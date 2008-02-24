@@ -1,8 +1,7 @@
 <TABLE BORDER WIDTH="360" BGCOLOR="#C0C0C0" >
 <TR>
 <TD ALIGN=CENTER VALIGN=TOP COLSPAN=3 WIDTH="100%">
-<B>Live Conditions<br><%= @current.sample_date.getlocal.strftime("%a, %b %d %Y %I:%M:%S %p ") + Time.new.getlocal.zone %></B>
-<br><B>Refreshes every 10 seconds</B>
+<B>Live Conditions<br><%= (Time.now - @current.sample_date.getlocal).to_i %> seconds ago</B>
 </TD>
 </tr>
 
