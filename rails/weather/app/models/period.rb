@@ -1,6 +1,6 @@
 require 'pp'
 require "rubygems"
-require_gem "activerecord"
+require "activerecord"
 	
 class Period
   SQL_FORMAT = "%Y-%m-%d %H:%M:%S"
