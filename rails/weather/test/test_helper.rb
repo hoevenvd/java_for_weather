@@ -2,6 +2,8 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
 
+require 'action_web_service/test_invoke.rb'
+
 class Test::Unit::TestCase
   # Transactional fixtures accelerate your tests by wrapping each test method
   # in a transaction that's rolled back on completion.  This ensures that the
@@ -26,3 +28,4 @@ class Test::Unit::TestCase
 
   # Add more helper methods to be used by all tests here...
 end
+
