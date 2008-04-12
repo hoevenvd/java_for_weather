@@ -39,7 +39,18 @@ config.active_record.default_timezone = :utc
   # config.active_record.schema_format = :ruby
 
   # See Rails::Configuration for more options
+  
+  
+  config.load_paths += %W( #{RAILS_ROOT}/app/apis )
+  config.load_paths += Dir["#{RAILS_ROOT}/vendor/gems/**"].map do |dir|
+    File.directory?(lib = "#{dir}/lib") ? lib : dir
+  end
+
 end
+
+require 'actionwebservice'
+
+
 
 # Add new inflection rules using the following format 
 # (all these examples are active by default):

@@ -111,7 +111,8 @@ module ActionWebService
               if template_exists?(customized_template)
                 content = @template.render :file => customized_template
               else
-                content = @template.render :file => default_template
+#                content = @template.render :file => default_template
+                 content = @template.render({:file => default_template, :use_full_path => false})
               end
               @template.instance_variable_set("@content_for_layout", content)
               if self.active_layout.nil?
