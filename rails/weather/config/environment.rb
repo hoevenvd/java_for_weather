@@ -2,7 +2,7 @@
 
 # Uncomment below to force Rails into production mode when 
 # you don't control web/app server and can't set it the proper way
-# ENV['RAILS_ENV'] ||= 'production'
+ENV['RAILS_ENV'] ||= 'production'
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -18,7 +18,7 @@ config.frameworks -= [ :action_mailer ]
 
   # Force all environments to use the same logger level 
   # (by default production uses :info, the others :debug)
-config.log_level = :warn
+#config.log_level = :debug
 
   # Use the database for sessions instead of the file system
   # (create the session table with 'rake create_sessions_table')
@@ -50,7 +50,8 @@ end
 
 require 'actionwebservice'
 
-
+# Rotate the log at 10 megabyte, keeping the last 10
+RAILS_DEFAULT_LOGGER = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}.log", 10, 10000000)
 
 # Add new inflection rules using the following format 
 # (all these examples are active by default):
