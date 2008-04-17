@@ -1,9 +1,11 @@
-#require_dependency 'sparklines'
-
-# Filters added to this controller will be run for all controllers in the application.
+# Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
+
 class ApplicationController < ActionController::Base
-  helper :sparklines
+  helper :all # include all helpers, all the time
+
+  # See ActionController::RequestForgeryProtection for details
+  # Uncomment the :secret if you're not using the cookie session store
+  #protect_from_forgery :secret => 'aa5e850b76a331a73e154bce16e78863'
   session :off
-  #ActiveRecord::Base.verification_timeout = 300 # get ActiveRecord to check w/ the db every 5 mins
 end

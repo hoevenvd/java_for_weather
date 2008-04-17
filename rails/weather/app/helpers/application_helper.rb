@@ -1,10 +1,11 @@
+# Methods added to this helper will be available to all templates in the application.
 require 'memcache'
 
 module ApplicationHelper
 
   def ApplicationHelper.init_cache
     if (@cache == nil)
-      @cache = MemCache::new '192.168.1.4:11211', :debug => false
+      @cache = MemCache::new AppConfig.memcache_url, :debug => false
     end
   end
   
