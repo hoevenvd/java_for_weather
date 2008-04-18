@@ -93,3 +93,14 @@ end
 env_config = config.send(RAILS_ENV)
 config.common.update(env_config) unless env_config.nil?
 AppConfig = OpenStruct.new(config.common)
+
+begin
+  RAILS_DEFAULT_LOGGER = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}.log", 5, 1024 * 1024 * 10)
+rescue StandardError
+  RAILS_DEFAULT_LOGGER = Logger.new(STDERR)
+  RAILS_DEFAULT_LOGGER.level = Logger::WARN
+  RAILS_DEFAULT_LOGGER.warn(
+    "Rails Error: Unable to access log file. Please ensure that log/#{RAILS_ENV}.log exists and is chmod 0666. " +
+    "The log level has been raised to WARN and the output directed to STDERR until the problem is fixed." 
+  )
+end
