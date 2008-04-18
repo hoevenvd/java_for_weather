@@ -3,6 +3,7 @@ common:
   latitude:          42.56212
   longitude:         -70.84997
   location:          01915
+  memcache_url: 192.168.1.4:11211
   wunderground:
     01915:
       id: KMASTONE1
@@ -13,5 +14,4 @@ test:
   service_password: wx
 production:
   service_password: wx
-  memcache_url: 192.168.1.4:11211
   
