@@ -4,7 +4,6 @@ class WxController < ApplicationController
   include REXML
 
   def index
-    @current = CurrentCondition.find_by_location(AppConfig.location)
     @today = WxPeriod.today_summary[0]
     @yesterday = WxPeriod.yesterday_summary[0]
     @this_hour = WxPeriod.this_hour_summary[0]
@@ -20,6 +19,7 @@ class WxController < ApplicationController
     @conditions_date = ApplicationHelper.observed_conditions_date
     @visibility = ApplicationHelper.observed_visibility
     @forecast = ApplicationHelper.forecast
+    @current = CurrentCondition.find_by_location(AppConfig.location)
   end
   
   def last_rain
