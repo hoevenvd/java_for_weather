@@ -17,18 +17,6 @@ module ApplicationHelper
     end
   end
  
-  def ApplicationHelper.observed_conditions
-    cache["01915-obs"]["weather"]
-  end
-
-  def ApplicationHelper.observed_conditions_date
-    cache["01915-obs"]["observation_time"].to_s
-  end
-
-  def ApplicationHelper.observed_visibility
-    cache["01915-obs"]["visibility_mi"]
-  end
-
   def ApplicationHelper.forecast
     cache["01915-forecast"]
   end

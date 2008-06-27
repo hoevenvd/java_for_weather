@@ -8,13 +8,12 @@ include REXML
 
 class CacheWriter
 
-  LOCATION = "01915-obs"
   LOCATION_FORECAST = "01915-forecast"
   URL = 'www.weather.gov'
   PREFIX = "/data/current_obs/"
   PORT = 80
   POSTFIX = ".xml"
-  STATION = "KBVY"
+  STATION = ARGV[0] # Appconfig.noaa_location # "KBVY" # 
   CACHE_URL = AppConfig.memcache_url
   CACHE_DEBUG = false
 
@@ -44,16 +43,23 @@ class CacheWriter
     log.level = Logger::DEBUG
     h = Net::HTTP.new(URL, PORT)
     resp, data = h.get(PREFIX + STATION + POSTFIX, nil)
+    #log.debug(resp)
+    #log.debug(data)
     doc = Document.new(data)
-    value = { 'weather' => doc.elements[1].elements["weather"].text }
-    date_str = doc.elements[1].elements["observation_time"].text
-    value['observation_time'] = date_str
-    value['visibility_mi'] = doc.elements[1].elements["visibility_mi"].text.to_f
-    # log.debug(value)
-    write_entry(LOCATION, value)
-    write_entry(LOCATION_FORECAST, get_forecast)
-  rescue Exception
-    log.error($!)
+    location = doc.elements[1].elements["station_id"].text
+    as_of = Time.rfc822(doc.elements[1].elements["observation_time_rfc822"].text).utc
+    record = NoaaConditions.find_by_as_of_and_location(as_of, location)
+    #log.debug(record)
+    if (record.nil?)
+      conditions = NoaaConditions.new
+      conditions.location = location
+      conditions.as_of = as_of
+      conditions.conditions = doc.elements[1].elements["weather"].text
+      conditions.visibility = doc.elements[1].elements["visibility_mi"].text.to_i
+      conditions.save!
+      log.debug(conditions)
+    end
+    #write_entry(LOCATION_FORECAST, get_forecast)
   end
 
 end

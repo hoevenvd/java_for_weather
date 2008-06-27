@@ -1,7 +1,7 @@
 <TABLE BORDER WIDTH="360" BGCOLOR="#C0C0C0" >
 <TR>
 <TD ALIGN=CENTER VALIGN=TOP COLSPAN=3 WIDTH="100%">
-<B>Live Conditions<br><%= (Time.now - @current.sample_date.getlocal).to_i %> seconds ago</B>
+<B>Live Conditions as of <%= @current.sample_date.getlocal.strftime("%I:%M:%S %p") %><br>(<%= (Time.now - @current.sample_date.getlocal).to_i %> seconds ago)</B>
 </TD>
 </tr>
 
@@ -46,16 +46,19 @@
 <!--
 <TR>
 <TD ALIGN=CENTER COLSPAN=3 WIDTH="100%"><B>Data collected from sensors: </B>
-<BR><%= @current.sample_date.strftime("%a %b %d %I:%M:%S %p") %></TD>
+<BR><%= @current.sample_date.strftime("%a %b %d %I:%M:%S %p") %></BR>
+</TD>
 </tr>
 -->
+
+<% if @conditions != nil && @conditions_date > 2.hours.ago %>
 <tr>														 
 <TD ALIGN=CENTER COLSPAN=3 WIDTH="100%"><B><%= @conditions %><br>Visibility <%= @visibility %> miles</B><br/>
 Beverly Airport<br/>
- <%= Time.parse(@conditions_date).to_s(:short) %>
+ <%= @conditions_date.to_s(:short) %>
 </TD>
 </tr>
-</tr>
+<% end # if @current != nil %>
 
 <TR>
 </table>
