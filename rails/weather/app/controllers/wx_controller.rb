@@ -15,13 +15,21 @@ class WxController < ApplicationController
     @last_month = WxPeriod.last_month_summary[0]
     last_rain_date = last_rain
     @last_rain = last_rain_date
-    @conditions = ApplicationHelper.observed_conditions
-    @conditions_date = ApplicationHelper.observed_conditions_date
-    @visibility = ApplicationHelper.observed_visibility
-    @forecast = ApplicationHelper.forecast
+    get_noaa_conditions
+    #@forecast = ApplicationHelper.forecast
     @current = CurrentCondition.find_by_location(AppConfig.location)
   end
-  
+
+  def get_noaa_conditions
+    noaa_conditions = NoaaConditions.find_all_by_location(AppConfig.noaa_location, :limit => 1, :order => "as_of desc")
+    noaa_conditions = noaa_conditions[0]
+    if noaa_conditions !=  nil
+      @conditions = noaa_conditions.conditions
+      @conditions_date = noaa_conditions.as_of.localtime
+      @visibility = noaa_conditions.visibility
+    end
+  end
+
   def last_rain
     s = ArchiveRecord.find(:first, :conditions => "rainfall > 0 and location = #{AppConfig.location}", :limit => 1, :order => "date desc")
     if !s.nil?
@@ -32,17 +40,13 @@ class WxController < ApplicationController
   end
   
   def current_conditions
-    @conditions = ApplicationHelper.observed_conditions
-    @conditions_date = ApplicationHelper.observed_conditions_date
-    @visibility = ApplicationHelper.observed_visibility
+    get_noaa_conditions
     @current = CurrentCondition.find_by_location(AppConfig.location)
     @today = WxPeriod.today_summary[0]
     if (@current.outside_temperature.to_f >= @today.hiTemp.to_f) 
-      puts "high!"
       @highlo = "(daily high)"
     else
       if (@current.outside_temperature.to_f <= @today.lowTemp.to_f) 
-        puts "low"
         @highlo = "(daily low)"
       end
     end 

@@ -3,6 +3,8 @@ require 'net/http'
 require 'rexml/document'
 include REXML
 
+# example: http://forecast.weather.gov//MapClick.php?textField1=42.56212&textField2=-70.84997&TextType=3
+
 class Forecast
   HOST = "forecast.weather.gov"
   PORT = 80
