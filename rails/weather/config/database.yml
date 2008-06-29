@@ -26,10 +26,10 @@ test:
 
 production:
   adapter: mysql
-  database: weather_development
+  database: weather_production
   username: weather
   password: wx4all
-  host: localhost
+  host: servers
   port: 3306
   
 site5-dev:
