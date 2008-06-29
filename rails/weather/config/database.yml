@@ -10,7 +10,7 @@ development:
   database: tomorg_weatherdevelopment
   username: tomorg_wx
   password: wx4all
-  host: localhost
+  host: tommitchell.net
   port: 3306
 	
 # Warning: The database defined as 'test' will be erased and
@@ -32,3 +32,11 @@ production:
   host: localhost
   port: 3306
   
+site5-dev:
+  adapter: mysql
+  database: tomorg_weatherdevelopment
+  username: tomorg_wx
+  password: wx4all
+  host: www.tommitchell.net
+  port: 3306
+
