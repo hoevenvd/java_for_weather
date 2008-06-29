@@ -9,11 +9,11 @@ Options +FollowSymLinks +ExecCGI
 #   Alias /myrailsapp /path/to/myrailsapp/public
 #RewriteBase /wx
 
-RewriteCond %{REQUEST_URI} ^/java.*
+RewriteCond %{REQUEST_URI} ^/weather/java.*
 RewriteRule .* - [L]
-RewriteCond %{REQUEST_URI} ^/javascripts.*
+RewriteCond %{REQUEST_URI} ^/weather/javascripts.*
 RewriteRule .* - [L]
-RewriteCond %{REQUEST_URI} ^/images.*
+RewriteCond %{REQUEST_URI} ^/weather/images.*
 RewriteRule .* - [L]
 
 RewriteEngine On
