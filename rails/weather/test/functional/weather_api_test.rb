@@ -12,6 +12,7 @@ class WeatherController; def rescue_action(e) raise e end; end
 
 class WeatherControllerApiTest < Test::Unit::TestCase
 
+  # FIXME: read this from config
   PASSWORD = "wx"
   
   def setup
