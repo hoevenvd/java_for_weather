@@ -7,10 +7,10 @@
 #   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
 development:
   adapter: mysql
-  database: weather_development
-  username: wx
+  database: tomorg_weatherdevelopment
+  username: tomorg_wx
   password: wx4all
-  host: servers
+  host: localhost
   port: 3306
 	
 # Warning: The database defined as 'test' will be erased and
@@ -26,9 +26,9 @@ test:
 
 production:
   adapter: mysql
-  database: weather_production
+  database: weather_development
   username: weather
   password: wx4all
-  host: servers
+  host: localhost
   port: 3306
   

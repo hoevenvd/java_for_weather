@@ -40,11 +40,11 @@ class CacheWriter
 
   begin
     log = Logger.new(STDOUT)
-    log.level = Logger::DEBUG
+    log.level = Logger::INFO
     h = Net::HTTP.new(URL, PORT)
     resp, data = h.get(PREFIX + STATION + POSTFIX, nil)
-    #log.debug(resp)
-    #log.debug(data)
+    log.debug(resp)
+    log.debug(data)
     doc = Document.new(data)
     location = doc.elements[1].elements["station_id"].text
     as_of = Time.rfc822(doc.elements[1].elements["observation_time_rfc822"].text).utc
