@@ -37,6 +37,6 @@ site5-dev:
   database: tomorg_weatherdevelopment
   username: tomorg_wx
   password: wx4all
-  host: www.tommitchell.net
+  host: tommitchell.net
   port: 3306
 
