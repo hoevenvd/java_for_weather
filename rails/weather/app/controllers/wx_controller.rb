@@ -15,9 +15,8 @@ class WxController < ApplicationController
     @last_month = WxPeriod.last_month_summary[0]
     last_rain_date = last_rain
     @last_rain = last_rain_date
-    get_noaa_conditions
-    #@forecast = ApplicationHelper.forecast
-    @current = CurrentCondition.find_by_location(AppConfig.location)
+    get_current_conditions
+    @forecast = NoaaForecast.find_by_location(AppConfig.noaa_location)
   end
 
   def get_noaa_conditions
@@ -39,17 +38,23 @@ class WxController < ApplicationController
     end
   end
   
-  def current_conditions
+  def get_current_conditions
     get_noaa_conditions
     @current = CurrentCondition.find_by_location(AppConfig.location)
+    # kludge for time sync problems btw station time and web server
+    @current.sample_date = Time.now if @current.sample_date > Time.now
     @today = WxPeriod.today_summary[0]
     if (@current.outside_temperature.to_f >= @today.hiTemp.to_f) 
-      @highlo = "(daily high)"
+      @highlo = "<br>(daily high)</br>"
     else
       if (@current.outside_temperature.to_f <= @today.lowTemp.to_f) 
-        @highlo = "(daily low)"
+        @highlo = "<br>(daily low)</br>"
       end
     end 
+  end
+
+  def current_conditions
+    get_current_conditions
     render(:template => "wx/_current_conditions",
            :layout => false)
   end

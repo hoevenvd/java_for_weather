@@ -49,7 +49,7 @@ CREATE TABLE  `archive_records` (
   UNIQUE KEY `date_loc` (`date`,`location`),
   KEY `dates` (`date`),
   KEY `locations` (`location`)
-) TYPE=InnoDB;
+) TYPE=myIsam;
 
 DROP TABLE IF EXISTS `current_conditions`;
 CREATE TABLE  `current_conditions` (
@@ -73,5 +73,46 @@ CREATE TABLE  `current_conditions` (
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) TYPE=InnoDB;
+) TYPE=MyISAM;;
 
+DROP TABLE IF EXISTS `noaa_conditions`;
+CREATE TABLE `noaa_conditions` (
+  `id` int(11) NOT NULL auto_increment,
+  `created_at` datetime default NULL,
+  `location` varchar(20) NOT NULL default '',
+  `updated_at` datetime default NULL,
+  `conditions` text NOT NULL,
+  `as_of` datetime default NULL,
+  `visibility` int(11) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `created_at` (`created_at`),
+  KEY `location` (`location`)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS `noaa_forecasts`;
+CREATE TABLE `noaa_forecasts` (
+  `id` int(11) NOT NULL auto_increment,
+  `forecast_xml` text NOT NULL,
+  `created_at` datetime default NULL,
+  `location` varchar(20) NOT NULL default '',
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `created_at` (`created_at`),
+  KEY `location` (`location`)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS `forecast_periods`;
+CREATE TABLE `forecast_periods` (
+  `id` int(11) NOT NULL auto_increment,
+  `noaa_forecast_id` int(11) NOT NULL default '0',
+  `name` varchar(20) NOT NULL default '',
+  `text` text,
+  `created_at` datetime default NULL,
+  `icon_location` varchar(255) NOT NULL default '',
+  `updated_at` datetime default NULL,
+  `temp` int(11) default NULL,
+  `weather` text,
+  `pop` int(11) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `noaa_forecast_id` (`noaa_forecast_id`)
+) ENGINE=MyISAM;

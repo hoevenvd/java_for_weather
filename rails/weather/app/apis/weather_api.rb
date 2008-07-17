@@ -7,6 +7,12 @@ class WeatherApi < ActionWebService::API::Base
              :expects => [{:location=>:string}],
              :returns => [ArchiveStruct]
              
+  api_method :get_archive_since,
+             :expects => [{:password=>:string}, 
+                          {:location=>:string},
+                          {:since=>:time}],
+             :returns => [ [ArchiveStruct] ]
+
   api_method :put_current_conditions,
              :expects => [{:password=>:string}, 
                           {:location=>:string}, 

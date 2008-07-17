@@ -33,7 +33,12 @@ class CurrentCondition < ActiveRecord::Base
 
   def hourly_rain
     start_tm = 1.hour.ago.utc
-    ArchiveRecord.sum(:rainfall, :conditions => "date > \'#{start_tm.to_s(:db)}\'")
+    ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\'")
+  end
+
+  def daily_rain
+    start_tm = Time.now.at_beginning_of_day.utc
+    ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\'")
   end
 
   def temp_trend

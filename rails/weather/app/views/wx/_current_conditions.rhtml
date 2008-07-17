@@ -1,7 +1,7 @@
 <TABLE BORDER WIDTH="360" BGCOLOR="#C0C0C0" >
 <TR>
 <TD ALIGN=CENTER VALIGN=TOP COLSPAN=3 WIDTH="100%">
-<B>Live Conditions as of <%= @current.sample_date.getlocal.strftime("%I:%M:%S %p") %><br>(<%= (Time.now - @current.sample_date.getlocal).to_i %> seconds ago)</B>
+<B>Live Conditions as of <%= @current.sample_date.getlocal.strftime("%I:%M:%S %p") %><br>(<%= distance_of_time_in_words_to_now(@current.sample_date.getlocal, true) %> ago)</B>
 </TD>
 </tr>
 
@@ -54,8 +54,7 @@
 <% if @conditions != nil && @conditions_date > 2.hours.ago %>
 <tr>														 
 <TD ALIGN=CENTER COLSPAN=3 WIDTH="100%"><B><%= @conditions %><br>Visibility <%= @visibility %> miles</B><br/>
-Beverly Airport<br/>
- <%= @conditions_date.to_s(:short) %>
+ Observed at Beverly Airport <%= distance_of_time_in_words_to_now(@conditions_date, false) %> ago
 </TD>
 </tr>
 <% end # if @current != nil %>

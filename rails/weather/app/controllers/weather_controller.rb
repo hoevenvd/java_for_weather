@@ -2,7 +2,8 @@ class WeatherController < ApplicationController
   wsdl_service_name 'Weather'
   web_service_scaffold :invoke
   before_invocation :authenticate, :except => [:get_current_conditions,
-                                               :get_last_archive]
+                                               :get_last_archive,
+                                               :get_archive_since]
   
   def get_current_conditions(location)
     sample = CurrentCondition.find_by_location(location)
@@ -18,12 +19,33 @@ class WeatherController < ApplicationController
         :windspeed => sample[:windspeed],
         :ten_min_avg_wind => sample[:ten_min_avg_wind],
         :is_raining => sample[:is_raining],
+        :solar_radiation => sample[:solar_radiation],
         :wind_direction => sample[:wind_direction],
         :apparent_temp =>  sample[:apparent_temp],
         :rain_rate => sample[:rain_rate])
   end
   
-
+  def put_current_conditions(password, location, sample)
+    cond = CurrentCondition.find_or_create_by_location(location)
+    cond[:location] = location
+    cond[:sample_date] = sample[:sample_date].getutc
+    cond[:outside_temperature] = sample[:temp]
+    cond[:outside_humidity] = sample[:humidity]
+    cond[:pressure] = sample[:pressure]
+    cond[:bar_status] = sample[:bar_status]
+    cond[:windspeed] = sample[:windspeed]
+    cond[:wind_direction] = sample[:wind_direction]
+    cond[:rain_rate] = sample[:rain_rate]
+    cond[:ten_min_avg_wind] = sample[:ten_min_avg_wind]
+    cond[:uv] = sample[:uv]
+    cond[:solar_radiation] = sample[:solar_radiation]
+    cond[:daily_rain] = sample[:daily_rain]
+    if !cond.save
+      raise cond.errors.full_messages.to_s
+    end
+    WeatherHelper.post_to_wunderground(location)
+  end
+  
   def get_last_archive(location)
     entry = ArchiveRecord.find(:first, 
                                :conditions => ["location = ?", location],
@@ -53,26 +75,36 @@ class WeatherController < ApplicationController
         :high_solar_radiation => entry[:high_solar_radiation]
       )
   end
-  
-  def put_current_conditions(password, location, sample)
-    cond = CurrentCondition.find_or_create_by_location(location)
-    cond[:location] = location
-    cond[:sample_date] = sample[:sample_date].getutc
-    cond[:outside_temperature] = sample[:temp]
-    cond[:outside_humidity] = sample[:humidity]
-    cond[:pressure] = sample[:pressure]
-    cond[:bar_status] = sample[:bar_status]
-    cond[:windspeed] = sample[:windspeed]
-    cond[:wind_direction] = sample[:wind_direction]
-    cond[:rain_rate] = sample[:rain_rate]
-    cond[:ten_min_avg_wind] = sample[:ten_min_avg_wind]
-    cond[:uv] = sample[:uv]
-    cond[:solar_radiation] = sample[:solar_radiation]
-    cond[:daily_rain] = sample[:daily_rain]
-    if !cond.save
-      raise cond.errors.full_messages.to_s
+
+  def get_archive_since(password, location, date)
+    records = ArchiveRecord.find_all_by_location(location, :conditions => ["date > ?", date.utc], :order => "date")
+    structs = Array.new
+    records.each do | entry |
+          structs << 
+      ArchiveStruct.new(
+        :location => location,
+        :date => entry[:date],
+        :outside_temp => entry[:outside_temp],
+        :high_outside_temp => entry[:high_outside_temp],
+        :low_outside_temp => entry[:low_outside_temp],
+        :pressure => entry[:pressure],
+        :outside_humidity => entry[:outside_humidity],
+        :rainfall => entry[:rainfall],
+        :high_rain_rate => entry[:high_rain_rate],
+        :average_wind_speed => entry[:average_wind_speed],
+        :high_wind_speed => entry[:high_wind_speed],
+        :direction_of_high_wind_speed => entry[:direction_of_high_wind_speed],
+        :prevailing_wind_direction => entry[:prevailing_wind_direction],
+        :inside_temp => entry[:inside_temp],
+        :inside_humidity => entry[:inside_humidity],
+        :number_of_wind_samples => entry[:number_of_wind_samples],
+        :average_uv_index => entry[:average_uv_index],
+        :high_uv_index => entry[:high_uv_index],
+        :average_solar_radiation => entry[:solar_radiation],
+        :high_solar_radiation => entry[:high_solar_radiation]
+      )
     end
-    WeatherHelper.post_to_wunderground(location)
+    return structs
   end
   
   def put_archive_entry(password, location, entry)

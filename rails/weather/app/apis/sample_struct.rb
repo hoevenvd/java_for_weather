@@ -8,6 +8,7 @@ class SampleStruct < ActionWebService::Struct
 	member	:windspeed,				:int
 	member	:wind_direction,	:int
 	member  :apparent_temp,   :int
+	member  :solar_radiation,   :int
 	member  :rain_rate,       :float
 	member  :ten_min_avg_wind,:int
 	member  :is_raining,      :bool
