@@ -6,17 +6,14 @@
 <p><font face="Arial">This page features up to the second weather from the 
  <a href="http://maps.google.com/?t=k&ll=<%= AppConfig.latitude %>,<%= AppConfig.longitude %>&spn=0.025701,0.036135&t=k">Beverly Cove neighborhood of
  Beverly, Mass</a> which is about 20 miles Northeast of downtown Boston.<p>
- With the exception of the radar image thanks to 
- <a href="http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=KMASTONE1">Weather Underground</a>,
-  all of this information comes from sensors mounted on my house.<p>
-   The current conditions are updated <b>every 10 seconds</b> and the page reloads itself every 10 minutes.  The graphs are built every 10 minutes too.<p>
-  This iteration of this site has been built with Ruby on Rails for presentation and Java polling the device and saving
-  to a MySQL database.  Everything runs on Linux.<p>
+ With the exception of the radar image, all of this information comes from sensors mounted on my house.<p>
+   The current conditions are updated <b>every 5 seconds</b> and the page reloads itself every 10 minutes.  The graphs are built every 15 minutes.<p>
+  This website site runs on Ruby on Rails. The weather station is polled using a Java program. The database is MySQL.  Everything runs on Linux.<p>
 </font>
 </TD>
 <td>
 <center>
-<img src="http://www.tom.org:8083/weather/images/rails.png">
+<img src=<%= image_path("rails.png") %>
 </center>
 <br>
 <center>
@@ -25,8 +22,12 @@
 </center>
 </td>
 </TR>
+<tr>
+  <td>
+    <center>Comments or suggestions: <A HREF="mailto:tom@tom.org">Tom Mitchell</A></center>
+  </td>
+</tr>
 </table>
-<center>Comments or suggestions: <A HREF="mailto:tom@tom.org">Tom Mitchell</A></center>
 <p>
 
 

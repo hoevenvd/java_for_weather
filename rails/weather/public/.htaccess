@@ -1,5 +1,7 @@
 AddHandler fastcgi-script .fcgi
 Options +FollowSymLinks +ExecCGI
+AddHandler cgi-script .cgi
+
 #RewriteRule ^([^\.]+[^/])$ http://%{HTTP_HOST}/$1/ [R=301,L]
 
 # If your Rails application is accessed via an Alias directive,
@@ -9,18 +11,11 @@ Options +FollowSymLinks +ExecCGI
 #   Alias /myrailsapp /path/to/myrailsapp/public
 #RewriteBase /wx
 
-RewriteCond %{REQUEST_URI} ^/weather/java.*
-RewriteRule .* - [L]
-RewriteCond %{REQUEST_URI} ^/weather/javascripts.*
-RewriteRule .* - [L]
-RewriteCond %{REQUEST_URI} ^/weather/images.*
-RewriteRule .* - [L]
-
 RewriteEngine On
 RewriteRule ^$ index.html [QSA]
 RewriteRule ^([^.]+)$ $1.html [QSA]
-RewriteRule ^(.*)$ dispatch.fcgi [QSA,L]
 RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ dispatch.cgi [QSA,L]
 
 # In case Rails experiences terminal errors
 # Instead of displaying this message you can supply a file here which will be rendered instead

@@ -1,15 +1,18 @@
 LOG = Logger.new(STDOUT) 
 LOG.level = Logger::DEBUG
 
+CURRENT = "production"
+NEW = "a2prod"
+
 def close_current_connection
   ActiveRecord::Base.connection.disconnect!
 end
 
 def sync_current
-  ActiveRecord::Base.establish_connection("production")
+  ActiveRecord::Base.establish_connection(CURRENT)
   curr = CurrentCondition.find(:first)
   close_current_connection
-  ActiveRecord::Base.establish_connection("site5-dev")
+  ActiveRecord::Base.establish_connection(NEW)
   old = CurrentCondition.find(:first)
   old.update_attributes!(curr.attributes)
   LOG.debug(old.to_yaml)
@@ -17,15 +20,15 @@ def sync_current
 end
 
 def sync_archive
-  ActiveRecord::Base.establish_connection("site5-dev")
+  ActiveRecord::Base.establish_connection(NEW)
   last = ArchiveRecord.find(:first, :order => "date desc")
   LOG.debug("last record from #{last.date}")
   close_current_connection
-  ActiveRecord::Base.establish_connection("production")
+  ActiveRecord::Base.establish_connection(CURRENT)
   later = ArchiveRecord.find_all_by_location("01915", :conditions => "date > \"#{last.date.to_s(:db)}\"")
   LOG.debug("found #{later.size} records to add")
   close_current_connection
-  ActiveRecord::Base.establish_connection("site5-dev")
+  ActiveRecord::Base.establish_connection(NEW)
   later.each do |r|
     LOG.debug(r.to_yaml)
     a = ArchiveRecord.new(r.attributes)
