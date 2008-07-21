@@ -4,17 +4,7 @@ class WxController < ApplicationController
   include REXML
 
   def index
-    @today = WxPeriod.today_summary[0]
-    @yesterday = WxPeriod.yesterday_summary[0]
-    @this_hour = WxPeriod.this_hour_summary[0]
-    @last_hour = WxPeriod.last_hour_summary[0]
-    @this_week = WxPeriod.this_week_summary[0]
-    @this_month = WxPeriod.this_month_summary[0]
-#    @this_year = WxPeriod.this_year_summary[0]
-    @last_week = WxPeriod.last_week_summary[0]
-    @last_month = WxPeriod.last_month_summary[0]
-    last_rain_date = last_rain
-    @last_rain = last_rain_date
+    periods
     get_current_conditions
     @forecast = NoaaForecast.find_by_location(AppConfig.noaa_location)
   end
@@ -27,6 +17,20 @@ class WxController < ApplicationController
       @conditions_date = noaa_conditions.as_of.localtime
       @visibility = noaa_conditions.visibility
     end
+  end
+
+  def periods
+    @today = WxPeriod.today_summary[0]
+    @yesterday = WxPeriod.yesterday_summary[0]
+    @this_hour = WxPeriod.this_hour_summary[0]
+    @last_hour = WxPeriod.last_hour_summary[0]
+    @this_week = WxPeriod.this_week_summary[0]
+    @this_month = WxPeriod.this_month_summary[0]
+#    @this_year = WxPeriod.this_year_summary[0]
+    @last_week = WxPeriod.last_week_summary[0]
+    @last_month = WxPeriod.last_month_summary[0]
+    last_rain_date = last_rain
+    @last_rain = last_rain_date
   end
 
   def last_rain
@@ -59,4 +63,9 @@ class WxController < ApplicationController
            :layout => false)
   end
   
+  def period
+    periods
+    render(:template => "wx/_period",
+           :layout => false)
+  end
 end

@@ -77,7 +77,7 @@ class WeatherController < ApplicationController
   end
 
   def get_archive_since(password, location, date)
-    records = ArchiveRecord.find_all_by_location(location, :conditions => ["date > ?", date.utc], :order => "date")
+    records = ArchiveRecord.find_all_by_location(location, :conditions => ["date > ?", date.utc], :order => "date", :limit => 60)
     structs = Array.new
     records.each do | entry |
           structs << 

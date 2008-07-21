@@ -40,8 +40,14 @@
 <table>
 <tr align="center">
 <td>
-<!-- include here -->
+<div id="period">
 <%= render(:partial => "period", :layout => false  ) %>
+</div>
+<%= periodically_call_remote(:update => 'period',
+				 :url => { :action => :period },
+				 :frequency => 60 ) %>
+
+<!-- include here -->
 </td>
 </tr>
 </table>
