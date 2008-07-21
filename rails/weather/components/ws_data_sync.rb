@@ -1,7 +1,7 @@
 require 'soap/wsdlDriver'
 
 log = Logger.new(STDOUT)
-log.level = Logger::WARN
+log.level = Logger::DEBUG
 
 src_url="http://servers:3000/weather/wsdl"
 src_soap = SOAP::WSDLDriverFactory.new(src_url).create_rpc_driver
@@ -42,7 +42,7 @@ while true do
       log.debug(Time.now - t)
     end
   rescue
-    exit 1 unless error_count < 5
+    exit 1 unless error_count < 25
     error_count += 1
   end
 end
