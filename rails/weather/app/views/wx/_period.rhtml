@@ -81,7 +81,7 @@
 <CENTER>Last week: <%= @last_week.rain %> inches </CENTER>
 <% end %>
 <% if !@last_rain.nil? %>
-<CENTER>Last rain: <%= @last_rain.getlocal.to_s(:short)  %></CENTER>
+<CENTER>Last rain: <%= distance_of_time_in_words_to_now(@last_rain.getlocal, false)  %> ago</CENTER>
 <% end %>
 </TD>
 </TR>
