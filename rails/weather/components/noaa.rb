@@ -8,11 +8,11 @@ include REXML
 
 class NOAAConditionsWriter
   log = Logger.new(STDOUT)
-  log.level = Logger::INFO
+  log.level = Logger::DEBUG
 
   LOCATION_FORECAST = "01915-forecast"
   URL = 'www.weather.gov'
-  PREFIX = "/data/current_obs/"
+  PREFIX = "/xml/current_obs/"
   PORT = 80
   POSTFIX = ".xml"
   STATION = ARGV[0] # Appconfig.noaa_location # "KBVY" # 
