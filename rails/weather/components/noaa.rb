@@ -8,7 +8,7 @@ include REXML
 
 class NOAAConditionsWriter
   log = Logger.new(STDOUT)
-  log.level = Logger::DEBUG
+  log.level = Logger::INFO
 
   LOCATION_FORECAST = "01915-forecast"
   URL = 'www.weather.gov'
