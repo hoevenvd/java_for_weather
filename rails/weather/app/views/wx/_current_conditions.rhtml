@@ -46,15 +46,13 @@
 
 <TR>
 <TD ALIGN=CENTER COLSPAN=3 WIDTH="100%">
-  <B>
     <% if @current.is_raining %>
-      Raining at <%= @current.rain_rate %> inches per hour
+      <b>Raining at <%= @current.rain_rate %> inches per hour</b>
     <% else %>
       <% if !@last_rain.nil? %>
-        Last rain: <%= distance_of_time_in_words_to_now(@last_rain.getlocal, true)  %> ago
+      <b>Last rain:</b> <%= distance_of_time_in_words_to_now(@last_rain.getlocal, true)  %> ago
       <% end %>
     <% end %>
-  </b>
 </TD>
 </tr>
 
