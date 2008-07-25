@@ -5,13 +5,6 @@
 </TD>
 </tr>
 
-<% if @current.is_raining %>
-<TR>
-<TD ALIGN=CENTER COLSPAN=3 WIDTH="100%"><B>Raining at <%= @current.rain_rate %> inches per hour</B>
-</TD>
-</tr>
-<% end %>
-
 <TD ALIGN=CENTER><B>Temp</B>&nbsp;
 <BR><%= @current.outside_temperature %> <%= @current.temp_trend %> <b><%= @highlo %></b></TD>
 
@@ -50,6 +43,21 @@
 </TD>
 </tr>
 -->
+
+<TR>
+<TD ALIGN=CENTER COLSPAN=3 WIDTH="100%">
+  <B>
+    <% if @current.is_raining %>
+      Raining at <%= @current.rain_rate %> inches per hour
+    <% else %>
+      <% if !@last_rain.nil? %>
+        Last rain: <%= distance_of_time_in_words_to_now(@last_rain.getlocal, true)  %> ago
+      <% end %>
+    <% end %>
+  </b>
+</TD>
+</tr>
+
 
 <% if @conditions != nil && @conditions_date > 2.hours.ago %>
 <tr>														 

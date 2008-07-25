@@ -29,8 +29,6 @@ class WxController < ApplicationController
 #    @this_year = WxPeriod.this_year_summary[0]
     @last_week = WxPeriod.last_week_summary[0]
     @last_month = WxPeriod.last_month_summary[0]
-    last_rain_date = last_rain
-    @last_rain = last_rain_date
   end
 
   def last_rain
@@ -55,6 +53,8 @@ class WxController < ApplicationController
         @highlo = "<br>(daily low)</br>"
       end
     end 
+    last_rain_date = last_rain
+    @last_rain = last_rain_date
   end
 
   def current_conditions

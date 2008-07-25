@@ -80,9 +80,6 @@
 <% if !@last_week.nil? %>
 <CENTER>Last week: <%= @last_week.rain %> inches </CENTER>
 <% end %>
-<% if !@last_rain.nil? %>
-<CENTER>Last rain: <%= distance_of_time_in_words_to_now(@last_rain.getlocal, false)  %> ago</CENTER>
-<% end %>
 </TD>
 </TR>
 
