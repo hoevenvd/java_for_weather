@@ -55,15 +55,7 @@ task :symlink_public, :roles => :app do
        /home/#{user}/public_html/weather"
 end
 
-# TODO: copy current images (like tide, graphs) out of public/images to current/images
-# 
-#desc "chmod +x dispatch.fcgi"
-task :chmod_files, :roles => :app do
-  run "chmod +x #{release_path}/public/dispatch.fcgi"
-  run "chmod +x #{release_path}/script/*"
-end
-
-after 'deploy:update_code', 'chmod_files', 'symlink_config_yml', 'symlink_public'
+after 'deploy:update_code', 'symlink_config_yml', 'symlink_public'
 
 namespace(:deploy) do
   desc "Shared dispatch.fcgi restart"
