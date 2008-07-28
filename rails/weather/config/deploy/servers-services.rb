@@ -51,13 +51,7 @@ task :symlink_public, :roles => :app do
 #       /var/www/wx"
 end
 
-# 
-#desc "chmod +x dispatch.fcgi"
-task :chmod_files, :roles => :app do
-  run "chmod +x #{release_path}/script/*"
-end
-
-after 'deploy:update_code', 'chmod_files', 'symlink_config_yml', 'symlink_public'
+after 'deploy:update_code', 'symlink_config_yml', 'symlink_public'
 
 namespace(:deploy) do
   desc "Shared dispatch.fcgi restart"
