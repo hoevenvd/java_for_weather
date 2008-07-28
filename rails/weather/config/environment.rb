@@ -7,12 +7,21 @@
 ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.0.2' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.1.0' unless defined? RAILS_GEM_VERSION 
+#RAILS_GEM_VERSION = '2.0.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
+class Rails::Configuration
+  attr_accessor :action_web_service
+end
+
 Rails::Initializer.run do |config|
+  
+  config.frameworks += [ :action_web_service]
+  config.action_web_service = Rails::OrderedOptions.new
+  config.load_paths += %W( #{RAILS_ROOT}/app/apis )
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
@@ -69,7 +78,7 @@ Rails::Initializer.run do |config|
   
 end
 
-require 'actionwebservice'
+#require 'actionwebservice'
 
 # Rotate the log at 10 megabyte, keeping the last 10
 #RAILS_DEFAULT_LOGGER = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}.log", 10, 10000000)
