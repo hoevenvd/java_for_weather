@@ -2,8 +2,7 @@ class WeatherController < ApplicationController
   wsdl_service_name 'Weather'
   web_service_scaffold :invoke
   before_invocation :authenticate, :except => [:get_current_conditions,
-                                               :get_last_archive,
-                                               :get_archive_since]
+                                               :get_last_archive]
   
   def get_current_conditions(location)
     sample = CurrentCondition.find_by_location(location)
