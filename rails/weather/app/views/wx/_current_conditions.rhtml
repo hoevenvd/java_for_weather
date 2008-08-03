@@ -1,4 +1,6 @@
+<br>
 <TABLE BORDER WIDTH="360" BGCOLOR="#C0C0C0" >
+<div id="CUR">
 <TR>
 <TD ALIGN=CENTER VALIGN=TOP COLSPAN=3 WIDTH="100%">
 <B>Live Conditions as of <%= @current.sample_date.getlocal.strftime("%I:%M:%S %p") %><br>(<%= distance_of_time_in_words_to_now(@current.sample_date.getlocal, true) %> ago)</B>
@@ -66,9 +68,6 @@
 <% end # if @current != nil %>
 
 <TR>
+</div>
 </table>
-<TD ALIGN=CENTER VALIGN=CENTER COLSPAN="2" WIDTH="100%">
-<TABLE BORDER=0 WIDTH="100%" >
-<TR>
-</TR>
-</TABLE>
+<br>

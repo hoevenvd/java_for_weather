@@ -24,19 +24,27 @@
 
 <%= render(:partial => "sunapplet", :layout => false  ) %>
 
+<table>
 <!-- insert magic here -->
 <% if @current.nil? %>
 <p>
 <b>Current Conditions Currently Unavailable</b>
 <% else %>
+<tr>
+  <td></td>
+<td>
 <div id="current_conditions">
+<table>
 <%= render(:partial => "current_conditions", :layout => false  ) %>
+</table>
 </div>
 <%= periodically_call_remote(:update => 'current_conditions',
-				 :url => { :action => :current_conditions },
-				 :frequency => 5 ) %>
-														 
-<% end %>														 
+				 :url => { :action => :current_conditions }, :frequency => 5, :complete => visual_effect(:highlight, 'current_conditions', :startcolor => "#003333"))  %>
+</td>
+<td></td>
+</tr>
+</table>
+<% end %>
 <table>
 <tr align="center">
 <td>
