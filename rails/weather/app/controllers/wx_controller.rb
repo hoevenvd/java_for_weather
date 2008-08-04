@@ -26,7 +26,7 @@ class WxController < ApplicationController
     @last_hour = WxPeriod.last_hour_summary[0]
     @this_week = WxPeriod.this_week_summary[0]
     @this_month = WxPeriod.this_month_summary[0]
-#    @this_year = WxPeriod.this_year_summary[0]
+    @this_year = WxPeriod.this_year_summary[0]
     @last_week = WxPeriod.last_week_summary[0]
     @last_month = WxPeriod.last_month_summary[0]
   end
