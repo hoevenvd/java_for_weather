@@ -28,7 +28,7 @@ module WeatherHelper
           :baromin => sample.pressure,
           :dewptf => sample.dewpoint,
           :solarradiation => sample.solar_radiation,
-          :weather => NoaaConditions.find_all_by_location(AppConfig.noaa_location, :limit => 1, :order => "as_of desc").conditions,
+          :weather => NoaaConditions.find_all_by_location(AppConfig.noaa_location, :limit => 1, :order => "as_of desc")[0].conditions,
           :softwaretype => "org.tom.weather")
      end
 
