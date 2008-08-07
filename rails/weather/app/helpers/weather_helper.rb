@@ -12,6 +12,7 @@ module WeatherHelper
     conf = AppConfig.wunderground[location]
     if conf != nil
       sample = CurrentCondition.find_by_location(location)
+      noaa = NoaaConditions.find_all_by_location(AppConfig.noaa_location, :limit => 1, :order => "as_of desc")[0]
       raise ArgumentError if sample == nil
       new_sample = 
         WundergroundStruct.new(
@@ -28,7 +29,8 @@ module WeatherHelper
           :baromin => sample.pressure,
           :dewptf => sample.dewpoint,
           :solarradiation => sample.solar_radiation,
-          :weather => NoaaConditions.find_all_by_location(AppConfig.noaa_location, :limit => 1, :order => "as_of desc")[0].conditions,
+          :weather => noaa.conditions,
+          :visibility => noaa.visibility,
           :softwaretype => "org.tom.weather")
      end
 
@@ -46,6 +48,7 @@ module WeatherHelper
     post_url += "&dewptf=" + CGI::escape(new_sample[:dewptf].to_s)
     post_url += "&solarradiation=" + CGI::escape(new_sample[:solarradiation].to_s)
     post_url += "&weather=" + CGI::escape(new_sample[:weather].to_s)
+    post_url += "&visibility=" + CGI::escape(new_sample[:visibility].to_s)
     post_url += "&softwaretype=" + CGI::escape(new_sample[:softwaretype].to_s)
     post_url += "&action=updateraw&realtime=1&rtfreq=3.0"
 
