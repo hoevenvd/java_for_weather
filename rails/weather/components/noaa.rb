@@ -5,6 +5,7 @@ require 'rexml/document'
 require 'noaa_forecast'
 include REXML
 
+# http://www.weather.gov/xml/current_obs/KBVY.xml
 
 class NOAAConditionsWriter
   log = Logger.new(STDOUT)
