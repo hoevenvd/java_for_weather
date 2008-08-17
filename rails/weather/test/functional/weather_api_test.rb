@@ -12,9 +12,6 @@ class WeatherController; def rescue_action(e) raise e end; end
 
 class WeatherControllerApiTest < Test::Unit::TestCase
 
-  # FIXME: read this from config
-  PASSWORD = "wx"
-  
   def setup
     @controller = WeatherController.new
     @request    = ActionController::TestRequest.new
@@ -23,15 +20,15 @@ class WeatherControllerApiTest < Test::Unit::TestCase
 
   def test_minimal_current_conditions
     my_struct = create_a_minimal_struct
-    invoke :put_current_conditions, PASSWORD, "01915-test", my_struct 
-    res = invoke :get_current_conditions, "01915-test"
+    invoke :put_current_conditions, AppConfig.service_password, AppConfig.location, my_struct 
+    res = invoke :get_current_conditions, AppConfig.location
     assert_not_equal nil, res
   end
   
   def test_get_current_conditions_vp
     my_struct = create_a_good_struct
-    invoke :put_current_conditions, PASSWORD, "01915-test", my_struct 
-    res = invoke :get_current_conditions, "01915-test"
+    invoke :put_current_conditions, AppConfig.service_password, AppConfig.location, my_struct 
+    res = invoke :get_current_conditions, AppConfig.location
 
     assert_not_equal nil, res
     assert_equal res[:temp], 32.2
@@ -46,8 +43,8 @@ class WeatherControllerApiTest < Test::Unit::TestCase
   
   def test_get_current_conditions_wm2
     my_struct = create_a_good_struct_wm2
-    invoke :put_current_conditions, PASSWORD, "01915-test", my_struct 
-    res = invoke :get_current_conditions, "01915-test"
+    invoke :put_current_conditions, AppConfig.service_password, AppConfig.location, my_struct 
+    res = invoke :get_current_conditions, AppConfig.location
 
     assert_not_equal nil, res
     assert_equal res[:temp], 32.2
@@ -63,7 +60,7 @@ class WeatherControllerApiTest < Test::Unit::TestCase
   def test_bad_input_data
     begin
       my_struct = create_a_bad_struct
-      invoke :put_current_conditions, "wrong", "01915-test", my_struct 
+      invoke :put_current_conditions, "wrong", AppConfig.location, my_struct 
     rescue RuntimeError
       assert true
     end
@@ -80,7 +77,7 @@ class WeatherControllerApiTest < Test::Unit::TestCase
   def test_authenticate_put_current_conditions
     begin
       my_struct = create_a_good_struct
-      invoke :put_current_conditions, "wrong", "01915-test", my_struct
+      invoke :put_current_conditions, "wrong", AppConfig.location, my_struct
       assert false
     rescue RuntimeError
       assert_equal $!.message, "not authenticated"
@@ -100,7 +97,7 @@ class WeatherControllerApiTest < Test::Unit::TestCase
   def test_basic_archive
     a = create_complete_archive_struct
     location = "basic"
-    password = PASSWORD
+    password = AppConfig.service_password
     invoke :put_archive_entry, password, location, a
     invoke :put_archive_entry, password, location, a
     entry = ArchiveRecord.find_by_location_and_date(location, a[:date])
@@ -113,7 +110,7 @@ class WeatherControllerApiTest < Test::Unit::TestCase
   def test_minimal_archive
     a = create_minimal_archive_struct
     location = "basic"
-    password = PASSWORD
+    password = AppConfig.service_password
     invoke :put_archive_entry, password, location, a
     entry = ArchiveRecord.find_by_location_and_date(location, a[:date])
     assert_not_nil entry
@@ -122,20 +119,20 @@ class WeatherControllerApiTest < Test::Unit::TestCase
     assert_equal entry[:date].getutc.to_s, a[:date].getutc.to_s
   end  
 
-  def test_get_rise_set
-    password = PASSWORD
-    latitude = AppConfig.latitude
-    longitude = AppConfig.longitude
+ # def test_get_rise_set
+ #   password = AppConfig.service_password
+ #   latitude = AppConfig.latitude
+ #   longitude = AppConfig.longitude
 #    date = Time.now
-    date = nil
-    struct = invoke :get_rise_set, password, date, latitude, longitude
-    assert_not_nil struct
-    latitude = 52.5
-    longitude = 5.5
-    struct = invoke :get_rise_set, password, date, latitude, longitude
-    assert_not_nil struct
-    100.times do | i | struct = invoke :get_rise_set, password, date, latitude, longitude end
-  end
+ #   date = nil
+ #   struct = invoke :get_rise_set, password, date, latitude, longitude
+ #   assert_not_nil struct
+#    latitude = 52.5
+#    longitude = 5.5
+#    struct = invoke :get_rise_set, password, date, latitude, longitude
+#    assert_not_nil struct
+#    100.times do | i | struct = invoke :get_rise_set, password, date, latitude, longitude end
+#  end
 
   def create_a_good_struct
     my_struct = InputSampleStruct.new( 
@@ -147,7 +144,10 @@ class WeatherControllerApiTest < Test::Unit::TestCase
        :bar_status => "rising",
        :rain_rate => 1.01,
        :ten_min_avg_wind => 2,
-       :wind_direction => 270)
+       :wind_direction => 270,
+       :daily_rain => 2.02,
+       :uv => 0,
+       :solar_radiation => 555)
   end
   
   def create_a_minimal_struct
