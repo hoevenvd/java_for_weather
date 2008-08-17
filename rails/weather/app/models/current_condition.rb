@@ -89,5 +89,10 @@ class CurrentCondition < ActiveRecord::Base
   def validate
     errors.add(:pressure, "invalid") if !pressure.nil? && 
          (pressure < 27 || pressure > 32)
+    if (windspeed != nil && windspeed > 0)
+      if (wind_direction != nil) && (wind_direction < 0 || wind_direction > 359)
+        errors.add(:wind_direction, "invalid")
+      end
+    end
   end
 end

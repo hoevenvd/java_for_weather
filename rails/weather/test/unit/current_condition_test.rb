@@ -21,6 +21,7 @@ class CurrentConditionTest < Test::Unit::TestCase
   
   def test_valid_wind_direction
     cond = current_conditions(:good)
+    assert cond.save
     cond.wind_direction = 360
     assert !cond.save
     assert_equal "invalid", cond.errors.on(:wind_direction)
