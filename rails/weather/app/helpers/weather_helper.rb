@@ -24,12 +24,10 @@ module WeatherHelper
      req += "e1w"
      init_str = "user #{AppConfig.cwop_id} pass -1 vers linux-1wire 1.00"
      s = TCPSocket.open("cwop.aprs.net", 14580)
-     puts init_str
      s.puts(init_str)
-     puts(s.gets)
-     puts req
+     s.gets
      s.puts(req)
-     puts(s.gets)
+     s.gets
   end
 
   def self.post_to_wunderground(location)
