@@ -19,6 +19,7 @@ module WeatherHelper
      req += sprintf("g%03d", c[:gust])
      req += sprintf("t%03d", c[:outside_temperature].to_i)
      req += sprintf("r%03d", c.hourly_rain * 100)
+     req += sprintf("p%03d", c.twentyfour_hour_rain * 100)
      req += sprintf("b%05d", c.pressure * 33.864 * 10)
      req += sprintf("h%02d", c.outside_humidity)
      req += "e1w"

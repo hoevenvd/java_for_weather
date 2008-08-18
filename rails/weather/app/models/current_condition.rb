@@ -31,6 +31,10 @@ class CurrentCondition < ActiveRecord::Base
     a.date
   end
 
+  def twentyfour_hour_rain
+    start_tm = 24.hours.ago.utc
+    ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\'")
+  end
   def hourly_rain
     start_tm = 1.hour.ago.utc
     ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\'")
