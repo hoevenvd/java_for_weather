@@ -1,4 +1,5 @@
 require 'net/http'
+require 'socket'
 
 #      sb.append("&action=updateraw&realtime=1&rtfreq=3.0");
 # weather.wunderground.realtime.uploadUrl=http://rtupdate.wunderground.com/weatherstation/updateweatherstation.php
@@ -7,6 +8,29 @@ URL = "rtupdate.wunderground.com"
 
 module WeatherHelper
 
+  def self.post_to_cwop(location)
+     c = CurrentCondition.find_by_location(location)
+     req = AppConfig.cwop_id
+     req += ">APRS,TCPXX*:"
+     req += c.sample_date.utc.strftime("@%d%H%Mz")
+     req += AppConfig.cwop_lat_long
+     req += sprintf("_%03d", c[:wind_direction])
+     req += sprintf("/%03d", c[:windspeed])
+     req += sprintf("g%03d", c[:gust])
+     req += sprintf("t%03d", c[:outside_temperature].to_i)
+     req += sprintf("r%03d", c.hourly_rain * 100)
+     req += sprintf("b%05d", c.pressure * 33.864 * 10)
+     req += sprintf("h%02d", c.outside_humidity)
+     req += "e1w"
+     init_str = "user #{AppConfig.cwop_id} pass -1 vers linux-1wire 1.00"
+     s = TCPSocket.open("cwop.aprs.net", 14580)
+     puts init_str
+     s.puts(init_str)
+     puts(s.gets)
+     puts req
+     s.puts(req)
+     puts(s.gets)
+  end
 
   def self.post_to_wunderground(location)
     conf = AppConfig.wunderground[location]
@@ -54,6 +78,5 @@ module WeatherHelper
 
     response = Net::HTTP.get_response(URL, post_url)
   end
-
 
 end
