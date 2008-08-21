@@ -23,7 +23,7 @@ module WeatherHelper
      req += sprintf("p%03d", c.twentyfour_hour_rain * 100)
      req += sprintf("b%05d", c.pressure * 33.864 * 10)
      req += sprintf("h%02d", c.outside_humidity)
-     req += "e1w"
+     req += "eTomOrgDavisVP2"
      init_str = "user #{AppConfig.cwop_id} pass -1 vers linux-1wire 1.00"
      s = TCPSocket.open("cwop.aprs.net", 14580)
      s.puts(init_str)
