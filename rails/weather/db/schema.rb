@@ -120,8 +120,4 @@ ActiveRecord::Schema.define(:version => 0) do
   add_index "noaa_forecasts", ["created_at"], :name => "created_at"
   add_index "noaa_forecasts", ["location"], :name => "location"
 
-  create_table "schema_info", :id => false, :force => true do |t|
-    t.integer "version", :limit => 11
-  end
-
 end
