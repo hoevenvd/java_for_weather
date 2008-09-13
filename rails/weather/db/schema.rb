@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(:version => 20080912225020) do
 
   create_table "archive_records", :force => true do |t|
     t.datetime "date",                                                                                     :null => false
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.integer  "solar_radiation",              :limit => 11
     t.integer  "average_uv_index",             :limit => 11
     t.integer  "et",                           :limit => 11
-    t.integer  "high_solar_radation",          :limit => 11
+    t.integer  "high_solar_radiation",         :limit => 11
     t.integer  "high_uv_index",                :limit => 11
     t.integer  "forecastRule",                 :limit => 11
     t.integer  "leaf_temp_1",                  :limit => 11

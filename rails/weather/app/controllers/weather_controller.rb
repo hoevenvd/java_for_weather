@@ -128,7 +128,7 @@ class WeatherController < ApplicationController
     rec[:average_uv_index] = entry[:average_uv_index]
     rec[:high_uv_index] = entry[:high_uv_index]
     rec[:solar_radiation] = entry[:average_solar_radiation]
-    rec[:high_solar_radation] = entry[:high_solar_radiation]
+    rec[:high_solar_radiation] = entry[:high_solar_radiation]
     if !rec.save
       raise rec.errors.full_messages.to_s
     end

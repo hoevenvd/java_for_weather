@@ -21,7 +21,7 @@ CREATE TABLE  `archive_records` (
   `solar_radiation` int(11) default NULL,
   `average_uv_index` int(11) default NULL,
   `et` int(11) default NULL,
-  `high_solar_radation` int(11) default NULL,
+  `high_solar_radiation` int(11) default NULL,
   `high_uv_index` int(11) default NULL,
   `forecastRule` int(11) default NULL,
   `leaf_temp_1` int(11) default NULL,
