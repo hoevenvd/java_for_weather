@@ -1,6 +1,6 @@
 class RenameSolarRadationColumnToAverage < ActiveRecord::Migration
   def self.up
-    rename_column "archive_records", "solar_radation", "average_solar_radiation"
+    rename_column "archive_records", "solar_radiation", "average_solar_radiation"
   end
 
   def self.down
