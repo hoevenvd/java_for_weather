@@ -27,7 +27,7 @@ class PeriodStruct < ActionWebService::Struct
 
 	member	:rainfall,					            :float
 	
-	member  :solar_radiation,               :int
+	member  :average_solar_radiation,               :int
 	member  :high_solar_radiation,          :int
 	
 	member  :uv,                            :int

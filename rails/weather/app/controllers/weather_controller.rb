@@ -70,7 +70,7 @@ class WeatherController < ApplicationController
         :number_of_wind_samples => entry[:number_of_wind_samples],
         :average_uv_index => entry[:average_uv_index],
         :high_uv_index => entry[:high_uv_index],
-        :average_solar_radiation => entry[:solar_radiation],
+        :average_solar_radiation => entry[:average_solar_radiation],
         :high_solar_radiation => entry[:high_solar_radiation]
       )
   end
@@ -99,7 +99,7 @@ class WeatherController < ApplicationController
         :number_of_wind_samples => entry[:number_of_wind_samples],
         :average_uv_index => entry[:average_uv_index],
         :high_uv_index => entry[:high_uv_index],
-        :average_solar_radiation => entry[:solar_radiation],
+        :average_solar_radiation => entry[:average_solar_radiation],
         :high_solar_radiation => entry[:high_solar_radiation]
       )
     end
@@ -127,7 +127,7 @@ class WeatherController < ApplicationController
     rec[:number_of_wind_samples] = entry[:number_of_wind_samples]
     rec[:average_uv_index] = entry[:average_uv_index]
     rec[:high_uv_index] = entry[:high_uv_index]
-    rec[:solar_radiation] = entry[:average_solar_radiation]
+    rec[:average_solar_radiation] = entry[:average_solar_radiation]
     rec[:high_solar_radiation] = entry[:high_solar_radiation]
     if !rec.save
       raise rec.errors.full_messages.to_s

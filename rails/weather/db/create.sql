@@ -18,7 +18,7 @@ CREATE TABLE  `archive_records` (
   `average_dewpoint` decimal(4,1) default NULL,
   `average_apparent_temp` smallint(6) default NULL,
   `inside_humidity` smallint(6) default NULL,
-  `solar_radiation` int(11) default NULL,
+  `average_solar_radiation` int(11) default NULL,
   `average_uv_index` int(11) default NULL,
   `et` int(11) default NULL,
   `high_solar_radiation` int(11) default NULL,
