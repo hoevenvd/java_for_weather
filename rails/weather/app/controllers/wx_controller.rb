@@ -20,12 +20,12 @@ class WxController < ApplicationController
 
   def periods
     @today = WxPeriod.today_summary
-    @yesterday = WxPeriod.yesterday_summary
     @this_hour = WxPeriod.this_hour_summary
-    @last_hour = WxPeriod.last_hour_summary
     @this_week = WxPeriod.this_week_summary
     @this_month = WxPeriod.this_month_summary
-    @this_year = WxPeriod.this_year_summary
+
+    @yesterday = WxPeriod.yesterday_summary
+    @last_hour = WxPeriod.last_hour_summary
     @last_week = WxPeriod.last_week_summary
     @last_month = WxPeriod.last_month_summary
   end
