@@ -82,7 +82,7 @@ class WxPeriod < Period
     rs[0]["hiTempDate"] = my_pd.hi_temp_date(my_pd, rs[0]["hiTemp"])
     rs[0]["lowTempDate"] = my_pd.low_temp_date(my_pd, rs[0]["lowTemp"])
     rs[0]["gustDate"] = my_pd.gust_date(my_pd, rs[0]["hiWindspeed"])
-    rs
+    rs[0]
   end
 end
 
