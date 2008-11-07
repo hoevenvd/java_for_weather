@@ -10,8 +10,7 @@ class WxController < ApplicationController
   end
 
   def get_noaa_conditions
-    noaa_conditions = NoaaConditions.find_all_by_location(AppConfig.noaa_location, :limit => 1, :order => "as_of desc")
-    noaa_conditions = noaa_conditions[0]
+    noaa_conditions = NoaaConditions.find_all_by_location(AppConfig.noaa_location, :limit => 1, :order => "as_of desc")[0]
     if noaa_conditions !=  nil
       @conditions = noaa_conditions.conditions
       @conditions_date = noaa_conditions.as_of.localtime
@@ -20,15 +19,15 @@ class WxController < ApplicationController
   end
 
   def periods
-    @today = WxPeriod.today_summary[0]
-    @yesterday = WxPeriod.yesterday_summary[0]
-    @this_hour = WxPeriod.this_hour_summary[0]
-    @last_hour = WxPeriod.last_hour_summary[0]
-    @this_week = WxPeriod.this_week_summary[0]
-    @this_month = WxPeriod.this_month_summary[0]
-    @this_year = WxPeriod.this_year_summary[0]
-    @last_week = WxPeriod.last_week_summary[0]
-    @last_month = WxPeriod.last_month_summary[0]
+    @today = WxPeriod.today_summary
+    @yesterday = WxPeriod.yesterday_summary
+    @this_hour = WxPeriod.this_hour_summary
+    @last_hour = WxPeriod.last_hour_summary
+    @this_week = WxPeriod.this_week_summary
+    @this_month = WxPeriod.this_month_summary
+    @this_year = WxPeriod.this_year_summary
+    @last_week = WxPeriod.last_week_summary
+    @last_month = WxPeriod.last_month_summary
   end
 
   def last_rain
@@ -45,7 +44,7 @@ class WxController < ApplicationController
     @current = CurrentCondition.find_by_location(AppConfig.location)
     # kludge for time sync problems btw station time and web server
     @current.sample_date = Time.now if @current.sample_date > Time.now
-    @today = WxPeriod.today_summary[0]
+    @today = WxPeriod.today_summary
     if (@current.outside_temperature.to_f >= @today.hiTemp.to_f) 
       @highlo = "<br>(daily high)</br>"
     else
