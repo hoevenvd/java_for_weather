@@ -14,7 +14,7 @@ error_count = 0
 while true do
 
   begin
-    5.times do
+    15.times do
       log.debug("getting conditions.")
       t = Time.now
       conditions = src_soap.GetCurrentConditions("01915")
