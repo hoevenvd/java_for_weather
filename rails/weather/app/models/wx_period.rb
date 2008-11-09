@@ -2,6 +2,13 @@ require 'pp'
 require 'period'
  
 class WxPeriod < Period
+  
+  def WxPeriod.add_to_db(summary)
+    s = PastSummary.find_or_initialize_by_period(summary.period)
+    s.update_attributes(summary.attributes)
+    s
+  end
+
   def WxPeriod.this_hour_summary
     return WxPeriod.query(this_hour)
   end
@@ -23,19 +30,39 @@ class WxPeriod < Period
   end
   
   def WxPeriod.last_hour_summary
-    return WxPeriod.query(last_hour)
+    s = PastSummary.find_by_period("LAST_HOUR")
+    if s.nil? or s.startdate.utc != Period.last_hour.start_time.utc
+      return WxPeriod.add_to_db(WxPeriod.query(last_hour))
+    else
+      return s      
+    end
   end
   
   def WxPeriod.yesterday_summary
-    return WxPeriod.query(yesterday)
+    s = PastSummary.find_by_period("YESTERDAY")
+    if s.nil? or s.startdate.utc != Period.yesterday.start_time.utc
+      return WxPeriod.add_to_db(WxPeriod.query(yesterday))
+    else
+      return s      
+    end
   end
   
   def WxPeriod.last_week_summary
-    return WxPeriod.query(last_week)
+    s = PastSummary.find_by_period("LAST_WEEK")
+    if s.nil? or s.startdate.utc != Period.last_week.start_time.utc
+      return WxPeriod.add_to_db(WxPeriod.query(last_week))
+    else
+      return s      
+    end
   end
   
   def WxPeriod.last_month_summary
-    return WxPeriod.query(last_month)
+    s = PastSummary.find_by_period("LAST_MONTH")
+    if s.nil? or s.startdate.utc != Period.last_month.start_time.utc
+      return WxPeriod.add_to_db(WxPeriod.query(last_month))
+    else
+      return s      
+    end
   end
 
   def hi_temp_date(pd, temp)
@@ -82,6 +109,9 @@ class WxPeriod < Period
     rs[0]["hiTempDate"] = my_pd.hi_temp_date(my_pd, rs[0]["hiTemp"])
     rs[0]["lowTempDate"] = my_pd.low_temp_date(my_pd, rs[0]["lowTemp"])
     rs[0]["gustDate"] = my_pd.gust_date(my_pd, rs[0]["hiWindspeed"])
+    rs[0]["startdate"] = pd.start_time.utc
+    rs[0]["enddate"] = pd.end_time.utc
+    rs[0]["period"] = pd.period_name
     rs[0]
   end
 end
