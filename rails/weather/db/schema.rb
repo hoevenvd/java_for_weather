@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080913095415) do
+ActiveRecord::Schema.define(:version => 20081108211516) do
 
   create_table "archive_records", :force => true do |t|
     t.datetime "date",                                                                                     :null => false
@@ -119,6 +119,37 @@ ActiveRecord::Schema.define(:version => 20080913095415) do
 
   add_index "noaa_forecasts", ["created_at"], :name => "created_at"
   add_index "noaa_forecasts", ["location"], :name => "location"
+
+  create_table "past_summaries", :force => true do |t|
+    t.string   "period"
+    t.decimal  "avgDewpoint",                      :precision => 6, :scale => 1
+    t.integer  "avgHumidity",        :limit => 11
+    t.decimal  "avgPressure",                      :precision => 6, :scale => 2
+    t.decimal  "avgTemp",                          :precision => 6, :scale => 1
+    t.integer  "avgWindspeed",       :limit => 11
+    t.integer  "avgWindchill",       :limit => 11
+    t.integer  "hiDewpoint",         :limit => 11
+    t.integer  "hiWindspeed",        :limit => 11
+    t.integer  "hiHumidity",         :limit => 11
+    t.decimal  "hiPressure",                       :precision => 6, :scale => 1
+    t.decimal  "hiTemp",                           :precision => 6, :scale => 1
+    t.integer  "hiWindchill",        :limit => 11
+    t.integer  "lowDewpoint",        :limit => 11
+    t.integer  "lowOutsideHumidity", :limit => 11
+    t.decimal  "lowPressure",                      :precision => 6, :scale => 1
+    t.decimal  "lowTemp",                          :precision => 6, :scale => 1
+    t.integer  "lowWindchill",       :limit => 11
+    t.decimal  "rain",                             :precision => 6, :scale => 2
+    t.datetime "hiTempDate"
+    t.datetime "lowTempDate"
+    t.datetime "gustDate"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "startdate"
+    t.datetime "enddate"
+  end
+
+  add_index "past_summaries", ["period"], :name => "index_past_summaries_on_period", :unique => true
 
   create_table "schema_info", :id => false, :force => true do |t|
     t.integer "version", :limit => 11
