@@ -39,17 +39,21 @@ class WeatherController < ApplicationController
     cond[:uv] = sample[:uv]
     cond[:solar_radiation] = sample[:solar_radiation]
     cond[:daily_rain] = sample[:daily_rain]
+    
     if !cond.save
       raise cond.errors.full_messages.to_s
     end
-    WeatherHelper.post_to_wunderground(location)
+
+    if AppConfig.wunderground != nil
+      WeatherHelper.post_to_wunderground(location)
+    end
   end
   
   def get_last_archive(location)
     entry = ArchiveRecord.find(:first, 
                                :conditions => ["location = ?", location],
                                :order => "date DESC")
-    raise ArgumentError if entry.nil?
+    return nil if entry.nil?
     last_entry = 
       ArchiveStruct.new(
         :location => location,
