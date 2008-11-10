@@ -30,9 +30,14 @@ while true do
     end
 
     last_archive = dest_soap.GetLastArchive("01915")
-    log.debug(last_archive.date)
+    if (last_archive.nil?)
+      date = Time.parse("1/1/1970")
+    else
+      log.debug(last_archive.date)
+      date = last_archive.date
+    end
 
-    archive_structs = src_soap.GetArchiveSince("wx", "01915", last_archive.date)
+    archive_structs = src_soap.GetArchiveSince("wx", "01915", date)
     log.debug("returned #{archive_structs.length} entries")
 
     archive_structs.each do |s|
@@ -41,8 +46,5 @@ while true do
       log.debug(s.date)
       log.debug(Time.now - t)
     end
-  rescue
-    exit 1 unless error_count < 25
-    error_count += 1
   end
 end

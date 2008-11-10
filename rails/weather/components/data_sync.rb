@@ -1,8 +1,8 @@
 LOG = Logger.new(STDOUT) 
-LOG.level = Logger::DEBUG
+LOG.level = Logger::INFO
 
 CURRENT = "production"
-NEW = "a2prod"
+NEW = "development"
 
 def close_current_connection
   ActiveRecord::Base.connection.disconnect!
@@ -22,15 +22,21 @@ end
 def sync_archive
   ActiveRecord::Base.establish_connection(NEW)
   last = ArchiveRecord.find(:first, :order => "date desc")
-  LOG.debug("last record from #{last.date}")
+  if last.nil?
+    date = Time.parse("01/01/1970")
+  else
+    date = last.date
+    LOG.debug("last record from #{last.date}")
+  end
   close_current_connection
   ActiveRecord::Base.establish_connection(CURRENT)
-  later = ArchiveRecord.find_all_by_location("01915", :conditions => "date > \"#{last.date.to_s(:db)}\"")
+  later = ArchiveRecord.find_all_by_location("01915", :conditions => "date > \"#{date.to_s(:db)}\"", :limit => 20000, :order => "date asc")
   LOG.debug("found #{later.size} records to add")
   close_current_connection
   ActiveRecord::Base.establish_connection(NEW)
   later.each do |r|
     LOG.debug(r.to_yaml)
+    LOG.info(r.date)
     a = ArchiveRecord.new(r.attributes)
     a.save!
   end
