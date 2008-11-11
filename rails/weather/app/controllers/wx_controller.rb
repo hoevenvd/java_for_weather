@@ -6,11 +6,11 @@ class WxController < ApplicationController
   def index
     periods
     get_current_conditions
-    @forecast = NoaaForecast.find_by_location(AppConfig.noaa_location)
+    @forecast = NoaaForecast.latest(AppConfig.noaa_location)[0]
   end
 
   def get_noaa_conditions
-    noaa_conditions = NoaaConditions.find_all_by_location(AppConfig.noaa_location, :limit => 1, :order => "as_of desc")[0]
+    noaa_conditions = NoaaConditions.latest(AppConfig.noaa_location)[0]
     if noaa_conditions !=  nil
       @conditions = noaa_conditions.conditions
       @conditions_date = noaa_conditions.as_of.localtime
@@ -31,7 +31,7 @@ class WxController < ApplicationController
   end
 
   def last_rain
-    s = ArchiveRecord.find(:first, :conditions => "rainfall > 0 and location = #{AppConfig.location}", :limit => 1, :order => "date desc")
+    s = ArchiveRecord.last_rain(AppConfig.location)[0]
     if !s.nil?
       s[:date]
     else
@@ -52,8 +52,7 @@ class WxController < ApplicationController
         @highlo = "<br>(daily low)</br>"
       end
     end 
-    last_rain_date = last_rain
-    @last_rain = last_rain_date
+    @last_rain = last_rain
   end
 
   def current_conditions
