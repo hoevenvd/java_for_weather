@@ -1,3 +1,4 @@
+<% if @forecast != nil %>
 <TABLE BORDER=1 ALIGN="CENTER" WIDTH="50%" >
 <tr><td colspan="3" align="center"><center><b><h2>Forecast</h2></b></center></td></tr>
 <% @forecast.forecast_periods.each do | pd | %>
@@ -10,3 +11,4 @@
 
 </table>
 
+<% end %>
