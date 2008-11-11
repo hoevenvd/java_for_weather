@@ -7,6 +7,10 @@ class ArchiveRecord < ActiveRecord::Base
                           :allow_nil => true, :message => "invalid"
   validates_inclusion_of  :outside_humidity, :in => 1..100, 
                           :allow_nil => true, :message => "invalid"
+                        
+  named_scope :really_old, lambda {{:conditions => ["date < ?", Time.now.utc.at_beginning_of_year - 1.year]}}
+  named_scope :last_rain, lambda { |location| {:conditions => ["rainfall > 0 and location = #{AppConfig.location}", location], 
+                            :limit => 1, :order => "date desc"} }
 
   def before_save    
     if  !(outside_temp.nil? || outside_humidity.nil?)
