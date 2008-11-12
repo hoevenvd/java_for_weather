@@ -2,7 +2,14 @@ LOG = Logger.new(STDOUT)
 LOG.level = Logger::INFO
 
 CURRENT = "production"
-NEW = "development"
+NEW = ARGV[0]
+
+if NEW == "production"
+  LOG.error("can't replicate from production to production")
+  exit(1)
+else
+  LOG.info("using #{NEW} as destination")
+end
 
 def close_current_connection
   ActiveRecord::Base.connection.disconnect!
@@ -47,7 +54,7 @@ while true do
   sync_archive
   20.times do
     sync_current
-    sleep 2
+    sleep 4
   end
 end
 

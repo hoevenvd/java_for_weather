@@ -1,3 +1,7 @@
+# sync a development environment from a production one
+#  - uses web services
+# 
+
 require 'soap/wsdlDriver'
 
 log = Logger.new(STDOUT)

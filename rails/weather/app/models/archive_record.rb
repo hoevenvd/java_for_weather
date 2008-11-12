@@ -9,6 +9,10 @@ class ArchiveRecord < ActiveRecord::Base
                           :allow_nil => true, :message => "invalid"
                         
   named_scope :really_old, lambda {{:conditions => ["date < ?", Time.now.utc.at_beginning_of_year - 1.year]}}
+  named_scope :last_year, lambda {{:conditions => ["date < ? and date >= ?", 
+                                   Time.now.utc.at_beginning_of_year,
+                                   Time.now.utc.at_beginning_of_year - 1.year],
+                                   :order => "date desc"}}
   named_scope :last_rain, lambda { |location| {:conditions => ["rainfall > 0 and location = #{AppConfig.location}", location], 
                             :limit => 1, :order => "date desc"} }
 
