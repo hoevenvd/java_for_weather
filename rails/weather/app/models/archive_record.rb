@@ -29,6 +29,11 @@ class ArchiveRecord < ActiveRecord::Base
          (pressure < 27 || pressure > 32)
   end
   
+  def self.last_rain_date(location)
+    last = ArchiveRecord.last_rain(location)[0]
+    last == nil ? nil : last.date
+  end
+  
   def self.last_rolling_hour_rain
     start_tm = 1.hour.ago
     rain = ArchiveRecord.sum(:rainfall, :conditions => "date > \'#{start_tm.to_s(:db)}\'")
