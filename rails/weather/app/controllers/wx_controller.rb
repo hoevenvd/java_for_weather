@@ -10,7 +10,7 @@ class WxController < ApplicationController
   end
 
   def get_noaa_conditions
-    noaa_conditions = NoaaConditions.latest(AppConfig.noaa_location)[0]
+    noaa_conditions = NoaaConditions.latest(AppConfig.noaa_location)
     if noaa_conditions !=  nil
       @conditions = noaa_conditions.conditions
       @conditions_date = noaa_conditions.as_of.localtime
@@ -31,12 +31,7 @@ class WxController < ApplicationController
   end
 
   def last_rain
-    s = ArchiveRecord.last_rain(AppConfig.location)[0]
-    if !s.nil?
-      s[:date]
-    else
-      nil
-    end
+    ArchiveRecord.last_rain_date(AppConfig.location)
   end
   
   def get_current_conditions
