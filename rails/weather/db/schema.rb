@@ -17,10 +17,10 @@ ActiveRecord::Schema.define(:version => 20081112230015) do
     t.decimal  "outside_temp",                               :precision => 4, :scale => 1
     t.decimal  "high_outside_temp",                          :precision => 4, :scale => 1
     t.decimal  "low_outside_temp",                           :precision => 4, :scale => 1
-    t.float    "pressure"
+    t.float    "pressure",                     :limit => 5
     t.integer  "outside_humidity",             :limit => 6
-    t.float    "rainfall"
-    t.float    "high_rain_rate"
+    t.float    "rainfall",                     :limit => 5
+    t.float    "high_rain_rate",               :limit => 6
     t.integer  "average_wind_speed",           :limit => 6
     t.integer  "high_wind_speed",              :limit => 6
     t.integer  "direction_of_high_wind_speed", :limit => 6
@@ -69,16 +69,16 @@ ActiveRecord::Schema.define(:version => 20081112230015) do
     t.integer  "outside_humidity",    :limit => 6
     t.decimal  "dewpoint",                          :precision => 4, :scale => 1
     t.integer  "apparent_temp",       :limit => 6
-    t.float    "pressure"
+    t.float    "pressure",            :limit => 5
     t.string   "bar_status",          :limit => 25
     t.integer  "windspeed",           :limit => 6
     t.integer  "wind_direction",      :limit => 6
     t.boolean  "is_raining"
-    t.float    "rain_rate"
+    t.float    "rain_rate",           :limit => 5
     t.integer  "ten_min_avg_wind",    :limit => 6
     t.integer  "uv",                  :limit => 6
     t.integer  "solar_radiation",     :limit => 6
-    t.float    "daily_rain"
+    t.float    "daily_rain",          :limit => 5
     t.datetime "created_at"
     t.datetime "updated_at"
   end
