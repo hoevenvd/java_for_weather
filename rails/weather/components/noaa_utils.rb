@@ -32,6 +32,7 @@ class NOAAForecastUtils
         forecast.forecast_xml = @xml
         log.debug("creation time raw: #{@doc.elements['//creationTime']}")
         forecast.creation_time = Time.local(*ParseDate.parsedate(@doc.elements['//creationTime'].text)).utc
+        forecast.last_retrieved = Time.now.utc
         forecast.save
         @doc.elements.each("//period") do | pd |
           forecast.forecast_periods << ForecastPeriod.new(
