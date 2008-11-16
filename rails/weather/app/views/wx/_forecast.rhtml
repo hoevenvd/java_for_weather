@@ -1,6 +1,6 @@
 <% if @forecast != nil %>
 <TABLE BORDER=1 ALIGN="CENTER" WIDTH="50%" >
-<tr><td colspan="3" align="center"><center><b><h2>Forecast as of <%= distance_of_time_in_words_to_now(@forecast.creation_time.localtime, false) %> ago</h2></b></center></td></tr>
+<tr><td colspan="3" align="center"><center><b><h2> NOAA Forecast as of <%= distance_of_time_in_words_to_now(@forecast.creation_time.localtime, false) %> ago</h2></b></center></td></tr>
 <% @forecast.forecast_periods.each do | pd | %>
   <tr>
    <td><b><%= pd.name %></b></td>
