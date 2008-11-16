@@ -2,7 +2,7 @@ LOG = Logger.new(STDOUT)
 LOG.level = Logger::INFO
 
 CURRENT = "production"
-NEW = ARGV[0]
+NEW = ARGV[0] || "development"
 
 if NEW == "production"
   LOG.error("can't replicate from production to production")
