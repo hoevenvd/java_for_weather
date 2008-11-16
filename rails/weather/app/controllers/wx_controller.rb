@@ -6,9 +6,13 @@ class WxController < ApplicationController
   def index
     periods
     get_current_conditions
-    @forecast = NoaaForecast.latest(AppConfig.noaa_location)[0]
+    get_noaa_forecast
   end
 
+  def get_noaa_forecast
+    @forecast = NoaaForecast.latest(AppConfig.noaa_location)
+  end
+  
   def get_noaa_conditions
     noaa_conditions = NoaaConditions.latest(AppConfig.noaa_location)
     if noaa_conditions !=  nil

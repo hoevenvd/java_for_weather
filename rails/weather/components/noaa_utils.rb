@@ -1,4 +1,5 @@
 require 'time'
+require 'parsedate'
 require 'net/http'
 require 'rexml/document'
 include REXML
@@ -7,7 +8,7 @@ include REXML
 
 class NOAAForecastUtils
   log = Logger.new(STDOUT)
-  log.level = Logger::INFO
+  log.level = Logger::DEBUG
 
   LOCATION = AppConfig.noaa_location
   HOST = "forecast.weather.gov"
@@ -29,6 +30,8 @@ class NOAAForecastUtils
         forecast.forecast_periods.destroy_all
         icon_base = (@doc.elements['//icon-location'].text + '/').to_s
         forecast.forecast_xml = @xml
+        log.debug("creation time raw: #{@doc.elements['//creationTime']}")
+        forecast.creation_time = Time.local(*ParseDate.parsedate(@doc.elements['//creationTime'].text)).utc
         forecast.save
         @doc.elements.each("//period") do | pd |
           forecast.forecast_periods << ForecastPeriod.new(
