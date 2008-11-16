@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081116113637) do
+ActiveRecord::Schema.define(:version => 20081116132049) do
 
   create_table "archive_records", :force => true do |t|
     t.datetime "date",                                                                                     :null => false
@@ -111,11 +111,12 @@ ActiveRecord::Schema.define(:version => 20081116113637) do
   add_index "noaa_conditions", ["location"], :name => "location"
 
   create_table "noaa_forecasts", :force => true do |t|
-    t.text     "forecast_xml",                                :null => false
+    t.text     "forecast_xml",                                 :null => false
     t.datetime "created_at"
-    t.string   "location",      :limit => 20, :default => "", :null => false
+    t.string   "location",       :limit => 20, :default => "", :null => false
     t.datetime "updated_at"
     t.datetime "creation_time"
+    t.datetime "last_retrieved"
   end
 
   add_index "noaa_forecasts", ["created_at"], :name => "created_at"
