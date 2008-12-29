@@ -123,7 +123,11 @@ public class WxWsClient {
   
   public static long getLatestArchiveRecordDate(String location) throws RemoteException {
     ArchiveStruct s = binding.getLastArchive(location);
-    return s.getDate().getTimeInMillis();
+    if (s != null) {
+        return s.getDate().getTimeInMillis();
+    } else {
+        return 0;
+    }
   }
 
   public static void postArchiveEntry(String password, String location,

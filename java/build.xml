@@ -12,7 +12,6 @@
   <property name="distjar" value="${dist}/weather-1.0.jar"/>
   <property name="tmp" value="./tmp"/>
   <property name="staging" value="./staging"/>
-  <property name="webapp" value="./webapp"/>
   <property name="ws.client.gen" value="./classes"/>
   
   <property name="axis.home" value="." />
@@ -34,7 +33,7 @@
   </delete>
 </target>
 
-<target name="main"  depends="package">
+<target name="main"  depends="make-jar">
 </target>
 
 <target name="base"  depends="gen-ws-client,init">
@@ -49,7 +48,7 @@
 </target>
 	
 <target name="pollVp" depends="main">	
-	<java classname="uk.me.jstott.jweatherstation.Main" fork="no" >
+	<java classname="org.tom.weather.comm.Main" fork="no" >
 	    <arg value="-Dlog4j.configuration=./log4j.properites"/>
 	    <!-- <jvmarg value=""/> -->
 		  <classpath>
@@ -78,16 +77,8 @@
          basedir="${build}"/>
   </target>
 	
-  <target name="make-webapp" depends="make-jar">
 
-	<war warfile="${dist}/weather.war" webxml="${staging}/web.xml">
-		<fileset dir="${webapp}"/>
-		<lib dir="${lib}" includes="*.jar"/>
-	</war>
-  </target>
-
-
-  <target name="package" depends="make-jar, make-webapp">
+  <target name="package" depends="make-jar">
     <copy todir="${tmp}">
       <fileset dir="${lib}" includes="*.jar"/>
     </copy>
