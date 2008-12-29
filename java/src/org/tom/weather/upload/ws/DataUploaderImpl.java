@@ -130,6 +130,7 @@ public class DataUploaderImpl implements DataUploader {
     struct.setNumber_of_wind_samples(entry.getNumberOfWindSamples());
     if (entry.isValid()) {
       WxWsClient.postArchiveEntry(password, getLocation(), struct);
+      LOGGER.info(entry);
     }
   }
 

@@ -1,4 +1,4 @@
-portName=serial
+portName=192.168.1.203
 baudRate=10001
 
 graph.db.Driver=com.mysql.jdbc.Driver
