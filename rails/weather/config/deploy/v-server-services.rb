@@ -29,9 +29,9 @@ set :scm, :subversion
 
 set :deploy_via, :export 
 
-role :app, "v-server"
-role :web, "v-server"
-role :db,  "v-server", :primary => true
+role :app, "wx"
+role :web, "wx"
+role :db,  "wx", :primary => true
 
 #todo: copy database.yml
 # cp ~/apps/weather/config/database.yml ~/cap/weather/shared/system/
