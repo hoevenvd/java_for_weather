@@ -12,7 +12,5 @@ class WundergroundStruct < ActionWebService::Struct
 	member	:baromin,			:float
 	member	:dewptf,			:float
 	member  :solarradiation, 	:int
-	member  :visibility, 	        :int
-	member	:weather,		:text
 	member	:softwaretype,		:text
 end
