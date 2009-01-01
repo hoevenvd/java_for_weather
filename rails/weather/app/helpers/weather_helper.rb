@@ -74,7 +74,7 @@ module WeatherHelper
     post_url += "&dewptf=" + CGI::escape(new_sample[:dewptf].to_s)
     post_url += "&solarradiation=" + CGI::escape(new_sample[:solarradiation].to_s)
     post_url += "&weather=" + CGI::escape(noaa.conditions) unless noaa.nil?
-    post_url += "&visibility=" + CGI::escape(noaa.visibility) unless noaa.nil?
+    post_url += "&visibility=" + CGI::escape(noaa.visibility.to_s) unless noaa.nil?
     post_url += "&softwaretype=" + CGI::escape(new_sample[:softwaretype].to_s)
     post_url += "&action=updateraw&realtime=1&rtfreq=3.0"
 
