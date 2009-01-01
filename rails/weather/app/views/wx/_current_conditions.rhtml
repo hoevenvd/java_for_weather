@@ -38,14 +38,6 @@
 </TR>
 <% end # if @current.solar_radiation > 0 %>
 
-<!--
-<TR>
-<TD ALIGN=CENTER COLSPAN=3 WIDTH="100%"><B>Data collected from sensors: </B>
-<BR><%= @current.sample_date.strftime("%a %b %d %I:%M:%S %p") %></BR>
-</TD>
-</tr>
--->
-
 <TR>
 <TD ALIGN=CENTER COLSPAN=3 WIDTH="100%">
     <% if @current.is_raining %>
