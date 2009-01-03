@@ -54,18 +54,9 @@ end
 after 'deploy:update_code', 'symlink_config_yml', 'symlink_public'
 
 namespace(:deploy) do
-  desc "Shared dispatch.fcgi restart"
+  desc "Shared phusion passenger restart"
   task :restart, :roles => :app do
-    stop
-    start
-  end
-
-  task :stop, :roles => :app do
-    run "~/bin/stop-webapp.sh > /dev/null 2>/dev/null"
-  end
-
-  task :start, :roles => :app do
-    run "~/bin/webapp.sh"
+    run "touch #{current_path}/tmp/restart.txt"
   end
 end
 
