@@ -13,15 +13,6 @@ module WxHelper
     end
   end
     
-  def minutes_to_hhmm(start_tm, end_tm)
-    interval = ((end_tm - start_tm) / 60).to_i # get minutes
-    tmp = interval.divmod(60)
-    hours = tmp[0]
-    minutes = tmp[1]
-    return sprintf("%d:%02d", hours, minutes)
-  end
-  
-  
   def self.heat_index (temp, rh)
     # http://en.wikipedia.org/wiki/Heat_index
     return temp unless (temp > 80.0 && rh > 40.0) # not relevant
