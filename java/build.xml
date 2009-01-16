@@ -7,9 +7,7 @@
   <property name="src_generated" value="./src_generated"/>
 	<property name="build" value="./classes"/>
   <property name="lib" value="./lib"/>
-  <property name="dist" value="./dist"/>
   <property name="appjar" value="weather.jar"/>
-  <property name="distjar" value="${dist}/weather-1.0.jar"/>
   <property name="tmp" value="./tmp"/>
   <property name="staging" value="./staging"/>
   <property name="ws.client.gen" value="./classes"/>
@@ -26,7 +24,6 @@
 <target name="clean" depends="init">
   <delete>
     <fileset dir="${build}" includes="**/*"/>
-    <fileset dir="${dist}" includes="**/*"/>
     <fileset dir="${tmp}" includes="**/*"/>
     <fileset dir="${build}" includes="**/*"/>
     <fileset dir="${src_generated}" includes="**/*"/>
@@ -65,7 +62,6 @@
     <tstamp/>
     <!-- Create the build directory structure used by compile -->
     <mkdir dir="${build}"/>
-    <mkdir dir="${dist}"/>
     <mkdir dir="${tmp}"/>
     <mkdir dir="${build}"/>
     <mkdir dir="${src_generated}"/>
@@ -82,7 +78,6 @@
     <copy todir="${tmp}">
       <fileset dir="${lib}" includes="*.jar"/>
     </copy>
-    <jar jarfile="${distjar}" basedir="${tmp}"/>
     <delete>
       <fileset dir="${tmp}" includes="**/*" excludes="weather.jar"/>
     </delete>
