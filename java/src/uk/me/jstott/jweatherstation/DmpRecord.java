@@ -177,6 +177,11 @@ public class DmpRecord implements ArchiveEntry {
 
   private void checkValid() {
     // check CRC
+
+    if (date.getTime().getTime() > new Date().getTime()) {
+        valid = false;
+        setInvalidReason("date in future");
+    }
     
     if (numberOfWindSamples == 0) {
       valid = false;
