@@ -25,7 +25,6 @@
 <%= render(:partial => "sunapplet", :layout => false  ) %>
 
 <table>
-<!-- insert magic here -->
 <% if @current.nil? %>
 <p>
 <b>Current Conditions Currently Unavailable</b>
@@ -55,7 +54,6 @@
 				 :url => { :action => :period },
 				 :frequency => 60 ) %>
 
-<!-- include here -->
 </td>
 </tr>
 </table>
