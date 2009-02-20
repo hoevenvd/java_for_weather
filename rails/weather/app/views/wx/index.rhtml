@@ -1,6 +1,7 @@
+<html>
 <head>
 <%= javascript_include_tag :defaults %>
-<META name="verify-v1" content="GYFz3wNRskJO2k9uhxRRYuYW+kH9UmPZj8lnMV1BzaY=" />
+<META name="verify-v1" content="GYFz3wNRskJO2k9uhxRRYuYW+kH9UmPZj8lnMV1BzaY=">
 <META NAME="keywords" CONTENT="Beverly weather tide Boston Mass massachusetts ma live rails java temperature dry hot humid cold new england northeast current humid rain wind windy current">
 <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
 <meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
@@ -9,9 +10,8 @@
 <title>Live Beverly, MA Weather</title>
 </head>
 
-<html>
-<body BGCOLOR="#FFFFFF" background=<%= image_path("sky-bkgd1.jpg") %> >
-<center>
+<body BGCOLOR="#FFFFFF" background="<%= image_path("sky-bkgd1.jpg") %>" >
+<CENTER>
 <table border="0" width="100%" cellspacing="0" cellpadding="3">
   <tr>
     <td width="100%" bgcolor="#000080"><font face="Arial Black" color="#FFFFFF"><big>
@@ -71,5 +71,6 @@
 
 <%= render(:partial => "google_analytics", :layout => false  ) %>
 
+</CENTER>
 </body>
 </html>

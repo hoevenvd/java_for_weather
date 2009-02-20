@@ -1,45 +1,48 @@
-<br>
-<TABLE BORDER WIDTH="360" BGCOLOR="#C0C0C0" >
+<TABLE BORDER WIDTH="360" BGCOLOR="#C0C0C0">
 <div id="CUR">
 <TR>
-<TD ALIGN=CENTER VALIGN=TOP COLSPAN=3 WIDTH="100%">
-<B>Live Conditions as of <%= @current.sample_date.getlocal.strftime("%I:%M:%S %p") %><br>(<%= distance_of_time_in_words_to_now(@current.sample_date.getlocal, true) %> ago)</B>
-</TD>
-</tr>
+  <TD ALIGN="CENTER" VALIGN="TOP" COLSPAN="3" WIDTH="100%">
+  <B>Live Conditions as of <%= @current.sample_date.getlocal.strftime("%I:%M:%S %p") %></B><br>(<%= distance_of_time_in_words_to_now(@current.sample_date.getlocal, true) %> ago)
+  </TD>
+</TR>
 
-<TD ALIGN=CENTER><B>Temp</B>&nbsp;
-<BR><%= @current.outside_temperature %> <%= @current.temp_trend %> <b><%= @highlo %></b></TD>
+<TR>
+  <TD ALIGN="CENTER"><B>Temp</B><br>
+    <%= @current.outside_temperature %> <%= @current.temp_trend %> <%= @highlo %>
+  </TD>
 
-<TD>
-<CENTER><B>Wind</b><br><%= @current.wind_str %></CENTER>
-</TD>
+  <TD ALIGN=CENTER><B>Wind</B><br><%= @current.wind_str %></TD>
 
-<TD ALIGN=CENTER><B>Dewpoint</B>
-<BR><%= @current.dewpoint %> <%= @current.dewpoint_trend %></TD>
-</tr>
+  <TD ALIGN=CENTER><B>Dewpoint</B><BR><%= @current.dewpoint %> <%= @current.dewpoint_trend %></TD>
+</TR>
 
-<tr>
-<TD ALIGN=CENTER><B>Feels like</B><br>
-<%= @current.apparent_temp %></TD>
-<TD>
-<CENTER><B>Pressure</b><br><%= @current.pressure %> and  <%= @current.bar_status %></B></CENTER>
-</TD>
+<TR>
+  <TD ALIGN="CENTER"><B>Feels like</B><br>
+    <%= @current.apparent_temp %>
+  </TD>
+  <TD ALIGN="CENTER"><B>Pressure</B><br>
+    <%= @current.pressure %> and  <%= @current.bar_status %>
+  </TD>
 
-<TD ALIGN=CENTER><B>Humidity</B>&nbsp;
-<BR><%= @current.outside_humidity %> </TD>
+  <TD ALIGN=CENTER><B>Humidity</B><br>
+    <%= @current.outside_humidity %>
+  </TD>
 
 </TR>
 
 <% if @current.solar_radiation > 0 %>
 <TR>
-<TD COLSPAN="3" WIDTH="100%">
-<CENTER><B>Solar Radiation</b><br><%= @current.solar_radiation %> watts / sq. meter</B></CENTER>
-</TD>
+  <TD ALIGN="CENTER" COLSPAN="3" WIDTH="100%">
+    <B>Solar Radiation</B>
+  </TD>
+  <TD ALIGN="CENTER" COLSPAN="3" WIDTH="100%">
+    <B><%= @current.solar_radiation %> watts / sq. meter</B>
+  </TD>
 </TR>
 <% end # if @current.solar_radiation > 0 %>
 
 <TR>
-<TD ALIGN=CENTER COLSPAN=3 WIDTH="100%">
+  <TD ALIGN=CENTER COLSPAN=3 WIDTH="100%">
     <% if @current.is_raining %>
       <b>Raining at <%= @current.rain_rate %> inches per hour</b>
     <% else %>
@@ -47,19 +50,17 @@
       <b>Last rain:</b> <%= distance_of_time_in_words_to_now(@last_rain.getlocal, true)  %> ago
       <% end %>
     <% end %>
-</TD>
-</tr>
+  </TD>
+</TR>
 
 
 <% if @conditions != nil && @conditions_date > 2.hours.ago %>
-<tr>														 
-<TD ALIGN=CENTER COLSPAN=3 WIDTH="100%"><B><%= @conditions %><br>Visibility <%= @visibility %> miles</B><br/>
- Observed at Beverly Airport <%= distance_of_time_in_words_to_now(@conditions_date, false) %> ago
-</TD>
-</tr>
+<TR>
+  <TD ALIGN=CENTER COLSPAN=3 WIDTH="100%"><B><%= @conditions %><br>Visibility <%= @visibility %> miles</B><br/>
+   Observed at Beverly Airport <%= distance_of_time_in_words_to_now(@conditions_date, false) %> ago
+  </TD>
+</TR>
 <% end # if @current != nil %>
 
-<TR>
 </div>
-</table>
-<br>
+</TABLE>
