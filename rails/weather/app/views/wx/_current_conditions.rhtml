@@ -41,17 +41,21 @@
 </TR>
 <% end # if @current.solar_radiation > 0 %>
 
+<% if @current.is_raining %>
 <TR>
   <TD ALIGN=CENTER COLSPAN=3 WIDTH="100%">
-    <% if @current.is_raining %>
       <b>Raining at <%= @current.rain_rate %> inches per hour</b>
-    <% else %>
-      <% if !@last_rain.nil? %>
-      <b>Last rain:</b> <%= distance_of_time_in_words_to_now(@last_rain.getlocal, true)  %> ago
-      <% end %>
-    <% end %>
   </TD>
 </TR>
+<% else %>
+  <% if !@last_rain.nil? %>
+    <TR>
+      <TD ALIGN=CENTER COLSPAN=3 WIDTH="100%">
+        <b>Last rain:</b> <%= distance_of_time_in_words_to_now(@last_rain.getlocal, true)  %> ago
+      </TD>
+    </TR>
+  <% end %>
+<% end %>
 
 
 <% if @conditions != nil && @conditions_date > 2.hours.ago %>
