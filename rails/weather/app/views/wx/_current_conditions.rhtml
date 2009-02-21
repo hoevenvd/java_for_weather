@@ -33,10 +33,7 @@
 <% if @current.solar_radiation > 0 %>
 <TR>
   <TD ALIGN="CENTER" COLSPAN="3" WIDTH="100%">
-    <B>Solar Radiation</B>
-  </TD>
-  <TD ALIGN="CENTER" COLSPAN="3" WIDTH="100%">
-    <B><%= @current.solar_radiation %> watts / sq. meter</B>
+    <B>Solar Radiation <%= @current.solar_radiation %> watts / sq. meter</B>
   </TD>
 </TR>
 <% end # if @current.solar_radiation > 0 %>
