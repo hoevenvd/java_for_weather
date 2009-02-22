@@ -87,18 +87,21 @@
 <TR>
 <TD COLSPAN="4" align="center" >
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Barometer</FONT></FONT></B></CENTER>
-<% if !@today.nil? %>
+<% if !@today.hiPressure?.nil? %>
 <CENTER>Today's High: <%= sprintf("%.2f", @today.hiPressure) %></CENTER>
-<CENTER>Today's Low:  <%= sprintf("%.2f", @today.lowPressure) %></center>
+<% end %>
+<% if !@today.lowPressure.nil? %>
+<CENTER>Today's Low:  <%= sprintf("%.2f", @today.lowPressure) %></CENTER>
 <% end %>
 </TD>
 
 </TR>
 
 <TR>
-<TD COLSPAN="4" align="center" >
-<CENTER>N 42&deg;33'41.54, W 70&deg;50'58.28</CENTER>
-</td></TR>
+  <TD COLSPAN="4" align="center" >
+    <CENTER>N 42&deg;33'41.54, W 70&deg;50'58.28</CENTER>
+  </TD>
+</TR>
 
 </TABLE>
 
