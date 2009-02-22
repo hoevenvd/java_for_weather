@@ -11,7 +11,7 @@
 <% if @today.hiTempDate != nil then %>
  (<%= @today.hiTempDate.localtime.strftime "%I:%M %p" %>)
 <% end %></center>
-<center>Today's Low Wind Chill: </FONT><%= @today.lowWindchill %>
+<center>Today's Low Wind Chill: <%= @today.lowWindchill %>
 <% end %></center>
 
 <% if !@yesterday.lowTemp.nil? %>
@@ -41,8 +41,8 @@
 <center>Last Month Avg.: <%= sprintf("%.1f", @last_month.avgTemp) %></center>
 <% end %> 
 
-</td>
-</tr>
+</TD>
+</TR>
 <tr>
 <TD  align="center" >
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Wind</FONT></FONT></B></CENTER>
@@ -55,7 +55,7 @@
 <% end %>
 
 <% if !@today.avgWindspeed.nil? %>
-<Center>Today: <%= sprintf("%.1f", @today.avgWindspeed) %> mph</center>
+<CENTER>Today: <%= sprintf("%.1f", @today.avgWindspeed) %> mph</CENTER>
 <% end %>
 <% if !@today.hiWindspeed.nil? %>
   <% if @today.hiWindspeed != nil then %>
@@ -65,7 +65,7 @@
 
 </TD>
 </tr>
-<tr>
+<TR>
 <TD COLSPAN="4" align="center" >
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Precipitation</FONT></FONT></B></CENTER>
 <% if !@today.rain.nil? %>
