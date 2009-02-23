@@ -47,7 +47,7 @@
 <TD  align="center" >
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Wind</FONT></FONT></B></CENTER>
 <% if !@this_hour.avgWindspeed.nil? %>
-<Center>This Hour: <%= sprintf("%1.f", @this_hour.avgWindspeed) %> mph</Center>
+<Center>This Hour: <%= sprintf("%.1f", @this_hour.avgWindspeed) %> mph</Center>
 <% end %>
 
 <% if !@last_hour.avgWindspeed.nil? %>
@@ -87,7 +87,7 @@
 <TR>
 <TD COLSPAN="4" align="center" >
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Barometer</FONT></FONT></B></CENTER>
-<% if !@today.hiPressure?.nil? %>
+<% if !@today.hiPressure.nil? %>
 <CENTER>Today's High: <%= sprintf("%.2f", @today.hiPressure) %></CENTER>
 <% end %>
 <% if !@today.lowPressure.nil? %>
