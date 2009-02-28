@@ -69,16 +69,16 @@
 <TD COLSPAN="4" align="center" >
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Precipitation</FONT></FONT></B></CENTER>
 <% if !@today.rain.nil? %>
-<CENTER>Today: <%= @today.rain %> inches</CENTER>
+<CENTER>Today: <%= sprintf("%.02f", @today.rain) %> inches</CENTER>
 <% end %>
 <% if !@yesterday.rain.nil? %>
-<CENTER>Yesterday: <%= @yesterday.rain %> inches</CENTER>
+<CENTER>Yesterday: <%= sprintf("%.02f", @yesterday.rain) %> inches</CENTER>
 <% end %>
 <% if !@this_week.rain.nil? %>
-<CENTER>This week: <%= @this_week.rain %> inches</CENTER>
+<CENTER>This week: <%= sprintf("%.02f", @this_week.rain) %> inches</CENTER>
 <% end %>
 <% if !@last_week.rain.nil? %>
-<CENTER>Last week: <%= @last_week.rain %> inches </CENTER>
+<CENTER>Last week: <%= sprintf("%.02f", @last_week.rain) %> inches </CENTER>
 <% end %>
 
 </TD>

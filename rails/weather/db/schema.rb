@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081116132049) do
+ActiveRecord::Schema.define(:version => 20090226111251) do
 
   create_table "archive_records", :force => true do |t|
     t.datetime "date",                                                                                     :null => false
@@ -17,10 +17,10 @@ ActiveRecord::Schema.define(:version => 20081116132049) do
     t.decimal  "outside_temp",                               :precision => 4, :scale => 1
     t.decimal  "high_outside_temp",                          :precision => 4, :scale => 1
     t.decimal  "low_outside_temp",                           :precision => 4, :scale => 1
-    t.float    "pressure",                     :limit => 5
+    t.float    "pressure"
     t.integer  "outside_humidity",             :limit => 6
-    t.float    "rainfall",                     :limit => 5
-    t.float    "high_rain_rate",               :limit => 6
+    t.float    "rainfall"
+    t.float    "high_rain_rate"
     t.integer  "average_wind_speed",           :limit => 6
     t.integer  "high_wind_speed",              :limit => 6
     t.integer  "direction_of_high_wind_speed", :limit => 6
@@ -62,6 +62,25 @@ ActiveRecord::Schema.define(:version => 20081116132049) do
   add_index "archive_records", ["date"], :name => "dates"
   add_index "archive_records", ["location"], :name => "locations"
 
+  create_table "climates", :force => true do |t|
+    t.string   "location",                            :null => false
+    t.integer  "month",                 :limit => 11, :null => false
+    t.integer  "day",                   :limit => 11, :null => false
+    t.integer  "avg_high_temp",         :limit => 11
+    t.integer  "avg_low_temp",          :limit => 11
+    t.integer  "mean_temp",             :limit => 11
+    t.integer  "record_high_temp",      :limit => 11
+    t.integer  "record_high_temp_year", :limit => 11
+    t.integer  "record_low_temp",       :limit => 11
+    t.integer  "record_low_temp_year",  :limit => 11
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "climates", ["location"], :name => "index_climates_on_location"
+  add_index "climates", ["month"], :name => "index_climates_on_month"
+  add_index "climates", ["day"], :name => "index_climates_on_day"
+
   create_table "current_conditions", :force => true do |t|
     t.string   "location",            :limit => 10,                               :default => "", :null => false
     t.datetime "sample_date"
@@ -69,16 +88,16 @@ ActiveRecord::Schema.define(:version => 20081116132049) do
     t.integer  "outside_humidity",    :limit => 6
     t.decimal  "dewpoint",                          :precision => 4, :scale => 1
     t.integer  "apparent_temp",       :limit => 6
-    t.float    "pressure",            :limit => 5
+    t.float    "pressure"
     t.string   "bar_status",          :limit => 25
     t.integer  "windspeed",           :limit => 6
     t.integer  "wind_direction",      :limit => 6
     t.boolean  "is_raining"
-    t.float    "rain_rate",           :limit => 5
+    t.float    "rain_rate"
     t.integer  "ten_min_avg_wind",    :limit => 6
     t.integer  "uv",                  :limit => 6
     t.integer  "solar_radiation",     :limit => 6
-    t.float    "daily_rain",          :limit => 5
+    t.float    "daily_rain"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -111,7 +130,7 @@ ActiveRecord::Schema.define(:version => 20081116132049) do
   add_index "noaa_conditions", ["location"], :name => "location"
 
   create_table "noaa_forecasts", :force => true do |t|
-    t.text     "forecast_xml",                                 :null => false
+    t.text     "forecast_xml"
     t.datetime "created_at"
     t.string   "location",       :limit => 20, :default => "", :null => false
     t.datetime "updated_at"
@@ -200,12 +219,21 @@ ActiveRecord::Schema.define(:version => 20081116132049) do
     t.datetime "updated_at"
     t.datetime "startdate"
     t.datetime "enddate"
+    t.integer  "degreeDays",         :limit => 11
   end
 
   add_index "past_summaries", ["period"], :name => "index_past_summaries_on_period", :unique => true
 
-  create_table "schema_info", :id => false, :force => true do |t|
-    t.integer "version", :limit => 11
+  create_table "risesets", :force => true do |t|
+    t.string  "location",               :null => false
+    t.integer "month",    :limit => 11, :null => false
+    t.integer "day",      :limit => 11, :null => false
+    t.time    "rise"
+    t.time    "set"
   end
+
+  add_index "risesets", ["location"], :name => "index_risesets_on_location"
+  add_index "risesets", ["month"], :name => "index_risesets_on_month"
+  add_index "risesets", ["day"], :name => "index_risesets_on_day"
 
 end

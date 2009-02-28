@@ -101,7 +101,8 @@ class WxPeriod < Period
                                        max(outside_humidity) as hiHumidity, max(pressure) as hiPressure, max(high_outside_temp) as hiTemp, 
                                        max(average_apparent_temp) as hiWindchill, min(average_dewpoint) as lowDewpoint,
                                        min(outside_humidity) as lowOutsideHumidity, min(pressure) as lowPressure, 
-                                       min(low_outside_temp) as lowTemp, min(average_apparent_temp) as lowWindchill, sum(rainfall) as rain 
+                                       min(low_outside_temp) as lowTemp, min(average_apparent_temp) as lowWindchill, sum(rainfall) as rain,
+                                       avg(high_outside_temp) - 65.0 as degreeDays
                                     from archive_records d 
                                     where d.date > '#{pd.start_time_sql}' and d.date <= '#{pd.end_time_sql}';");
     #FIXME - needs massive refactoring of this class to get rid of the statics
