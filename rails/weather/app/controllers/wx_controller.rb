@@ -67,6 +67,8 @@ class WxController < ApplicationController
       end
     end 
     @last_rain = last_rain
+    get_climate
+    get_riseset
   end
 
   def current_conditions
