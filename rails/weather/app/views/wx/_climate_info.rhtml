@@ -1,0 +1,29 @@
+<TABLE BORDER WIDTH="360" BGCOLOR="#C0C0C0">
+<div id="CLIMATE">
+<TR>
+  <TD ALIGN="CENTER" VALIGN="TOP" COLSPAN="3" WIDTH="100%">
+  <B>Climate Information</B>
+  </TD>
+</TR>
+
+<TR>
+  <TD ALIGN="CENTER"><B>Normal High</B><br>
+    <%= @normal_high %>
+  </TD>
+  <TD ALIGN="CENTER"><B>Normal Low</B><br>
+    <%= @normal_low %>
+  </TD>
+
+</TR>
+
+<TR>
+  <TD ALIGN="CENTER"><B>Sunrise</B><br><%= @sunrise.strftime("%I:%M %p") %>
+  </TD>
+
+  <TD ALIGN=CENTER><B>Sunset</B><br><%= @sunset.strftime("%I:%M %p") %>
+  </TD>
+
+</TR>
+
+</div>
+</TABLE>

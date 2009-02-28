@@ -7,10 +7,25 @@ class WxController < ApplicationController
     periods
     get_current_conditions
     get_noaa_forecast
+    get_climate
+    get_riseset
   end
 
   def get_noaa_forecast
     @forecast = NoaaForecast.latest(AppConfig.noaa_location)
+  end
+
+  def get_climate
+    c = Climate.find_by_location_and_month_and_day(AppConfig.location,Time.now.localtime.month, Time.now.localtime.day)
+    @normal_high = c.avg_high_temp
+    @normal_low = c.avg_low_temp
+  end
+
+  def get_riseset
+    r = Riseset.find_by_location_and_month_and_day(AppConfig.location,
+            Time.now.localtime.month, Time.now.localtime.day)
+    @sunrise =  r.rise.localtime
+    @sunset = r.set.localtime
   end
   
   def get_noaa_conditions
