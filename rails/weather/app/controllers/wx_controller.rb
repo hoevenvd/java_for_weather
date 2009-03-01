@@ -16,13 +16,13 @@ class WxController < ApplicationController
   end
 
   def get_climate
-    c = Climate.find_by_location_and_month_and_day(AppConfig.location,Time.now.localtime.month, Time.now.localtime.day)
+    c = Climate.find_by_location_and_month_and_day(AppConfig.climate_location,Time.now.localtime.month, Time.now.localtime.day)
     @normal_high = c.avg_high_temp
     @normal_low = c.avg_low_temp
   end
 
   def get_riseset
-    r = Riseset.find_by_location_and_month_and_day(AppConfig.location,
+    r = Riseset.find_by_location_and_month_and_day(AppConfig.climate_location,
             Time.now.localtime.month, Time.now.localtime.day)
     @sunrise =  r.rise.localtime
     @sunset = r.set.localtime

@@ -1,4 +1,4 @@
-LOCATION = "01915"
+CLIMATE_LOCATION = "01915"
 
 def add_riseset(mon, a)
   rise_hour = a[1].split(":")[0].to_i
@@ -6,10 +6,10 @@ def add_riseset(mon, a)
   rise_minute = a[1].split(":")[1].to_i
   set_hour = a[3].split(":")[0].to_i
   set_hour += 12 if a[4] == "PM"
-  set_minute = a[1].split(":")[1].to_i
+  set_minute = a[3].split(":")[1].to_i
 
   r = Riseset.new
-  r.location = LOCATION
+  r.location = CLIMATE_LOCATION
   r.month = mon
   r.day = a[0].to_i
   r.rise = Time.local(Time.now.year, r.month, r.day, rise_hour, rise_minute).utc
@@ -19,7 +19,7 @@ end
 
 def add_climate(mon, a)  
   c = Climate.new
-  c.location = LOCATION
+  c.location = CLIMATE_LOCATION
   c.month = mon
   c.day = a[0].to_i
   c.avg_high_temp = a[5].to_i
@@ -37,7 +37,8 @@ end
 # day rise rise_ampm sunset sunset_ampm avghi avglow mean rec_high rec_high_yr rec_low rec_low_yr
 
 month = nil
-
+Riseset.delete_all
+Climate.delete_all
 File.open("../../doc/boston-climate.txt").each do |line|
 #  puts line
   a = line.split
