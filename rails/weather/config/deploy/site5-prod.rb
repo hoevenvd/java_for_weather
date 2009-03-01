@@ -75,6 +75,11 @@ task :tail_prod_log, :roles => :app do
 end
 
 desc "reset awstats config"
-task :reset_awstata, :roles => :app do
+task :reset_awstats, :roles => :app do
     send(run_method, "cp ~/tmp/awstats/awstats.tom.org.conf.good ~/tmp/awstats/awstats.tom.org.conf")
+end
+
+desc "get basic usage"
+task :uptime, :roles => :app do
+    send(run_method, "uptime")
 end
