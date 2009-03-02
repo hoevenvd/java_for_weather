@@ -17,15 +17,25 @@ class WxController < ApplicationController
 
   def get_climate
     c = Climate.find_by_location_and_month_and_day(AppConfig.climate_location,Time.now.localtime.month, Time.now.localtime.day)
-    @normal_high = c.avg_high_temp
-    @normal_low = c.avg_low_temp
+    if !c.nil?
+      @normal_high = c.avg_high_temp
+      @normal_low = c.avg_low_temp
+      @climate_available = true
+    else
+      @climate_available = false
+    end
   end
 
   def get_riseset
     r = Riseset.find_by_location_and_month_and_day(AppConfig.climate_location,
             Time.now.localtime.month, Time.now.localtime.day)
-    @sunrise =  r.rise.localtime
-    @sunset = r.set.localtime
+    if !r.nil?
+      @sunrise_available = true
+      @sunrise =  r.rise.localtime
+      @sunset = r.set.localtime
+    else
+      @sunrise_available = false
+    end
   end
   
   def get_noaa_conditions

@@ -63,7 +63,9 @@
 </TR>
 <% end # if @current != nil %>
 
-<%= render(:partial => "climate_info", :layout => false  ) %>
+<% if @climate_available or @sunrise_available %>
+  <%= render(:partial => "climate_info", :layout => false) %>
+<% end %>
 
 
 </div>
