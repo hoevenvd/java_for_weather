@@ -1,23 +1,27 @@
-<TABLE BORDER WIDTH="360" BGCOLOR="#C0C0C0">
-<div id="CLIMATE">
-<TR>
-  <TD ALIGN="CENTER"><B>Normal High</B><br>
-    <%= @normal_high %>
-  </TD>
-  <TD ALIGN="CENTER"><B>Normal Low</B><br>
-    <%= @normal_low %>
-  </TD>
+  <TABLE BORDER WIDTH="360" BGCOLOR="#C0C0C0">
+  <div id="CLIMATE">
+  <% if @climate_available %>
+    <TR>
+      <TD ALIGN="CENTER"><B>Normal High</B><br>
+        <%= @normal_high %>
+      </TD>
+      <TD ALIGN="CENTER"><B>Normal Low</B><br>
+        <%= @normal_low %>
+      </TD>
 
-</TR>
+    </TR>
+  <% end %>
 
-<TR>
-  <TD ALIGN="CENTER"><B>Sunrise</B><br><%= @sunrise.strftime("%I:%M %p") %>
-  </TD>
+  <% if @sunrise_available %>
+    <TR>
+      <TD ALIGN="CENTER"><B>Sunrise</B><br><%= @sunrise.strftime("%I:%M %p") %>
+      </TD>
 
-  <TD ALIGN=CENTER><B>Sunset</B><br><%= @sunset.strftime("%I:%M %p") %>
-  </TD>
+      <TD ALIGN=CENTER><B>Sunset</B><br><%= @sunset.strftime("%I:%M %p") %>
+      </TD>
 
-</TR>
+    </TR>
+  <% end %>
 
-</div>
-</TABLE>
+  </div>
+  </TABLE>
