@@ -25,6 +25,10 @@
 <% end %>
 <% end %></center>
 
+<% if !@yesterday.degreeDays.nil? %>
+<center>Yesterday's <%= (@yesterday.degreeDays < 0 ? "Heating" : "Cooling") %> Degree Days: <%= @yesterday.degreeDays.abs %></center>
+<% end %>
+
 <% if !@this_week.avgTemp.nil? %>
 <center>This Week Avg.: <%= sprintf("%.1f", @this_week.avgTemp) %></center>
 <% end %>
