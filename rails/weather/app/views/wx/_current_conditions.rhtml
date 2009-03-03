@@ -21,7 +21,7 @@
     <%= @current.apparent_temp %>
   </TD>
   <TD ALIGN="CENTER"><B>Pressure</B><br>
-    <%= @current.pressure %> and  <%= @current.bar_status %>
+    <%= sprintf("%0.02f", @current.pressure) %> and  <%= @current.bar_status %>
   </TD>
 
   <TD ALIGN=CENTER><B>Humidity</B><br>

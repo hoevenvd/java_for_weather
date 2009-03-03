@@ -13,12 +13,11 @@ log.debug(src_soap)
 dest_url="http://localhost:3000/weather/wsdl"
 dest_soap = SOAP::WSDLDriverFactory.new(dest_url).create_rpc_driver
 log.debug(dest_soap)
-error_count = 0
 
 while true do
 
   begin
-    15.times do
+    10.times do
       log.debug("getting conditions.")
       t = Time.now
       conditions = src_soap.GetCurrentConditions("01915")
@@ -29,8 +28,7 @@ while true do
       dest_soap.PutCurrentConditions("wx", "01915", conditions)
       log.debug("done.")
       log.debug(Time.now - t)
-      error_count = 0
-      sleep 2
+      sleep 5
     end
 
     last_archive = dest_soap.GetLastArchive("01915")
