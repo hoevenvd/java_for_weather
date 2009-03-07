@@ -27,12 +27,15 @@ class WxController < ApplicationController
   end
 
   def get_riseset
+
+    date = Time.now.localtime
     r = Riseset.find_by_location_and_month_and_day(AppConfig.climate_location,
-            Time.now.localtime.month, Time.now.localtime.day)
+            date.month, date.day)
+    
     if !r.nil?
       @sunrise_available = true
-      @sunrise =  r.rise.localtime
-      @sunset = r.set.localtime
+      @sunrise = Time.gm(date.year, date.month, date.day, r.rise.hour, r.rise.min).localtime
+      @sunset = Time.gm(date.year, date.month, date.day, r.set.hour, r.set.min).localtime
     else
       @sunrise_available = false
     end
