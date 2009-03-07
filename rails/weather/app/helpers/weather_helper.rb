@@ -18,6 +18,21 @@ module WeatherHelper
      req += sprintf("/%03d", c[:windspeed])
      req += sprintf("g%03d", c[:gust])
      req += sprintf("t%03d", c[:outside_temperature].to_i)
+
+     if !c.solar_radiation.nil?
+       # Luminescence (Solar Radiation). 
+       # Requires solar radiation sensor. 
+       # Data omitted if no solar radition sensor is present in the station.
+       # A capital L, "L", is used to report values between 0 and 999 w/m2.
+       #  A lower case L, "l", used to report values from 1000 to 1999 w/m2.
+       if (c.solar_radiation) > 1000
+         rads = sprintf("l%d", c.solar_radiation)
+       else
+         rads = sprintf("L%03d", c.solar_radiation)
+       end
+       req += rads
+     end
+     req += sprintf("")
      req += sprintf("r%03d", c.hourly_rain * 100)
      req += sprintf("p%03d", c.twentyfour_hour_rain * 100)
      req += sprintf("P%03d", c.daily_rain * 100)
@@ -25,13 +40,14 @@ module WeatherHelper
      req += sprintf("b%05d", c.pressure * 33.864 * 10)
      req += "eTomOrgDavisVP2"
      init_str = "user #{AppConfig.cwop_id} pass -1 vers linux-1wire 1.00"
-     s = TCPSocket.open("cwop.aprs.net", 14580)
+     # rotate.aprs.net:14580
+     s = TCPSocket.open("rotate.aprs.net", 14580)
      s.puts(init_str)
      sleep 3
-     s.gets
+     puts s.gets
      s.puts(req)
      sleep 3
-     s.gets
+     puts s.gets
   end
 
   def self.post_to_wunderground(location)
