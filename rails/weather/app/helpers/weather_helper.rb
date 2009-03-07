@@ -44,10 +44,10 @@ module WeatherHelper
      s = TCPSocket.open("rotate.aprs.net", 14580)
      s.puts(init_str)
      sleep 3
-     puts s.gets
+     s.gets
      s.puts(req)
      sleep 3
-     puts s.gets
+     s.gets
   end
 
   def self.post_to_wunderground(location)
