@@ -27,18 +27,10 @@ class WxController < ApplicationController
   end
 
   def get_riseset
-
-    date = Time.now.localtime
-    r = Riseset.find_by_location_and_month_and_day(AppConfig.climate_location,
-            date.month, date.day)
-    
-    if !r.nil?
-      @sunrise_available = true
-      @sunrise = Time.gm(date.year, date.month, date.day, r.rise.hour, r.rise.min).localtime
-      @sunset = Time.gm(date.year, date.month, date.day, r.set.hour, r.set.min).localtime
-    else
-      @sunrise_available = false
-    end
+    @sunrise = Riseset.today_rise
+    @sunrise_available = (@sunrise.nil? ? false: true)
+    @sunset = Riseset.today_set
+    @sunset_available = (@sunset.nil? ? false: true)
   end
   
   def get_noaa_conditions
