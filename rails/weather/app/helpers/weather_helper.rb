@@ -41,7 +41,7 @@ module WeatherHelper
      req += "eTomOrgDavisVP2"
      init_str = "user #{AppConfig.cwop_id} pass -1 vers linux-1wire 1.00"
      # rotate.aprs.net:14580
-     s = TCPSocket.open("rotate.aprs.net", 14580)
+     s = TCPSocket.open("cwop.aprs.net", 14580)
      s.puts(init_str)
      sleep 3
      s.gets
