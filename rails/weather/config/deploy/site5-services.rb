@@ -60,7 +60,7 @@ after 'deploy:update_code', 'symlink_config_yml', 'symlink_public'
 namespace(:deploy) do
   desc "Shared dispatch.fcgi restart"
   task :restart, :roles => :app do
-    send(run_method, "skill -9 -u #{user} -c dispatch.fcgi")
+    run "touch #{current_path}/tmp/restart.txt"
   end
 end
 
