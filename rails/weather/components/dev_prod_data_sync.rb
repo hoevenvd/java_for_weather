@@ -7,7 +7,7 @@ require 'soap/wsdlDriver'
 log = Logger.new(STDOUT)
 log.level = Logger::DEBUG
 
-src_url="http://servers:3000/wx/weather/wsdl"
+src_url="http://www.tom.org/weather/wsdl"
 src_soap = SOAP::WSDLDriverFactory.new(src_url).create_rpc_driver
 log.debug(src_soap)
 dest_url="http://localhost:3000/weather/wsdl"

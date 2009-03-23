@@ -1,0 +1,4 @@
+# this file is used to tell passenger where its base url is
+
+RailsBaseURI /weather
+
