@@ -1,5 +1,7 @@
 set :application, "weather"
 
+set :deploy_dir, "/weather"
+
 set :user, "tomorg"
 ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "id_rsa")] 
 #ssh_options[:port] = 7822
@@ -52,7 +54,12 @@ end
 #desc "Symlink root directory under public_html"
 task :symlink_public, :roles => :app do
   run "ln -nsf #{current_path}/public
-       /home/#{user}/public_html/weather"
+       /home/#{user}/public_html/#{deploy_dir}"
+
+# fixup .htaccess for passenger
+# example can be found in config/dot_htaccess_passenger
+  run "cp #{shared_path}/config/dot_htaccess
+       #{release_path}/public/.htaccess"
 end
 
 after 'deploy:update_code', 'symlink_config_yml', 'symlink_public'
