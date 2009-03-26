@@ -15,3 +15,7 @@ config.action_controller.perform_caching             = false
 
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
+
+# Enable serving of images, stylesheets, and javascripts from an asset server
+config.action_controller.asset_host                  = "http://henrymitchell.org/weather"
+
