@@ -49,6 +49,8 @@ end
 task :symlink_public, :roles => :app do
 #  run "ln -nsf #{current_path}/public
 #       /var/www/wx"
+  run "cp #{shared_path}/config/dot_htaccess \
+       #{release_path}/public/.htaccess"
 end
 
 after 'deploy:update_code', 'symlink_config_yml', 'symlink_public'
