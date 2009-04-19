@@ -16,7 +16,8 @@ class NOAAConditionsWriter
   PREFIX = "/xml/current_obs/"
   PORT = 80
   POSTFIX = ".xml"
-  STATION = ARGV[0] # Appconfig.noaa_location # "KBVY" # 
+#  STATION = ARGV[0] # Appconfig.noaa_location # "KBVY" #
+  STATION = AppConfig.noaa_location
   URL = "http://" + HOST + PREFIX + STATION + POSTFIX
   f = open(URL) # open-uri - treat the URL as an input stream
   data = f.read
