@@ -42,6 +42,7 @@ while true
       log.debug(s.date)
       log.debug(Time.now - t)
     end
+    error_count = 0
   rescue
     log.error($!)
     log.error("sleeping...")
