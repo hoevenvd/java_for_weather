@@ -85,4 +85,5 @@ end
 desc "get basic usage"
 task :uptime, :roles => :app do
     send(run_method, "uptime")
+    send(run_method, "ps auxw | grep tom")
 end
