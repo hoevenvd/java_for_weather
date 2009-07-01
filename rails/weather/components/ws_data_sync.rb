@@ -1,7 +1,7 @@
 require 'soap/wsdlDriver'
 
 log = Logger.new(STDOUT)
-log.level = Logger::DEBUG
+log.level = Logger::WARN
 
 SRC = AppConfig.sync_src
 src_soap = SOAP::WSDLDriverFactory.new(SRC).create_rpc_driver
