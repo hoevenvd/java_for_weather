@@ -65,10 +65,14 @@ Rails::Initializer.run do |config|
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector
 
+  # Set our local timezone
+  # use rake time:zones:all|local|us to see list of options
+  config.time_zone = 'Eastern Time (US & Canada)'
+
   # Make Active Record use UTC-base instead of local time
   config.active_record.default_timezone = :utc
-  
-  ENV['TZ'] = 'US/Eastern'  
+
+#  ENV['TZ'] = 'US/Eastern'
   
   config.load_paths += %W( #{RAILS_ROOT}/app/apis )
   config.load_paths += Dir["#{RAILS_ROOT}/vendor/gems/**"].map do |dir|
