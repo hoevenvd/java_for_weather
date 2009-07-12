@@ -2,7 +2,7 @@
 <div id="CUR">
 <TR>
   <TD ALIGN="CENTER" VALIGN="TOP" COLSPAN="3" WIDTH="100%">
-  <B>Live Conditions as of <%= @current.sample_date.getlocal.strftime("%I:%M:%S %p") %></B><br>(<%= distance_of_time_in_words_to_now(@current.sample_date.getlocal, true) %> ago)
+  <B>Live Conditions as of <%= @current.sample_date.in_time_zone.strftime("%I:%M:%S %p") %></B><br>(<%= distance_of_time_in_words_to_now(@current.sample_date, true) %> ago)
   </TD>
 </TR>
 
@@ -48,7 +48,7 @@
   <% if !@last_rain.nil? %>
     <TR>
       <TD ALIGN=CENTER COLSPAN=3 WIDTH="100%">
-        <b>Last rain:</b> <%= distance_of_time_in_words_to_now(@last_rain.getlocal, true)  %> ago
+        <b>Last rain:</b> <%= distance_of_time_in_words_to_now(@last_rain, true)  %> ago
       </TD>
     </TR>
   <% end %>
