@@ -5,11 +5,11 @@
 <% if !@today.nil? %>
 <center><FONT FACE="Arial">Today's Low: </FONT><%= @today.lowTemp %>
 <% if @today.lowTempDate != nil then %>
-  (<%= @today.lowTempDate.localtime.strftime "%I:%M %p" %>)
+  (<%= @today.lowTempDate.in_time_zone.strftime "%I:%M %p" %>)
 <% end %></center>
 <center>Today's High: <%= @today.hiTemp %>
 <% if @today.hiTempDate != nil then %>
- (<%= @today.hiTempDate.localtime.strftime "%I:%M %p" %>)
+ (<%= @today.hiTempDate.in_time_zone.strftime "%I:%M %p" %>)
 <% end %></center>
 <center>Today's Low Wind Chill: <%= @today.lowWindchill %>
 <% end %></center>
@@ -17,11 +17,11 @@
 <% if !@yesterday.lowTemp.nil? %>
 <center>Yesterday's Low: <%= @yesterday.lowTemp %>
 <% if @yesterday.lowTempDate != nil then %>
- (<%= @yesterday.lowTempDate.localtime.strftime "%I:%M %p" %>)</center>
+ (<%= @yesterday.lowTempDate.in_time_zone.strftime "%I:%M %p" %>)</center>
 <% end %>
 <center>Yesterday's High: <%= @yesterday.hiTemp %> 
 <% if @yesterday.hiTempDate != nil then %>
- (<%= @yesterday.hiTempDate.localtime.strftime "%I:%M %p" %>)
+ (<%= @yesterday.hiTempDate.in_time_zone.strftime "%I:%M %p" %>)
 <% end %>
 <% end %></center>
 
@@ -63,7 +63,7 @@
 <% end %>
 <% if !@today.hiWindspeed.nil? %>
   <% if @today.hiWindspeed != nil then %>
-    <Center>Today's High: <%= @today.hiWindspeed %> mph (<%= @today.gustDate.localtime.strftime "%I:%M %p" %>)</Center>
+    <Center>Today's High: <%= @today.hiWindspeed %> mph (<%= @today.gustDate.in_time_zone.strftime "%I:%M %p" %>)</Center>
   <% end %>
 <% end %>
 
