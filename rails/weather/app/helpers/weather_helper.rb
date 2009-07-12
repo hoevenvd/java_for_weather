@@ -78,7 +78,7 @@ module WeatherHelper
 
     post_url = "/weatherstation/updateweatherstation.php?ID=" + CGI::escape(new_sample[:id])
     post_url += "&PASSWORD=" + CGI::escape(new_sample[:password])
-    post_url += "&dateutc=" + CGI::escape(new_sample[:dateutc].to_s(:db))
+    post_url += "&dateutc=" + CGI::escape(new_sample[:dateutc].utc.to_s(:db))
     post_url += "&winddir=" + CGI::escape(new_sample[:winddir].to_s)
     post_url += "&windspeedmph=" + CGI::escape(new_sample[:windspeedmph].to_s)
     post_url += "&windgustmph=" + CGI::escape(new_sample[:windgustmph].to_s)
