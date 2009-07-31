@@ -56,6 +56,10 @@ public class Grapher extends TimerTask {
 
     new WindDirectionChart(getDataSource(), getBaseDir() + "/winddir24.jpg", getStart_2(), getEnd());
     new WindDirectionChart(getDataSource(), getBaseDir() + "/winddirweek.jpg", getStart_15(), getEnd());
+
+    new RainRateChart(getDataSource(), getBaseDir() + "/rainrate24.jpg", getStart_2(), getEnd());
+    new RainRateChart(getDataSource(), getBaseDir() + "/rainrateweek.jpg", getStart_15(), getEnd());
+
   }
 
   private void setDates() {
