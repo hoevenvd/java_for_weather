@@ -25,6 +25,8 @@ public interface ArchiveEntry extends Serializable {
 
   public double getRain();
 
+  public double getHighRainRate();
+
   public int getAvgWindSpeed();
 
   public Direction getWindDirection();

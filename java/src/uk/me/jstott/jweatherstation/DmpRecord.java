@@ -93,6 +93,10 @@ public class DmpRecord implements ArchiveEntry {
     rainfall = Process.bytesToInt(unsignedData[10], unsignedData[11]);
     // rainfall = 1; // FIXME
     highRainfallRate = Process.bytesToInt(unsignedData[12], unsignedData[13]);
+    //highRainfallRate = 1;
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("rain rate: " + highRainfallRate);
+    }
     pressure = new Pressure(Process.bytesToInt(unsignedData[14],
         unsignedData[15]));
     solarRadiation = Process.bytesToInt(unsignedData[16], unsignedData[17]);

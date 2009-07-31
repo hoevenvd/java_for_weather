@@ -2,21 +2,13 @@ package org.tom.weather.davis.wm2;
 
 import java.io.*;
 
-import javax.comm.*;
 import javax.naming.*;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.*;
 //import org.tom.util.Logger;
 import org.tom.weather.*;
 import org.tom.weather.posting.DataPoster;
-import org.tom.weather.upload.DataUploader;
 import org.apache.log4j.Logger;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.xml.DOMConfigurator;
 
 import uk.me.jstott.jweatherstation.Station;
 
@@ -253,21 +245,6 @@ public class WeatherMonitor extends Station {
     writeToContext = new Boolean(props.getProperty(Constants.WRITE_TO_CONTEXT))
         .booleanValue();
     writeToContext = false;
-    boolean wundergroundEnabled = Boolean.valueOf(
-        props.getProperty(Constants.WUNDERGROUND_ENABLE)).booleanValue();
-    String wundergroundURL = props.getProperty(Constants.WUNDERGROUND_URL);
-    String wundergroundId = props.getProperty(Constants.WUNDERGROUND_USER);
-    String wundergroundPassword = props
-        .getProperty(Constants.WUNDERGROUND_PASSWORD);
-    int wundergroundInterval = Integer.valueOf(
-        props.getProperty(Constants.WUNDERGROUND_INTERVAL)).intValue();
-    org.tom.weather.upload.wunderground.DataUploaderImpl wundergroundLoader = new org.tom.weather.upload.wunderground.DataUploaderImpl(
-        wundergroundURL, wundergroundEnabled, wundergroundId,
-        wundergroundPassword, wundergroundInterval);
-    wundergroundEnabled = false;
-    org.tom.weather.upload.aprswxnet.DataUploaderImpl.setProperties(props);
-    org.tom.weather.upload.aprswxnet.DataUploaderImpl aprswxnetLoader = org.tom.weather.upload.aprswxnet.DataUploaderImpl
-        .getInstance();
     WeatherMonitor weatherMonitor = null;
     try {
       weatherMonitor = new WeatherMonitor(props);
