@@ -111,4 +111,8 @@ public class BaseArchiveEntryImpl implements ArchiveEntry {
     return 0;
   }
 
+  public double getHighRainRate() {
+    return 0;
+  }
+
 }
