@@ -17,6 +17,7 @@ public class Grapher extends TimerTask {
   private static final Logger LOGGER = Logger.getLogger(Grapher.class);
   public static final long OFFSET = (new Date().getTimezoneOffset() * 60 * 1000);
   private java.sql.Timestamp start_2;
+  private java.sql.Timestamp start_7;
   private java.sql.Timestamp start_15;
   private java.sql.Timestamp end;
   private String baseDir = null;
@@ -57,8 +58,8 @@ public class Grapher extends TimerTask {
     new WindDirectionChart(getDataSource(), getBaseDir() + "/winddir24.jpg", getStart_2(), getEnd());
     new WindDirectionChart(getDataSource(), getBaseDir() + "/winddirweek.jpg", getStart_15(), getEnd());
 
-    new RainRateChart(getDataSource(), getBaseDir() + "/rainrate24.jpg", getStart_2(), getEnd());
-    new RainRateChart(getDataSource(), getBaseDir() + "/rainrateweek.jpg", getStart_15(), getEnd());
+    new RainRateChart(getDataSource(), getBaseDir() + "/rainrateweek.jpg", getStart_7(), getEnd());
+    new RainRateChart(getDataSource(), getBaseDir() + "/rainrate2weeks.jpg", getStart_15(), getEnd());
 
   }
 
@@ -72,6 +73,13 @@ public class Grapher extends TimerTask {
     ts = new Timestamp(cal.getTime().getTime() + OFFSET);
     LOGGER.debug("setting start_2 to: " + ts);
     setStart_2(ts);
+
+    cal = Calendar.getInstance();
+    cal.add(Calendar.DATE, -7);
+    ts = new Timestamp(cal.getTime().getTime() + OFFSET);
+    LOGGER.debug("setting start_7 to: " + ts);
+    setStart_7(ts);
+
     cal = Calendar.getInstance();
     cal.add(Calendar.DATE, -15);
     ts = new Timestamp(cal.getTime().getTime() + OFFSET);
@@ -86,6 +94,14 @@ public class Grapher extends TimerTask {
 
   private java.sql.Timestamp getStart_2() {
     return start_2;
+  }
+
+  private void setStart_7(java.sql.Timestamp start_7) {
+    this.start_7 = start_7;
+  }
+
+  private java.sql.Timestamp getStart_7() {
+    return start_7;
   }
 
   private void setStart_15(java.sql.Timestamp start_15) {
