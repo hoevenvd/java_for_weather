@@ -31,9 +31,9 @@ set :scm, :subversion
 
 set :deploy_via, :export 
 
-role :app, "tommitchell.net"
-role :web, "tommitchell.net"
-role :db,  "tommitchell.net", :primary => true
+role :app, "henrymitchell.org"
+role :web, "henrymitchell.org"
+role :db,  "henrymitchell.org", :primary => true
 
 #role :app, "dev"
 #role :web, "dev"
