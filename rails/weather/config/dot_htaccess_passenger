@@ -1,5 +1,8 @@
 PassengerEnabled on
 
+PassengerAppRoot /home/tom/apps/weather/current/
+
+
 #RailsBaseURI /weather
 
 #RewriteRule ^([^\.]+[^/])$ http://%{HTTP_HOST}/$1/ [R=301,L]
