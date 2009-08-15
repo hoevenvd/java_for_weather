@@ -24,17 +24,24 @@ class NOAAConditionsWriter
   log.debug(data)
   doc = Document.new(data)
   location = doc.elements[1].elements["station_id"].text
+  log.debug("location: " + location)
   as_of = Time.rfc822(doc.elements[1].elements["observation_time_rfc822"].text).utc
-  record = NoaaConditions.find_by_as_of_and_location(as_of, location)
+  log.debug("as_of: " + as_of.to_s)
+
+  visibility = doc.elements[1].elements["visibility_mi"].text.to_i
+  log.debug("visibility: " + visibility.to_s)
+
+  conditions = doc.elements[1].elements["weather"].text
+  log.debug("conditions: " + conditions)
+
+  record = NoaaConditions.find_or_create_by_location(location)
   log.debug(record)
-  if (record.nil?)
-    conditions = NoaaConditions.new
-    conditions.conditions_xml = data
-    conditions.location = location
-    conditions.as_of = as_of
-    conditions.conditions = doc.elements[1].elements["weather"].text
-    conditions.visibility = doc.elements[1].elements["visibility_mi"].text.to_i
-    conditions.save!
-    log.debug(conditions)
-  end
+  record[:conditions_xml] = data
+  record[:location] = location
+  record[:as_of] = as_of
+  record[:conditions] = conditions
+  record[:visibility] = visibility
+  record[:updated_at] = Time.now
+  log.debug(record)
+  record.save!
 end

@@ -26,7 +26,6 @@ class WeatherController < ApplicationController
   
   def put_current_conditions(password, location, sample)
     cond = CurrentCondition.find_or_create_by_location(location)
-    cond[:location] = location
     cond[:sample_date] = sample[:sample_date].getutc
     cond[:outside_temperature] = sample[:temp]
     cond[:outside_humidity] = sample[:humidity]
