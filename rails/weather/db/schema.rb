@@ -118,9 +118,9 @@ ActiveRecord::Schema.define(:version => 20090226111251) do
 
   create_table "noaa_conditions", :force => true do |t|
     t.datetime "created_at"
-    t.string   "location",       :limit => 20, :default => "", :null => false
+    t.string   "location",       :limit => 20, :default => ""
     t.datetime "updated_at"
-    t.text     "conditions",                                   :null => false
+    t.text     "conditions"
     t.datetime "as_of"
     t.integer  "visibility",     :limit => 11
     t.text     "conditions_xml"
