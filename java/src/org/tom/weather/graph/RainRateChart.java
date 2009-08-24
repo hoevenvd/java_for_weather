@@ -27,7 +27,7 @@ public class RainRateChart extends BaseChart {
     // create the chart...
     JFreeChart chart = 
       ChartFactory.createTimeSeriesChart("Rain Rate",
-        "Date", "in in/hr", data, // data
+        "Date", "in/hr", data, // data
         true, // include legend
         true, false);
     
