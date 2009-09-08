@@ -57,11 +57,13 @@ public class VantagePro extends Station {
       DmpRecord dmpRecord = new DmpRecord(rawData);
       if (dmpRecord.getDate().after(getLastDate().getTime())) {
       }
-      // LOGGER.info("new DmpRecord = " + dmpRecord.toString());
       if (LOGGER.isDebugEnabled()) {
         LOGGER.debug("DMP Record: " + dmpRecord);
       }
       if (dmpRecord.getDate().after(getLastDate().getTime())) {
+        if (LOGGER.isInfoEnabled() && dmpRecord.getDate().before(new Date())) {
+          LOGGER.info("new DmpRecord = " + dmpRecord.getDate().toString());
+        }
         dmpRecords.add(dmpRecord);
         setLastDate(getLastDate());
       } else {
