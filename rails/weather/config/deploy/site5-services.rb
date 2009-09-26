@@ -81,4 +81,9 @@ task :tail_prod_log, :roles => :app do
   stream "tail -f #{shared_path}/log/production.log"
 end
 
+desc "back up svn repo"
+task :back_up_svn, :roles => :app do
+  stream "nice -n 17 svnadmin dump ./svn/ > backups/svndump.dump"
+  stream "nice -n 17 rm -f backups/svndump.dump.gz"
+end
 require 'capistrano/ext/monitor'
