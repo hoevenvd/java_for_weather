@@ -32,11 +32,10 @@
 
 <TR>
   <TD ALIGN="CENTER" COLSPAN="3" WIDTH="100%">
-<% if @current.solar_radiation > 0 %>
     <B>Solar Radiation</B><br><%= @current.solar_radiation %> watts / sq. meter
-<% else %>
-    <B>Solar Radiation</B><br>Dark
-<% end # if @current.solar_radiation > 0 %>
+    <% if @current.solar_radiation == 0 %>
+      &nbsp;(Dark)
+    <% end # if @current.solar_radiation > 0 %>
   </TD>
 </TR>
 
