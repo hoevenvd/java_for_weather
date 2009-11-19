@@ -1,9 +1,9 @@
-WX_HOME=/home/tom/poller
+#WX_HOME=/home/tom/poller
 JAVA_HOME=/usr/jdk1.6.0_10
 
 PATH=$JAVA_HOME/bin:$PATH
 
-cd $WX_HOME
+#cd $WX_HOME
 
 while true 
 do

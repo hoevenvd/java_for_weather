@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>UserName</key>
+    <string>_update_sharing</string>
+    <key>Label</key>
+    <string>com.apple.java.updateSharingD</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>/System/Library/Frameworks/JavaVM.framework/Versions/A/Resources/bin/updateSharingD</string>
+    </array>
+    <key>MachServices</key>
+    <dict>
+      <key>com.apple.java.updateSharingD</key>
+      <true/>
+    </dict>
+  </dict>
+</plist>
