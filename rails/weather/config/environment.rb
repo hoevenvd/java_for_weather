@@ -7,7 +7,7 @@
 ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.1.0' unless defined? RAILS_GEM_VERSION 
+RAILS_GEM_VERSION = '2.3.4' unless defined? RAILS_GEM_VERSION
 #RAILS_GEM_VERSION = '2.0.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
@@ -78,6 +78,9 @@ Rails::Initializer.run do |config|
   config.load_paths += Dir["#{RAILS_ROOT}/vendor/gems/**"].map do |dir|
     File.directory?(lib = "#{dir}/lib") ? lib : dir
   end
+
+# TODO - fix this kludge and get rid of the components directory
+  config.load_paths += %W( #{RAILS_ROOT}/components )
 
   
 end
