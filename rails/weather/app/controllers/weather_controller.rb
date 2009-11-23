@@ -43,8 +43,12 @@ class WeatherController < ApplicationController
       raise cond.errors.full_messages.to_s
     end
 
-    if AppConfig.wunderground != nil
-      WeatherHelper.post_to_wunderground(location)
+    if SVC_CONFIG != nil && SVC_CONFIG["wunderground"] != nil
+      SVC_CONFIG["wunderground"].each do |l|
+        if (location == l["location"])
+          WeatherHelper.post_to_wunderground(l["location"], l["id"], l["password"])
+        end
+      end
     end
   end
   

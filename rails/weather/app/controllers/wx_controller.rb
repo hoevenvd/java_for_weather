@@ -43,15 +43,15 @@ class WxController < ApplicationController
   end
 
   def periods
-    @today = WxPeriod.today_summary
-    @this_hour = WxPeriod.this_hour_summary
-    @this_week = WxPeriod.this_week_summary
-    @this_month = WxPeriod.this_month_summary
+    @today = WxPeriod.today_summary(AppConfig.location)
+    @this_hour = WxPeriod.this_hour_summary(AppConfig.location)
+    @this_week = WxPeriod.this_week_summary(AppConfig.location)
+    @this_month = WxPeriod.this_month_summary(AppConfig.location)
 
-    @yesterday = WxPeriod.yesterday_summary
-    @last_hour = WxPeriod.last_hour_summary
-    @last_week = WxPeriod.last_week_summary
-    @last_month = WxPeriod.last_month_summary
+    @yesterday = WxPeriod.yesterday_summary(AppConfig.location)
+    @last_hour = WxPeriod.last_hour_summary(AppConfig.location)
+    @last_week = WxPeriod.last_week_summary(AppConfig.location)
+    @last_month = WxPeriod.last_month_summary(AppConfig.location)
   end
 
   def last_rain
@@ -63,7 +63,7 @@ class WxController < ApplicationController
     @current = CurrentCondition.find_by_location(AppConfig.location)
     # kludge for time sync problems btw station time and web server
     @current.sample_date = Time.now if @current.sample_date > Time.now
-    @today = WxPeriod.today_summary
+    @today = WxPeriod.today_summary(AppConfig.location)
     if (@current.outside_temperature.to_f >= @today.hiTemp.to_f) 
       @highlo = "<br>(daily high)</br>"
     else
