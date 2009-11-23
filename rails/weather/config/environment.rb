@@ -100,16 +100,3 @@ end
 # end
 
 # Include your application configuration below
-require 'ostruct'
-require 'yaml'
-
-ConfigFile = "#{RAILS_ROOT}/config/config.yml"
-if File.exist?(ConfigFile)
-  config = OpenStruct.new(YAML.load_file(ConfigFile))
-else
-  raise "config file not found: config.yml"
-end
-env_config = config.send(RAILS_ENV)
-config.common.update(env_config) unless env_config.nil?
-AppConfig = OpenStruct.new(config.common)
-

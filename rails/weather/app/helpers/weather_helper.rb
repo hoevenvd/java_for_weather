@@ -50,31 +50,25 @@ module WeatherHelper
      s.gets
   end
 
-  def self.post_to_wunderground(location)
-    conf = AppConfig.wunderground[location]
-    if conf != nil
-      sample = CurrentCondition.find_by_location(location)
-      noaa = NoaaConditions.find_all_by_location(AppConfig.noaa_location, :limit => 1, :order => "as_of desc")[0]
-      raise ArgumentError if sample == nil
-      new_sample = 
-        WundergroundStruct.new(
-          :id => conf["id"],
-          :password => conf["password"],
-          :dateutc => sample.sample_date,
-          :winddir => sample.wind_direction,
-          :windspeedmph => sample.windspeed,
-          :windgustmph => sample.gust,
-          :humidity => sample.outside_humidity,
-          :tempf => sample.outside_temperature,
-          :rainin => sample.hourly_rain,
-          :dailyrainin => sample.daily_rain,  
-          :baromin => sample.pressure,
-          :dewptf => sample.dewpoint,
-          :solarradiation => sample.solar_radiation,
-#          :weather => noaa.conditions,
-#          :visibility => noaa.visibility,
-          :softwaretype => "org.tom.weather")
-     end
+  def self.post_to_wunderground(location, id, password)
+    sample = CurrentCondition.find_by_location(location)
+    raise ArgumentError if sample == nil
+    new_sample =
+      WundergroundStruct.new(
+        :id => id,
+        :password => password,
+        :dateutc => sample.sample_date,
+        :winddir => sample.wind_direction,
+        :windspeedmph => sample.windspeed,
+        :windgustmph => sample.gust,
+        :humidity => sample.outside_humidity,
+        :tempf => sample.outside_temperature,
+        :rainin => sample.hourly_rain,
+        :dailyrainin => sample.daily_rain,
+        :baromin => sample.pressure,
+        :dewptf => sample.dewpoint,
+        :solarradiation => sample.solar_radiation,
+        :softwaretype => "org.tom.weather")
 
     post_url = "/weatherstation/updateweatherstation.php?ID=" + CGI::escape(new_sample[:id])
     post_url += "&PASSWORD=" + CGI::escape(new_sample[:password])
@@ -89,8 +83,8 @@ module WeatherHelper
     post_url += "&baromin=" + CGI::escape(new_sample[:baromin].to_s)
     post_url += "&dewptf=" + CGI::escape(new_sample[:dewptf].to_s)
     post_url += "&solarradiation=" + CGI::escape(new_sample[:solarradiation].to_s)
-    post_url += "&weather=" + CGI::escape(noaa.conditions) unless noaa.nil?
-    post_url += "&visibility=" + CGI::escape(noaa.visibility.to_s) unless noaa.nil?
+#    post_url += "&weather=" + CGI::escape(noaa.conditions) unless noaa.nil?
+#    post_url += "&visibility=" + CGI::escape(noaa.visibility.to_s) unless noaa.nil?
     post_url += "&softwaretype=" + CGI::escape(new_sample[:softwaretype].to_s)
     post_url += "&action=updateraw&realtime=1&rtfreq=3.0"
 
