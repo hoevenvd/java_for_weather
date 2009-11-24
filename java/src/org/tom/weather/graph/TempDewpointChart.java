@@ -17,12 +17,12 @@ public class TempDewpointChart extends BaseChart {
   private static final Logger LOGGER = Logger
       .getLogger(TempDewpointChart.class);
 
-  public TempDewpointChart(DataSource source, String filename, Timestamp start, Timestamp end) {
-    buildChart(source, filename, start, end);
+  public TempDewpointChart(String location, DataSource source, String filename, Timestamp start, Timestamp end) {
+    buildChart(location, source, filename, start, end);
   }
 
-  private void buildChart(DataSource source, String filename, Timestamp start, Timestamp end) {
-    XYDataset data = readData(source, start, end);
+  private void buildChart(String location, DataSource source, String filename, Timestamp start, Timestamp end) {
+    XYDataset data = readData(location, source, start, end);
 
     // create the chart...
     JFreeChart chart = ChartFactory.createTimeSeriesChart(
@@ -33,7 +33,7 @@ public class TempDewpointChart extends BaseChart {
     writeChart(chart, filename);
   }
   
-  private XYDataset readData(DataSource source, Timestamp start, Timestamp end) {
+  private XYDataset readData(String location, DataSource source, Timestamp start, Timestamp end) {
     JDBCXYDataset data = null;
 
 
@@ -42,7 +42,7 @@ public class TempDewpointChart extends BaseChart {
       data = new JDBCXYDataset(con);
       String sql = "SELECT date - INTERVAL  " + Grapher.OFFSET / 1000 + " second , outside_temp, average_dewpoint FROM archive_records"
           + " where date >= '" + start + "' and date < '" + end
-          + "' order by date desc;";
+          + "' and location = '" + location + "' order by date desc;";
       data.executeQuery(sql);
       con.close();
     }
