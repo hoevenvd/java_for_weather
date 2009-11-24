@@ -28,6 +28,9 @@
 		
 	<bean id="grapher"
 		class="org.tom.weather.graph.Grapher">
+		<property name="location">
+			<value>${graph.location}</value>
+		</property>
 		<property name="baseDir">
 			<value>${graph.baseDir}</value>
 		</property>
