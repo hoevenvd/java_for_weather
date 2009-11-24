@@ -118,9 +118,9 @@ ActiveRecord::Schema.define(:version => 20091121191345) do
 
   create_table "noaa_conditions", :force => true do |t|
     t.datetime "created_at"
-    t.string   "location",       :limit => 20, :default => ""
+    t.string   "location",       :limit => 20, :default => "", :null => false
     t.datetime "updated_at"
-    t.text     "conditions"
+    t.text     "conditions",                                   :null => false
     t.datetime "as_of"
     t.integer  "visibility"
     t.text     "conditions_xml"
@@ -237,5 +237,9 @@ ActiveRecord::Schema.define(:version => 20091121191345) do
   add_index "risesets", ["day"], :name => "index_risesets_on_day"
   add_index "risesets", ["location"], :name => "index_risesets_on_location"
   add_index "risesets", ["month"], :name => "index_risesets_on_month"
+
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version"
+  end
 
 end

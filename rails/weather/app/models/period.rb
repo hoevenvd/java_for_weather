@@ -3,7 +3,6 @@ require "rubygems"
 require "activerecord"
 	
 class Period
-  SQL_FORMAT = "%Y-%m-%d %H:%M:%S"
   
   attr_reader :start_time, :end_time
   attr_reader :start_time_sql, :end_time_sql
@@ -12,9 +11,9 @@ class Period
   def initialize(pd_start, pd_end, period_name = nil)
     @period_name = period_name
     @start_time = pd_start
-    @start_time_sql = @start_time.getutc.strftime(SQL_FORMAT)
+    @start_time_sql = @start_time.getutc.to_s(:db)
     @end_time = pd_end
-    @end_time_sql = @end_time.getutc.strftime(SQL_FORMAT)
+    @end_time_sql = @end_time.getutc.to_s(:db)
   end
   
   def Period.rolling_hour
