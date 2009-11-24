@@ -35,19 +35,19 @@ public class WindSpeedDirectionChart extends BaseChart {
 
   private static final Logger LOGGER = Logger.getLogger(WindSpeedDirectionChart.class);
 
-  public WindSpeedDirectionChart(DataSource source, String filename, Timestamp start, Timestamp end) {
-    buildChart(source, filename, start, end);
+  public WindSpeedDirectionChart(String location, DataSource source, String filename, Timestamp start, Timestamp end) {
+    buildChart(location, source, filename, start, end);
   }
 
-  private XYDataset[] readData(DataSource source, Timestamp start, Timestamp end) {
+  private XYDataset[] readData(String location, DataSource source, Timestamp start, Timestamp end) {
     XYDataset[] data = new JDBCXYDataset[2];
-    data[0] = createDirectionDataset(source, start, end);
-    data[1] = createForceDataset(source, start, end);
+    data[0] = createDirectionDataset(location, source, start, end);
+    data[1] = createForceDataset(location, source, start, end);
     return data;
   }
 
-  private void buildChart(DataSource source, String filename, Timestamp start, Timestamp end) {
-    XYDataset[] data = readData(source, start, end);
+  private void buildChart(String location, DataSource source, String filename, Timestamp start, Timestamp end) {
+    XYDataset[] data = readData(location, source, start, end);
 
     JFreeChart chart = ChartFactory.createTimeSeriesChart("Time", "Date",
         "Direction", data[0], true, true, false);
@@ -86,7 +86,7 @@ public class WindSpeedDirectionChart extends BaseChart {
 
   }
 
-  private XYDataset createDirectionDataset(DataSource source, Timestamp start, Timestamp end) {
+  private XYDataset createDirectionDataset(String location, DataSource source, Timestamp start, Timestamp end) {
     JDBCXYDataset data = null;
     try {
       Connection con = source.getConnection();
@@ -96,7 +96,7 @@ public class WindSpeedDirectionChart extends BaseChart {
           + start
           + "' and date < '"
           + end
-          + "' order by date desc;";
+          + "' and location = '" + location + "' order by date desc;";
       data.executeQuery(sql);
       con.close();
     } catch (SQLException e) {
@@ -130,14 +130,14 @@ public class WindSpeedDirectionChart extends BaseChart {
    * 
    * @return the dataset.
    */
-  private XYDataset createForceDataset(DataSource source, Timestamp start, Timestamp end) {
+  private XYDataset createForceDataset(String location, DataSource source, Timestamp start, Timestamp end) {
     JDBCXYDataset data = null;
     try {
       Connection con = source.getConnection();
       data = new JDBCXYDataset(con);
       String sql = "SELECT date - INTERVAL  " + Grapher.OFFSET / 1000 + " second, average_wind_speed FROM archive_records"
           + " where date >= '" + start + "' and date < '" + end
-          + "' order by date desc;";
+          + "' and location = '" + location + "' order by date desc;";
       data.executeQuery(sql);
       con.close();
     } catch (SQLException e) {

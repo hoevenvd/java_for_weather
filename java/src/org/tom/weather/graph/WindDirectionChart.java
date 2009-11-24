@@ -25,12 +25,12 @@ public class WindDirectionChart extends BaseChart {
 
   private static final Logger LOGGER = Logger.getLogger(WindDirectionChart.class);
   
-  public WindDirectionChart(DataSource source, String filename, Timestamp start, Timestamp end) {
-    buildChart(source, filename, start, end);
+  public WindDirectionChart(String location, DataSource source, String filename, Timestamp start, Timestamp end) {
+    buildChart(location, source, filename, start, end);
   }
   
-  private void buildChart(DataSource source, String filename, Timestamp start, Timestamp end) {
-    XYDataset data = readData(source, start, end);
+  private void buildChart(String location, DataSource source, String filename, Timestamp start, Timestamp end) {
+    XYDataset data = readData(location, source, start, end);
 
     // create the chart...
     JFreeChart chart = 
@@ -60,7 +60,7 @@ public class WindDirectionChart extends BaseChart {
     writeChart(chart, filename);
   }
 
-  private XYDataset readData(DataSource source, Timestamp start, Timestamp end) {
+  private XYDataset readData(String location, DataSource source, Timestamp start, Timestamp end) {
     JDBCXYDataset data = null;
  
     try {
@@ -68,7 +68,8 @@ public class WindDirectionChart extends BaseChart {
 
       data = new JDBCXYDataset(con);
       String sql = "SELECT date - INTERVAL  " + Grapher.OFFSET / 1000 + " second, prevailing_wind_direction as Direction FROM archive_records"
-          + " where date >= '" + start + "' and date < '" + end + "' order by date desc;";
+          + " where date >= '" + start + "' and date < '" + end + 
+          "' and location = '" + location + "' order by date desc;";
       data.executeQuery(sql);
       con.close();
     }

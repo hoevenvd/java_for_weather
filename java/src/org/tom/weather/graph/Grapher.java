@@ -21,6 +21,7 @@ public class Grapher extends TimerTask {
   private java.sql.Timestamp start_15;
   private java.sql.Timestamp end;
   private String baseDir = null;
+  private String location = null;
   private DataSource dataSource;
   
   
@@ -40,26 +41,26 @@ public class Grapher extends TimerTask {
   }
 
   private void buildCharts() {
-    new WindChart(getDataSource(), getBaseDir() + "/wind24.jpg", getStart_2(), getEnd());
-    new WindChart(getDataSource(), getBaseDir() + "/windweek.jpg", getStart_15(), getEnd());
+    new WindChart(getLocation(), getDataSource(), getBaseDir() + "/wind24.jpg", getStart_2(), getEnd());
+    new WindChart(getLocation(), getDataSource(), getBaseDir() + "/windweek.jpg", getStart_15(), getEnd());
 
-    new TempDewpointChart(getDataSource(), getBaseDir() + "/temp24.jpg", getStart_2(), getEnd());
-    new TempDewpointChart(getDataSource(), getBaseDir() + "/tempweek.jpg", getStart_15(), getEnd());
+    new TempDewpointChart(getLocation(), getDataSource(), getBaseDir() + "/temp24.jpg", getStart_2(), getEnd());
+    new TempDewpointChart(getLocation(), getDataSource(), getBaseDir() + "/tempweek.jpg", getStart_15(), getEnd());
 
-    new PressureChart(getDataSource(), getBaseDir() + "/pressure24.jpg", getStart_2(), getEnd());
-    new PressureChart(getDataSource(), getBaseDir() + "/pressureweek.jpg", getStart_15(), getEnd());
+    new PressureChart(getLocation(), getDataSource(), getBaseDir() + "/pressure24.jpg", getStart_2(), getEnd());
+    new PressureChart(getLocation(), getDataSource(), getBaseDir() + "/pressureweek.jpg", getStart_15(), getEnd());
 
-    new SolarRadiationChart(getDataSource(), getBaseDir() + "/solar24.jpg", getStart_2(), getEnd());
-    new SolarRadiationChart(getDataSource(), getBaseDir() + "/solarweek.jpg", getStart_15(), getEnd());
+    new SolarRadiationChart(getLocation(), getDataSource(), getBaseDir() + "/solar24.jpg", getStart_2(), getEnd());
+    new SolarRadiationChart(getLocation(), getDataSource(), getBaseDir() + "/solarweek.jpg", getStart_15(), getEnd());
 
-    new WindSpeedDirectionChart(getDataSource(), getBaseDir() + "/windspddir24.jpg", getStart_2(), getEnd());
-    new WindSpeedDirectionChart(getDataSource(), getBaseDir() + "/windspddirweek.jpg", getStart_15(), getEnd());
+    new WindSpeedDirectionChart(getLocation(), getDataSource(), getBaseDir() + "/windspddir24.jpg", getStart_2(), getEnd());
+    new WindSpeedDirectionChart(getLocation(), getDataSource(), getBaseDir() + "/windspddirweek.jpg", getStart_15(), getEnd());
 
-    new WindDirectionChart(getDataSource(), getBaseDir() + "/winddir24.jpg", getStart_2(), getEnd());
-    new WindDirectionChart(getDataSource(), getBaseDir() + "/winddirweek.jpg", getStart_15(), getEnd());
+    new WindDirectionChart(getLocation(), getDataSource(), getBaseDir() + "/winddir24.jpg", getStart_2(), getEnd());
+    new WindDirectionChart(getLocation(), getDataSource(), getBaseDir() + "/winddirweek.jpg", getStart_15(), getEnd());
 
-    new RainRateChart(getDataSource(), getBaseDir() + "/rainrateweek.jpg", getStart_2(), getEnd());
-    new RainRateChart(getDataSource(), getBaseDir() + "/rainrate2weeks.jpg", getStart_15(), getEnd());
+    new RainRateChart(getLocation(), getDataSource(), getBaseDir() + "/rainrateweek.jpg", getStart_2(), getEnd());
+    new RainRateChart(getLocation(), getDataSource(), getBaseDir() + "/rainrate2weeks.jpg", getStart_15(), getEnd());
 
   }
 
@@ -141,5 +142,18 @@ public class Grapher extends TimerTask {
     setDates();
     buildCharts();
   }
-  
+
+  /**
+   * @return the location
+   */
+  public String getLocation() {
+    return location;
+  }
+
+  /**
+   * @param location the location to set
+   */
+  public void setLocation(String location) {
+    this.location = location;
+  }
 }
