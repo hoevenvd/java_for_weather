@@ -63,16 +63,16 @@ ActiveRecord::Schema.define(:version => 20091124231454) do
   add_index "archive_records", ["location"], :name => "locations"
 
   create_table "climates", :force => true do |t|
-    t.string   "location",              :null => false
-    t.integer  "month",                 :null => false
-    t.integer  "day",                   :null => false
-    t.integer  "avg_high_temp"
-    t.integer  "avg_low_temp"
-    t.integer  "mean_temp"
-    t.integer  "record_high_temp"
-    t.integer  "record_high_temp_year"
-    t.integer  "record_low_temp"
-    t.integer  "record_low_temp_year"
+    t.string   "location",                           :null => false
+    t.integer  "month",                 :limit => 8, :null => false
+    t.integer  "day",                   :limit => 8, :null => false
+    t.integer  "avg_high_temp",         :limit => 8
+    t.integer  "avg_low_temp",          :limit => 8
+    t.integer  "mean_temp",             :limit => 8
+    t.integer  "record_high_temp",      :limit => 8
+    t.integer  "record_high_temp_year", :limit => 8
+    t.integer  "record_low_temp",       :limit => 8
+    t.integer  "record_low_temp_year",  :limit => 8
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -221,16 +221,17 @@ ActiveRecord::Schema.define(:version => 20091124231454) do
     t.datetime "updated_at"
     t.datetime "startdate"
     t.datetime "enddate"
-    t.integer  "degreeDays"
+    t.integer  "degreeDays",         :limit => 8
     t.string   "location",           :limit => 30,                               :null => false
   end
 
   add_index "past_summaries", ["location", "period"], :name => "index_past_summaries_on_location_and_period", :unique => true
+  add_index "past_summaries", ["period"], :name => "index_past_summaries_on_period", :unique => true
 
   create_table "risesets", :force => true do |t|
-    t.string  "location", :null => false
-    t.integer "month",    :null => false
-    t.integer "day",      :null => false
+    t.string  "location",              :null => false
+    t.integer "month",    :limit => 8, :null => false
+    t.integer "day",      :limit => 8, :null => false
     t.time    "rise"
     t.time    "set"
   end
