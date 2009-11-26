@@ -27,12 +27,16 @@
 <% end %>
 <% end %></center>
 
+<% if @yesterday != nil %>
 <% if !@yesterday.degreeDays.nil? %>
 <center>Yesterday's <%= (@yesterday.degreeDays < 0 ? "Heating" : "Cooling") %> Degree Days: <%= @yesterday.degreeDays.abs %></center>
 <% end %>
+<% end %>
 
+<% if @this_week != nil %>
 <% if !@this_week.avgTemp.nil? %>
 <center>This Week Avg.: <%= sprintf("%.1f", @this_week.avgTemp) %></center>
+<% end %>
 <% end %>
 
 <% if @last_week != nil %>
@@ -41,9 +45,11 @@
 <% end %>
 <% end %>
 
+<% if @this_month != nil %>
 <% if !@this_month.avgTemp.nil? %>
 <center>This Month Avg.: <%= sprintf("%.1f", @this_month.avgTemp) %></center>
-<% end %> 
+<% end %>
+<% end %>
 
 <% if @last_month != nil %>
 <% if !@last_month.avgTemp.nil? %>
