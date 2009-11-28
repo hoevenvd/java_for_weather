@@ -82,6 +82,7 @@ Rails::Initializer.run do |config|
 # TODO - fix this kludge and get rid of the components directory
   config.load_paths += %W( #{RAILS_ROOT}/components )
 
+  config.cache_store = :file_store, "#{RAILS_ROOT}/tmp/cache"
   
 end
 
