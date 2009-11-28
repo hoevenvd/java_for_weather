@@ -21,9 +21,9 @@
 
 
 <p>
-
-<%= render(:partial => "sunapplet", :layout => false  ) %>
-
+<% cache(:action => "index", :action_suffix => "sunapplet") do %>
+  <%= render(:partial => "sunapplet", :layout => false  ) %>
+<% end %>
 <table>
 <% if @current.nil? %>
 <p>
@@ -59,18 +59,29 @@
 </tr>
 </table>
 <p>
+<% cache(:action => "index", :action_suffix => "radarwebcam") do %>
+  <%= render(:partial => "radarwebcam", :layout => false  ) %>
+<% end %>
 
-<%= render(:partial => "radarwebcam", :layout => false  ) %>
+<% cache(:action => "index", :action_suffix => "graphs") do %>
+  <%= render(:partial => "graphs", :layout => false  ) %>
+<% end %>
 
-<%= render(:partial => "graphs", :layout => false  ) %>
+<% cache(:action => "index", :action_suffix => "forecast") do %>
+  <%= render(:partial => "forecast", :layout => false  ) %>
+<% end %>
 
-<%= render(:partial => "forecast", :layout => false  ) %>
+<% cache(:action => "index", :action_suffix => "tides") do %>
+  <%= render(:partial => "tides", :layout => false  ) %>
+<% end %>
 
-<%= render(:partial => "tides", :layout => false  ) %>
+<% cache(:action => "index", :action_suffix => "info") do %>
+  <%= render(:partial => "info", :layout => false  ) %>
+<% end %>
 
-<%= render(:partial => "info", :layout => false  ) %>
-
-<%= render(:partial => "google_analytics", :layout => false  ) %>
+<% cache(:action => "index", :action_suffix => "google_analytics") do %>
+  <%= render(:partial => "google_analytics", :layout => false  ) %>
+<% end %>
 
 </CENTER>
 </body>
