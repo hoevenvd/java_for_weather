@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091124231454) do
+ActiveRecord::Schema.define(:version => 20091125113000) do
 
   create_table "archive_records", :force => true do |t|
     t.datetime "date",                                                                                     :null => false
@@ -60,19 +60,23 @@ ActiveRecord::Schema.define(:version => 20091124231454) do
 
   add_index "archive_records", ["date", "location"], :name => "date_loc", :unique => true
   add_index "archive_records", ["date"], :name => "dates"
+  add_index "archive_records", ["location", "date", "high_outside_temp"], :name => "index_archive_records_on_location_and_date_and_high_outside_temp"
+  add_index "archive_records", ["location", "date", "high_wind_speed"], :name => "index_archive_records_on_location_and_date_and_high_wind_speed"
+  add_index "archive_records", ["location", "date", "low_outside_temp"], :name => "index_archive_records_on_location_and_date_and_low_outside_temp"
+  add_index "archive_records", ["location", "date", "rainfall"], :name => "index_archive_records_on_location_and_date_and_rainfall"
   add_index "archive_records", ["location"], :name => "locations"
 
   create_table "climates", :force => true do |t|
-    t.string   "location",                           :null => false
-    t.integer  "month",                 :limit => 8, :null => false
-    t.integer  "day",                   :limit => 8, :null => false
-    t.integer  "avg_high_temp",         :limit => 8
-    t.integer  "avg_low_temp",          :limit => 8
-    t.integer  "mean_temp",             :limit => 8
-    t.integer  "record_high_temp",      :limit => 8
-    t.integer  "record_high_temp_year", :limit => 8
-    t.integer  "record_low_temp",       :limit => 8
-    t.integer  "record_low_temp_year",  :limit => 8
+    t.string   "location",              :null => false
+    t.integer  "month",                 :null => false
+    t.integer  "day",                   :null => false
+    t.integer  "avg_high_temp"
+    t.integer  "avg_low_temp"
+    t.integer  "mean_temp"
+    t.integer  "record_high_temp"
+    t.integer  "record_high_temp_year"
+    t.integer  "record_low_temp"
+    t.integer  "record_low_temp_year"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -221,7 +225,7 @@ ActiveRecord::Schema.define(:version => 20091124231454) do
     t.datetime "updated_at"
     t.datetime "startdate"
     t.datetime "enddate"
-    t.integer  "degreeDays",         :limit => 8
+    t.integer  "degreeDays"
     t.string   "location",           :limit => 30,                               :null => false
   end
 
@@ -229,9 +233,9 @@ ActiveRecord::Schema.define(:version => 20091124231454) do
   add_index "past_summaries", ["period"], :name => "index_past_summaries_on_period", :unique => true
 
   create_table "risesets", :force => true do |t|
-    t.string  "location",              :null => false
-    t.integer "month",    :limit => 8, :null => false
-    t.integer "day",      :limit => 8, :null => false
+    t.string  "location", :null => false
+    t.integer "month",    :null => false
+    t.integer "day",      :null => false
     t.time    "rise"
     t.time    "set"
   end

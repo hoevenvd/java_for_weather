@@ -25,7 +25,9 @@
 </TR>
 <tr>
   <td>
-    <center>Comments or suggestions please email me at <B>tom@tom.org</B></center>
+    <center>
+      Comments or suggestions please email me at <B><%= mail_to("tom@tom.org", "tom@tom.org", :subject => "Weather Feedback", :encode => "javascript") %>
+        </B></center>
   </td>
 </tr>
 </TABLE>
