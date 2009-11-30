@@ -46,7 +46,8 @@ public class VantagePro extends Station {
     super(portName, baudRate);
   }
 
-  private void processDmpAftPacket(byte[] page, int pageOffset) {
+  private void processDmpAftPacket(byte[] page, int pageOffset) throws Exception {
+    List dmpRecords = new ArrayList();
     for (int i = pageOffset; i < 5; i++) {
       byte[] rawData = new byte[RECORD_SIZE];
       int byteOffset = RECORD_SIZE * i;
@@ -73,12 +74,7 @@ public class VantagePro extends Station {
         }
       }
     }
-  }
-  private void clearDmpRecords() {
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("clearing out dmprecords");
-    }
-    dmpRecords = new ArrayList();
+    uploadDmpRecords(dmpRecords);
   }
   
   private void wakeup() throws IOException {
@@ -153,7 +149,7 @@ public class VantagePro extends Station {
    * @throws IOException
    * @since 1.0
    */
-  public boolean dmpaft() throws IOException {
+  public void dmpaft() throws Exception {
     UnsignedByte[] datetime = null;
     datetime = getlLastArchiveRecord();
     // t lastDate
@@ -171,7 +167,7 @@ public class VantagePro extends Station {
     // sendBytes(zeros);
     if (!getAck()) {
       LOGGER.error("Aborting dmpaft");
-      return false;
+      return;
     }
 
     delay(500);
@@ -184,14 +180,14 @@ public class VantagePro extends Station {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("zero bytes available - trturning from method");
         }
-        return true;
+        return;
     }
   
     byte[] header = new byte[bytes];
     int bytesRead = getInputStream().read(header);
     if (bytesRead == 0) { // header must be null - give up and try again
       LOGGER.warn("got zero bytes from serial stream when more were expected");
-      return false;
+      return;
     }
  
     if (LOGGER.isDebugEnabled()) {
@@ -217,7 +213,7 @@ public class VantagePro extends Station {
     
     if (pages > 512) {
       LOGGER.warn("unexpected number of data pages: " + pages);
-      return false;
+      return;
     }
   
     for (int i = 0; i < pages; i++) {
@@ -244,16 +240,8 @@ public class VantagePro extends Station {
         readDmpData();
       }
     }
-  
-    uploadDmpRecords(dmpRecords);
-    
-    boolean success = true; // postToCache();
-    if (success) {
-      clearDmpRecords();
-    }
-    return success;
-  }
-  private void uploadDmpRecords(List dmpRecords2) {
+   }
+  private void uploadDmpRecords(List dmpRecords2)  throws Exception {
     
     if (getUploaderList().size() > 0) {
       ArchiveEntry[] entries = new ArchiveEntry[dmpRecords2.size()];
@@ -268,10 +256,10 @@ public class VantagePro extends Station {
       }
     }
   }
-  private void readDmpData() {
+  private void readDmpData() throws Exception {
     readDmpData(0);
   }
-  private void readDmpData(int offset) {
+  private void readDmpData(int offset) throws Exception {
   
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("reading dmp data at offset: " + offset);

@@ -5,7 +5,6 @@
  */
 package org.tom.weather.upload.ws;
 
-import java.rmi.RemoteException;
 import java.util.Calendar;
 import org.apache.log4j.Logger;
 import org.tom.weather.ArchiveEntry;
@@ -30,17 +29,13 @@ public class DataUploaderImpl implements DataUploader {
     return password;
   }
 
-  public synchronized void upload(org.tom.weather.ArchiveEntry[] entries) {
-      for (int i = 0; i < entries.length; i++) {
-        try {
-          uploadData(entries[i]);
-        } catch (RemoteException e) {
-          LOGGER.error(e);
-        }
-      }
+  public synchronized void upload(org.tom.weather.ArchiveEntry[] entries) throws Exception {
+    for (int i = 0; i < entries.length; i++) {
+      uploadData(entries[i]);
+    }
   }
 
-  private void uploadData(ArchiveEntry entry)  throws RemoteException {
+  private void uploadData(ArchiveEntry entry) throws Exception {
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("uploading: " + entry);
     }

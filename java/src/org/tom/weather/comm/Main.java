@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -62,12 +63,9 @@ public class Main {
           }
           // LOGGER.info(loop);
         }
-        boolean ok = getStation().dmpaft();
-        if (!ok) {
-          LOGGER.warn("dmpaft() returned false!");
-        }
-      } catch (IOException e) {
-        LOGGER.error("communication exception - waiting 5s", e);
+          getStation().dmpaft();
+      } catch (Exception e) {
+        LOGGER.error("exception - waiting 5s", e);
         try {
           Thread.sleep(5000);
           boolean ok = getStation().test();

@@ -5,5 +5,5 @@ package org.tom.weather.upload;
  * 
  */
 public interface DataUploader {
-  public void upload(org.tom.weather.ArchiveEntry[] entries);
+  public void upload(org.tom.weather.ArchiveEntry[] entries) throws Exception;
 }
