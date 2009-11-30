@@ -41,7 +41,7 @@ public class Station {
   static protected final Logger LOGGER = Logger.getLogger(Station.class);
   static protected final int BUFFER_SIZE = 266;
   static protected final int LOOP_SIZE = 99;
-  protected ArrayList dmpRecords = new ArrayList();
+//  protected ArrayList dmpRecords = new ArrayList();
   private static final int ACK = 6;
   static protected final byte LF = '\n';
   static protected final byte CR = '\r';
