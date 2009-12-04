@@ -67,9 +67,7 @@
   <%= render(:partial => "graphs", :layout => false  ) %>
 <% end %>
 
-<% cache(:action => "index", :action_suffix => "forecast") do %>
-  <%= render(:partial => "forecast", :layout => false  ) %>
-<% end %>
+<%= render(:partial => "forecast", :layout => false  ) %>
 
 <% cache(:action => "index", :action_suffix => "tides") do %>
   <%= render(:partial => "tides", :layout => false  ) %>
