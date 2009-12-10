@@ -1,5 +1,5 @@
-<% if @forecast != nil && @forecast.last_retrieved > 6.hours.ago %>
 <TABLE BORDER=1 ALIGN="CENTER" WIDTH="50%" >
+<% if @forecast != nil && @forecast.last_retrieved > 6.hours.ago %>
 <tr><td colspan="3" align="center"><center><b><h2> NOAA Forecast as of <%= distance_of_time_in_words_to_now(@forecast.last_retrieved, false) %> ago</h2></b></center></td></tr>
 <% @forecast.forecast_periods.each do | pd | %>
   <tr>
@@ -10,5 +10,6 @@
 <% end %>
 
 </table>
-
+<% else %>
+  <tr><td colspan="3" align="center"><center><b><h2> NOAA Forecast Temporarily Unavailable</h2></b></center></td></tr>
 <% end %>
