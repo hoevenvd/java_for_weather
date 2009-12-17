@@ -9,7 +9,7 @@ include REXML
 
 class NOAAForecastUtils
   log = Logger.new(STDOUT)
-  log.level = Logger::INFO
+  log.level = Logger::DEBUG
 
   LOCATION = AppConfig.noaa_location
   HOST = "forecast.weather.gov"
