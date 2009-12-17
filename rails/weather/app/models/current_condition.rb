@@ -31,25 +31,19 @@ class CurrentCondition < ActiveRecord::Base
     a.date
   end
 
-  #TODO: add back location for waring once the rain gauge is working
   def twentyfour_hour_rain
     start_tm = 24.hours.ago.utc
-    #ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\' and location = \'#{location}\'")
-    ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\'")
+    ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\' and location = \'#{location}\'")
   end
 
-  #TODO: add back location for waring once the rain gauge is working
   def hourly_rain
     start_tm = 1.hour.ago.utc
-    #ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\' and location = \'#{location}\'")
-    ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\'")
+    ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\' and location = \'#{location}\'")
   end
 
-  #TODO: add back location for waring once the rain gauge is working
   def daily_rain
     start_tm = Time.now.at_beginning_of_day.utc
-    #ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\' and location = \'#{location}\'")
-    ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\'")
+    ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\' and location = \'#{location}\'")
   end
 
   def temp_trend
