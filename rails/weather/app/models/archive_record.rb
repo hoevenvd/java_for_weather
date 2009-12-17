@@ -7,9 +7,9 @@ class ArchiveRecord < ActiveRecord::Base
                           :allow_nil => true, :message => "invalid"
   validates_inclusion_of  :outside_humidity, :in => 1..100, 
                           :allow_nil => true, :message => "invalid"
-                        
-  named_scope :really_old, lambda {{:conditions => ["date < ?", Time.now.utc.at_beginning_of_year - 1.year]}}
-  named_scope :last_year, lambda {{:conditions => ["date < ? and date >= ?", 
+
+  named_scope :really_old, lambda {{:conditions => ["date < ? and location = \'#{AppConfig.location}\'", Time.now.utc.at_beginning_of_year - 1.year]}}
+  named_scope :last_year, lambda {{:conditions => ["date < ? and date >= ? and location = \'#{AppConfig.location}\'",
                                    Time.now.utc.at_beginning_of_year,
                                    Time.now.utc.at_beginning_of_year - 1.year],
                                    :order => "date desc"}}
@@ -40,7 +40,7 @@ class ArchiveRecord < ActiveRecord::Base
   
   def self.last_rolling_hour_rain
     start_tm = 1.hour.ago
-    rain = ArchiveRecord.sum(:rainfall, :conditions => "date > \'#{start_tm.to_s(:db)}\'")
+    rain = ArchiveRecord.sum(:rainfall, :conditions => "date > \'#{start_tm.to_s(:db)}\' and location = \'#{location}\'")
   end
                             
 end

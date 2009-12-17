@@ -22,26 +22,33 @@ class CurrentCondition < ActiveRecord::Base
 
   def gust
     start_tm = 10.minutes.ago.utc
-    value = ArchiveRecord.maximum(:high_wind_speed, :conditions => "date > \'#{start_tm.to_s(:db)}\'")
+    value = ArchiveRecord.maximum(:high_wind_speed, :conditions => "date > \'#{start_tm.to_s(:db)}\' and location = \'#{location}\'")
     value #todo build an Event object here
   end
 
   def gust_time
-    a = ArchiveRecord.find(:first, :conditions => "high_wind_speed = #{gust}", :order => "date desc")
+    a = ArchiveRecord.find(:first, :conditions => {:high_wind_speed => :gust, :location => location}, :order => "date desc")
     a.date
   end
 
+  #TODO: add back location for waring once the rain gauge is working
   def twentyfour_hour_rain
     start_tm = 24.hours.ago.utc
-    ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\'")
-  end
-  def hourly_rain
-    start_tm = 1.hour.ago.utc
+    #ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\' and location = \'#{location}\'")
     ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\'")
   end
 
+  #TODO: add back location for waring once the rain gauge is working
+  def hourly_rain
+    start_tm = 1.hour.ago.utc
+    #ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\' and location = \'#{location}\'")
+    ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\'")
+  end
+
+  #TODO: add back location for waring once the rain gauge is working
   def daily_rain
     start_tm = Time.now.at_beginning_of_day.utc
+    #ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\' and location = \'#{location}\'")
     ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\'")
   end
 
@@ -66,7 +73,7 @@ class CurrentCondition < ActiveRecord::Base
   def trend_record
     bt = Time.now - 2.hours
     et = Time.now - 1.hour
-    @trend_record = ArchiveRecord.find(:first,:conditions => "date > \'#{bt.utc.to_s(:db)} and date < #{et.utc.to_s(:db)}\'", :order => 'date') unless @trend_record != nil
+    @trend_record = ArchiveRecord.find(:first,:conditions => "date > \'#{bt.utc.to_s(:db)} and date < #{et.utc.to_s(:db)}\' and location = \'#{location}\'", :order => 'date') unless @trend_record != nil
     @trend_record
   end
 
