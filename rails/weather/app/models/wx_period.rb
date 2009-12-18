@@ -86,9 +86,10 @@ class WxPeriod < Period
   def gust(pd, gust, location)
     a = ArchiveRecord.find(:first, :conditions => "location = '#{location}' and date >= '#{pd.start_time_sql}' and date < '#{pd.end_time_sql}' and high_wind_speed = '#{gust}'", :order => "date desc")
     if (a != nil) then
-      { :date => a.date != nil ? a.date : nil, :dir => a.direction_of_high_wind_speed }
+      { :date => a.date != nil ? a.date : nil,
+        :dir => a.direction_of_high_wind_speed != nil ? a.direction_of_high_wind_speed : nil }
     else
-      nil
+      { :date => nil, :dir => nil }
     end
   end
   

@@ -124,9 +124,9 @@ ActiveRecord::Schema.define(:version => 20091218124325) do
 
   create_table "noaa_conditions", :force => true do |t|
     t.datetime "created_at"
-    t.string   "location",       :limit => 20, :default => "", :null => false
+    t.string   "location",       :limit => 20, :default => ""
     t.datetime "updated_at"
-    t.text     "conditions",                                   :null => false
+    t.text     "conditions"
     t.datetime "as_of"
     t.integer  "visibility",     :limit => 8
     t.text     "conditions_xml"
@@ -136,12 +136,10 @@ ActiveRecord::Schema.define(:version => 20091218124325) do
   add_index "noaa_conditions", ["location"], :name => "location"
 
   create_table "noaa_forecasts", :force => true do |t|
-    t.text     "forecast_xml"
+    t.text     "forecast_xml",                               :null => false
     t.datetime "created_at"
-    t.string   "location",       :limit => 20, :default => "", :null => false
+    t.string   "location",     :limit => 20, :default => "", :null => false
     t.datetime "updated_at"
-    t.datetime "creation_time"
-    t.datetime "last_retrieved"
   end
 
   add_index "noaa_forecasts", ["created_at"], :name => "created_at"
@@ -231,6 +229,7 @@ ActiveRecord::Schema.define(:version => 20091218124325) do
   end
 
   add_index "past_summaries", ["location", "period"], :name => "index_past_summaries_on_location_and_period", :unique => true
+  add_index "past_summaries", ["period"], :name => "index_past_summaries_on_period", :unique => true
 
   create_table "risesets", :force => true do |t|
     t.string  "location", :null => false
