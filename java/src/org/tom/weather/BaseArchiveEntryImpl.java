@@ -115,4 +115,8 @@ public class BaseArchiveEntryImpl implements ArchiveEntry {
     return 0;
   }
 
+  public Direction getHighWindSpeedDirection() {
+    return null;
+  }
+
 }

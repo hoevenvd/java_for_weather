@@ -152,6 +152,7 @@ public class VantagePro extends Station {
   public void dmpaft() throws Exception {
     UnsignedByte[] datetime = null;
     datetime = getlLastArchiveRecord();
+    LOGGER.debug(datetime);
     // t lastDate
     sendString("DMPAFT\n");
     getAck();
