@@ -66,7 +66,7 @@ class WxPeriod < Period
   end
 
   def hi_temp_date(pd, temp, location)
-    a = ArchiveRecord.find(:first, :conditions => "location = '#{location}' and date >= '#{@start_time_sql}' and date < '#{@end_time_sql}' and high_outside_temp = '#{temp}'", :order => "date desc")
+    a = ArchiveRecord.find(:first, :conditions => "location = '#{location}' and date >= '#{pd.start_time_sql}' and date < '#{pd.end_time_sql}' and high_outside_temp = '#{temp}'", :order => "date desc")
     if (a != nil) then
       a.date != nil ? a.date : nil
     else
@@ -75,7 +75,7 @@ class WxPeriod < Period
   end
   
   def low_temp_date(pd, temp, location)
-    a = ArchiveRecord.find(:first, :conditions => "location = '#{location}' and date >= '#{@start_time_sql}' and date < '#{@end_time_sql}' and low_outside_temp = '#{temp}'", :order => "date desc")
+    a = ArchiveRecord.find(:first, :conditions => "location = '#{location}' and date >= '#{pd.start_time_sql}' and date < '#{pd.end_time_sql}' and low_outside_temp = '#{temp}'", :order => "date desc")
     if (a != nil) then
       a.date != nil ? a.date : nil
     else
@@ -83,10 +83,10 @@ class WxPeriod < Period
     end
   end
   
-  def gust_date(pd, gust, location)
-    a = ArchiveRecord.find(:first, :conditions => "location = '#{location}' and date >= '#{@start_time_sql}' and date < '#{@end_time_sql}' and high_wind_speed = '#{gust}'", :order => "date desc")
+  def gust(pd, gust, location)
+    a = ArchiveRecord.find(:first, :conditions => "location = '#{location}' and date >= '#{pd.start_time_sql}' and date < '#{pd.end_time_sql}' and high_wind_speed = '#{gust}'", :order => "date desc")
     if (a != nil) then
-      a.date != nil ? a.date : nil
+      { :date => a.date != nil ? a.date : nil, :dir => a.direction_of_high_wind_speed }
     else
       nil
     end
@@ -111,7 +111,8 @@ class WxPeriod < Period
     my_pd = WxPeriod.new(pd.start_time, pd.end_time)
     rs[0]["hiTempDate"] = my_pd.hi_temp_date(my_pd, rs[0]["hiTemp"], location)
     rs[0]["lowTempDate"] = my_pd.low_temp_date(my_pd, rs[0]["lowTemp"], location)
-    rs[0]["gustDate"] = my_pd.gust_date(my_pd, rs[0]["hiWindspeed"], location)
+    rs[0]["gustDate"] = my_pd.gust(my_pd, rs[0]["hiWindspeed"], location)[:date]
+    rs[0]["gustDir"] = my_pd.gust(my_pd, rs[0]["hiWindspeed"], location)[:dir]
     rs[0]["startdate"] = pd.start_time.utc
     rs[0]["enddate"] = pd.end_time.utc
     rs[0]["period"] = pd.period_name

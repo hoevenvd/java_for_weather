@@ -78,7 +78,7 @@
 <% end %>
 <% if !@today.hiWindspeed.nil? %>
   <% if @today.hiWindspeed != nil then %>
-    <Center>Today's High: <%= @today.hiWindspeed %> mph (<%= @today.gustDate.in_time_zone.strftime "%I:%M %p" %>)</Center>
+    <Center>Today's High: <%= Direction.to_s(@today.gustDir) %> at <%= @today.hiWindspeed %> mph (<%= @today.gustDate.in_time_zone.strftime "%I:%M %p" %>)</Center>
   <% end %>
 <% end %>
 
