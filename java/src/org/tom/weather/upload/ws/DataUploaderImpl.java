@@ -56,6 +56,7 @@ public class DataUploaderImpl implements DataUploader {
     struct.setHigh_rain_rate(entry.getHighRainRate());
     struct.setPrevailing_wind_direction(entry.getWindDirection().getDegrees());
     struct.setHigh_wind_speed(entry.getWindGust());
+    struct.setDirection_of_high_wind_speed(entry.getHighWindSpeedDirection().getDegrees());
     struct.setAverage_uv_index(entry.getAverageUVIndex());
     struct.setHigh_uv_index(entry.getHighUVIndex());
     struct.setAverage_solar_radiation(entry.getAverageSolarRadiation());

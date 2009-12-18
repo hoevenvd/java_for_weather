@@ -34,6 +34,8 @@ public interface ArchiveEntry extends Serializable {
   // public int getNativeWindDirection();
   public int getWindGust();
 
+  public Direction getHighWindSpeedDirection();
+  
   public Date getDate();
 
   public double getBarometer();

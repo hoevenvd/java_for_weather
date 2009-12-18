@@ -304,7 +304,7 @@ public class DmpRecord implements ArchiveEntry {
         + ","
         + highWindSpeed
         + ","
-        + highWindSpeedDirection.getDegrees()
+        + getHighWindSpeedDirection().getDegrees()
         + ","
         + getWindDirection().getDegrees()
         + ","
@@ -451,4 +451,18 @@ public class DmpRecord implements ArchiveEntry {
   public int getNumberOfWindSamples() {
     return numberOfWindSamples;
   }
+
+    /**
+     * @return the highWindSpeedDirection
+     */
+    public Direction getHighWindSpeedDirection() {
+        return highWindSpeedDirection;
+    }
+
+    /**
+     * @param highWindSpeedDirection the highWindSpeedDirection to set
+     */
+    public void setHighWindSpeedDirection(Direction highWindSpeedDirection) {
+        this.highWindSpeedDirection = highWindSpeedDirection;
+    }
 }
