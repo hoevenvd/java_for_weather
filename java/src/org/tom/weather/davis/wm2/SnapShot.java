@@ -1,5 +1,6 @@
 package org.tom.weather.davis.wm2;
 
+import java.util.Date;
 import org.tom.util.Rounding;
 import org.tom.weather.Converter;
 import org.tom.weather.Direction;
@@ -283,4 +284,28 @@ public class SnapShot implements org.tom.weather.SnapShot {
   public int getSolarRadiation() {
     return 0;
   }
+
+    public int getInsideHumidity() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public float getInsideTemp() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Date getSunrise() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Date getSunset() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public float getMonthRain() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public float getYearRain() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

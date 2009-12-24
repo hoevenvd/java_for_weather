@@ -17,11 +17,15 @@ public interface SnapShot extends Serializable {
 
   public float getOutsideHumidity();
 
+  public int getInsideHumidity();
+
   public String getBarStatus();
 
   public float getDewpoint();
 
   public float getOutsideTemp();
+
+  public float getInsideTemp();
 
   public int getWindspeed();
 
@@ -38,10 +42,18 @@ public interface SnapShot extends Serializable {
   public boolean isValid();
 
   public float getDayRain();
-  
+
+  public float getMonthRain();
+
+  public float getYearRain();
+
   public int getTenMinAvgWind();
   
   public int getUV();
   
   public int getSolarRadiation();
+
+  public java.util.Date getSunrise();
+
+  public java.util.Date getSunset();
 }

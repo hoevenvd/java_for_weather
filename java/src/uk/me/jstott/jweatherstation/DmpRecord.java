@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 import org.apache.log4j.Logger;
+import org.tom.util.DateUtils;
 import org.tom.weather.ArchiveEntry;
 import org.tom.weather.Converter;
 import org.tom.weather.Direction;
@@ -79,7 +80,7 @@ public class DmpRecord implements ArchiveEntry {
   public DmpRecord(byte[] data) {
     UnsignedByte[] unsignedData = UnsignedByte.getUnsignedBytes(data);
     unsignedRawData = unsignedData;// Process.unsign(data);
-    date = parseDate(unsignedRawData[0], unsignedRawData[1],
+    date = DateUtils.parseDate(unsignedRawData[0], unsignedRawData[1],
         unsignedRawData[2], unsignedRawData[3]);
     outsideTemperature = new Temperature(unsignedData[4], unsignedData[5]);
     highOutsideTemperature = new Temperature(unsignedData[6], unsignedData[7]);
@@ -201,24 +202,6 @@ public class DmpRecord implements ArchiveEntry {
       valid = false;
       setInvalidReason("humidity: " + outsideHumidity.getHumidity());
     }
-  }
-
-  private Calendar parseDate(UnsignedByte dateLSB, UnsignedByte dateMSB,
-      UnsignedByte timeLSB, UnsignedByte timeMSB) {
-    Calendar cal = Calendar.getInstance();
-    int year, month, date;
-    year = (dateMSB.getByte() >> 1) + 2000;
-    month = ((dateMSB.getByte() & 1) << 3) | (dateLSB.getByte() >> 5);
-    date = dateLSB.getByte() & 31;
-    int timeInt = (timeMSB.getByte() * 256) + timeLSB.getByte();
-    int hours = timeInt / 100;
-    int mins = timeInt - (hours * 100);
-    // System.out.println(dateMSB + " " + dateLSB + " " + timeMSB + " " +
-    // timeLSB + " - " + date + "/" + month + "/" + year + " " + hours + ":"
-    // + mins);
-    cal.set(Calendar.MILLISECOND, 0);
-    cal.set(year, month - 1, date, hours, mins, 0);
-    return cal;
   }
 
   /**

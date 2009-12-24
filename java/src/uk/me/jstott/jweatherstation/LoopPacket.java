@@ -8,6 +8,7 @@ package uk.me.jstott.jweatherstation;
 
 import java.util.Date;
 import org.apache.log4j.Logger;
+import org.tom.util.DateUtils;
 import org.tom.weather.Converter;
 import org.tom.weather.Direction;
 import org.tom.weather.SnapShot;
@@ -17,7 +18,6 @@ import uk.me.jstott.jweatherstation.datatypes.Temperature;
 import uk.me.jstott.jweatherstation.datatypes.Wind;
 import uk.me.jstott.jweatherstation.sql.SQLManager;
 import uk.me.jstott.jweatherstation.util.CRC;
-import uk.me.jstott.jweatherstation.util.Process;
 import uk.me.jstott.jweatherstation.util.UnsignedByte;
 
 /**
@@ -29,7 +29,7 @@ public class LoopPacket implements SnapShot {
   private boolean valid = true;
   private Date date = new Date();
   private Pressure pressure;
-  private Temperature insideTemperature;
+  private Temperature insideTemp;
   private Humidity insideHumidity;
   private Temperature outsideTemperature;
   private Wind wind;
@@ -50,8 +50,8 @@ public class LoopPacket implements SnapShot {
   private int forecastIcon;
   private int forecastRuleNumber;
   private boolean isRaining;
-  private int timeOfSunrise;
-  private int timeOfSunset;
+  private Date sunrise;
+  private Date sunset;
   private int crc;
   private UnsignedByte[] unsignedData;
 
@@ -63,14 +63,25 @@ public class LoopPacket implements SnapShot {
         + unsignedPacket[7].getByte(), pressureTrend);
     outsideTemperature = new Temperature((unsignedPacket[13].getByte() * 256)
         + unsignedPacket[12].getByte());
+    insideTemp = new Temperature((unsignedPacket[10].getByte() * 256)
+        + unsignedPacket[9].getByte());
     solarRadiation = (unsignedPacket[45].getByte() * 256)
         + unsignedPacket[44].getByte();
+    dayRain = (unsignedPacket[51].getByte() * 256)
+        + unsignedPacket[50].getByte();
+    monthRain = (unsignedPacket[53].getByte() * 256)
+        + unsignedPacket[52].getByte();
+    yearRain = (unsignedPacket[55].getByte() * 256)
+        + unsignedPacket[54].getByte();
     outsideHumidity = new Humidity(unsignedPacket[33].getByte());
+    insideHumidity = new Humidity(unsignedPacket[11].getByte());
     uv = unsignedPacket[43].getByte();
     wind = new Wind(unsignedPacket[14].getByte(), unsignedPacket[15].getByte(),
         (unsignedPacket[17].getByte() * 256) + unsignedPacket[16].getByte());
     rainRate = ((((unsignedPacket[42].getByte() * 256) + unsignedPacket[41]
         .getByte()) / 100.0D));
+    sunrise = DateUtils.parseDate(null, null, unsignedPacket[91], unsignedPacket[92]).getTime();
+    sunset = DateUtils.parseDate(null, null, unsignedPacket[93], unsignedPacket[94]).getTime();
     setDayRain((float)((((unsignedPacket[51].getByte() * 256) + unsignedPacket[50].getByte()) / 100.0D)));
     crc = ((unsignedPacket[97].getByte() * 256) + unsignedPacket[98].getByte());
     CRC calcCRC = new CRC();
@@ -210,4 +221,68 @@ public class LoopPacket implements SnapShot {
   public int getSolarRadiation() {
     return solarRadiation;
   }
+
+  /**
+   * @return the insideTemperature
+   */
+  public float getInsideTemp() {
+      return insideTemp.getTemperatureFahrenheit();
+  }
+
+  /**
+   * @param insideTemperature the insideTemperature to set
+   */
+  public void setInsideTemp(Temperature insideTemperature) {
+      this.insideTemp = insideTemperature;
+  }
+
+  /**
+   * @return the insideHumidity
+   */
+  public int getInsideHumidity() {
+      return insideHumidity.getHumidity();
+  }
+
+  /**
+   * @param insideHumidity the insideHumidity to set
+   */
+  public void setInsideHumidity(Humidity insideHumidity) {
+      this.insideHumidity = insideHumidity;
+  }
+
+    /**
+     * @return the sunrise
+     */
+    public Date getSunrise() {
+        return sunrise;
+    }
+
+    /**
+     * @param sunrise the sunrise to set
+     */
+    public void setSunrise(Date sunrise) {
+        this.sunrise = sunrise;
+    }
+
+    /**
+     * @return the sunset
+     */
+    public Date getSunset() {
+        return sunset;
+    }
+
+    /**
+     * @param sunset the sunset to set
+     */
+    public void setSunset(Date sunset) {
+        this.sunset = sunset;
+    }
+
+    public float getMonthRain() {
+        return monthRain;
+    }
+
+    public float getYearRain() {
+        return yearRain;
+    }
 }
