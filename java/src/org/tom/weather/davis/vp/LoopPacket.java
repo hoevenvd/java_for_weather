@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package uk.me.jstott.jweatherstation;
+package org.tom.weather.davis.vp;
 
 import java.util.Date;
 import org.apache.log4j.Logger;

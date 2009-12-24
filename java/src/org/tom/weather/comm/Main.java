@@ -14,7 +14,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.tom.weather.posting.DataPoster;
-import uk.me.jstott.jweatherstation.LoopPacket;
+import org.tom.weather.davis.vp.LoopPacket;
 
 public class Main {
   public static final Logger LOGGER = Logger.getLogger(Main.class);

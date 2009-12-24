@@ -10,7 +10,6 @@ import org.tom.weather.*;
 import org.tom.weather.posting.DataPoster;
 import org.apache.log4j.Logger;
 
-import uk.me.jstott.jweatherstation.Station;
 
 public class WeatherMonitor extends Station {
   private static final Logger LOGGER = Logger.getLogger(WeatherMonitor.class);
