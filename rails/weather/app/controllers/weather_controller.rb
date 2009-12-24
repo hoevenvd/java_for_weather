@@ -21,12 +21,19 @@ class WeatherController < ApplicationController
         :solar_radiation => sample[:solar_radiation],
         :wind_direction => sample[:wind_direction],
         :apparent_temp =>  sample[:apparent_temp],
+        :inside_temperature => sample[:inside_temperature],
+        :inside_humidity => sample[:inside_humidity],
+        :sunrise => sample[:sunrise],
+        :sunset => sample[:sunset],
+        :daily_rain => sample[:daily_rain],
+        :monthly_rain => sample[:monthly_rain],
+        :yearly_rain => sample[:yearly_rain],
         :rain_rate => sample[:rain_rate])
   end
   
   def put_current_conditions(password, location, sample)
     cond = CurrentCondition.find_or_create_by_location(location)
-    cond[:sample_date] = sample[:sample_date].getutc
+    cond[:sample_date] = Time.now.utc
     cond[:outside_temperature] = sample[:temp]
     cond[:outside_humidity] = sample[:humidity]
     cond[:pressure] = sample[:pressure]
@@ -35,9 +42,15 @@ class WeatherController < ApplicationController
     cond[:wind_direction] = sample[:wind_direction]
     cond[:rain_rate] = sample[:rain_rate]
     cond[:ten_min_avg_wind] = sample[:ten_min_avg_wind]
+    cond[:inside_temperature] = sample[:inside_temperature]
+    cond[:inside_humidity] = sample[:inside_humidity]
+    cond[:sunrise] = sample[:sunrise]
+    cond[:sunset] = sample[:sunset]
+    cond[:daily_rain] = sample[:daily_rain]
+    cond[:monthly_rain] = sample[:monthly_rain]
+    cond[:yearly_rain] = sample[:yearly_rain]
     cond[:uv] = sample[:uv]
     cond[:solar_radiation] = sample[:solar_radiation]
-    cond[:daily_rain] = sample[:daily_rain]
     
     if !cond.save
       raise cond.errors.full_messages.to_s
