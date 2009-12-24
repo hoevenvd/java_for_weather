@@ -24,8 +24,8 @@ import org.tom.weather.ArchiveEntry;
 import org.tom.weather.upload.DataUploader;
 import org.tom.weather.ws.client.WxWsClient;
 
-import uk.me.jstott.jweatherstation.DmpRecord;
-import uk.me.jstott.jweatherstation.LoopPacket;
+import org.tom.weather.davis.vp.DmpRecord;
+import org.tom.weather.davis.vp.LoopPacket;
 import uk.me.jstott.jweatherstation.util.Process;
 import uk.me.jstott.jweatherstation.util.UnsignedByte;
 
@@ -282,7 +282,7 @@ public class VantagePro extends Station {
       }
       delay(500);
     } catch (IOException ex) {
-      LOGGER.error(getPort().getName() + ": Cannot read input stream", ex);
+      LOGGER.error("Cannot read input stream", ex);
     }
   }
   private UnsignedByte[] getlLastArchiveRecord() {

@@ -1,7 +1,7 @@
 /*
  * Created on 18-Oct-2004
  */
-package uk.me.jstott.jweatherstation;
+package org.tom.weather.davis.vp;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -164,10 +164,11 @@ public class DmpRecord implements ArchiveEntry {
     
     if (getWindGust() == 0 && getAvgWindSpeed() == 0) {
       if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("overriding wind direction of: "
+        LOGGER.debug("overriding wind directions of: "
             + windDirection.getDegrees() + " with: " + 0);
       }
       windDirection = new Direction(0);
+      highWindSpeedDirection = new Direction(0);
     }
 
     if (averageWindSpeed > 100) {

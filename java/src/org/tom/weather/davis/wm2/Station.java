@@ -1,7 +1,7 @@
 /*
  * Created on 16-Oct-2004
  */
-package uk.me.jstott.jweatherstation;
+package org.tom.weather.davis.wm2;
 
 import java.io.IOException;
 import java.io.InputStream;
