@@ -38,7 +38,15 @@ public class WebServiceDataPosterImpl implements DataPoster {
     sample.setUv((int)snap.getUV());
     sample.setSolar_radiation((int)snap.getSolarRadiation());
     sample.setDaily_rain(snap.getDayRain());
-    
+    sample.setMonthly_rain(snap.getMonthRain());
+    sample.setYearly_rain(snap.getYearRain());
+    sample.setInside_humidity(snap.getInsideHumidity());
+    sample.setInside_temperature(snap.getInsideTemp());
+    sample.setTen_min_avg_wind(snap.getTenMinAvgWind());
+    cal.setTime(snap.getSunrise());
+    sample.setSunrise((Calendar)cal.clone());
+    cal.setTime(snap.getSunset());
+    sample.setSunset(cal);
     try {
       WxWsClient.postSample(password, location, sample);
     } catch (RemoteException e) {

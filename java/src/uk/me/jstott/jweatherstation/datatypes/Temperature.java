@@ -48,7 +48,7 @@ public class Temperature implements Serializable {
     temperature = (msb.getByte() << 8) | lsb.getByte();
   }
 
-  public Temperature(double temp) {
+  public Temperature(float temp) {
     temperature = (int) temp * 10;
     // TODO Auto-generated constructor stub
   }
@@ -68,8 +68,8 @@ public class Temperature implements Serializable {
    * 
    * @return the value of the temperature in degrees Fahrenheit
    */
-  public double getTemperatureFahrenheit() {
-    return ((double) temperature) / 10.0;
+  public float getTemperatureFahrenheit() {
+    return (float)((temperature) / 10.0);
   }
 
   /**
@@ -78,7 +78,7 @@ public class Temperature implements Serializable {
    * @return the value of the temperature in degrees Celsius
    */
   public double getTemperatureCelsius() {
-    return (5.0 / 9.0) * ((((double) temperature) / 10.0) - 32.0);
+    return (5.0 / 9.0) * (((temperature) / 10.0) - 32.0);
   }
 
   public String toString() {
