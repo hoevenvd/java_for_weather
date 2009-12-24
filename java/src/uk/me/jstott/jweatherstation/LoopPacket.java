@@ -40,8 +40,8 @@ public class LoopPacket implements SnapShot {
   private int stormRain;
   private int startDateOfCurrentStorm;
   private float dayRain;
-  private int monthRain;
-  private int yearRain;
+  private float monthRain;
+  private float yearRain;
   private int dayET;
   private int monthET;
   private int yearET;
@@ -67,12 +67,12 @@ public class LoopPacket implements SnapShot {
         + unsignedPacket[9].getByte());
     solarRadiation = (unsignedPacket[45].getByte() * 256)
         + unsignedPacket[44].getByte();
-    dayRain = (unsignedPacket[51].getByte() * 256)
-        + unsignedPacket[50].getByte();
-    monthRain = (unsignedPacket[53].getByte() * 256)
-        + unsignedPacket[52].getByte();
-    yearRain = (unsignedPacket[55].getByte() * 256)
-        + unsignedPacket[54].getByte();
+    dayRain = ((unsignedPacket[51].getByte() * 256)
+        + unsignedPacket[50].getByte()) / 100.0f;
+    monthRain = ((unsignedPacket[53].getByte() * 256)
+        + unsignedPacket[52].getByte()) / 100.0f;
+    yearRain = ((unsignedPacket[55].getByte() * 256)
+        + unsignedPacket[54].getByte()) / 100.0f;
     outsideHumidity = new Humidity(unsignedPacket[33].getByte());
     insideHumidity = new Humidity(unsignedPacket[11].getByte());
     uv = unsignedPacket[43].getByte();
