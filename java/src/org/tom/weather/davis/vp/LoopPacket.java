@@ -37,8 +37,8 @@ public class LoopPacket implements SnapShot {
   private double rainRate;
   private int uv;
   private int solarRadiation;
-  private int stormRain;
-  private int startDateOfCurrentStorm;
+  private float stormRain;
+  private Date startDateOfCurrentStorm;
   private float dayRain;
   private float monthRain;
   private float yearRain;
@@ -80,9 +80,10 @@ public class LoopPacket implements SnapShot {
         (unsignedPacket[17].getByte() * 256) + unsignedPacket[16].getByte());
     rainRate = ((((unsignedPacket[42].getByte() * 256) + unsignedPacket[41]
         .getByte()) / 100.0D));
+    stormRain = ((((unsignedPacket[47].getByte() * 256) + unsignedPacket[46]
+        .getByte()) / 100.0f));
     sunrise = DateUtils.parseDate(null, null, unsignedPacket[91], unsignedPacket[92]).getTime();
     sunset = DateUtils.parseDate(null, null, unsignedPacket[93], unsignedPacket[94]).getTime();
-    setDayRain((float)((((unsignedPacket[51].getByte() * 256) + unsignedPacket[50].getByte()) / 100.0D)));
     crc = ((unsignedPacket[97].getByte() * 256) + unsignedPacket[98].getByte());
     CRC calcCRC = new CRC();
     calcCRC.updateCRC(data);
@@ -284,5 +285,9 @@ public class LoopPacket implements SnapShot {
 
     public float getYearRain() {
         return yearRain;
+    }
+
+    public double getStormRain() {
+        return stormRain;
     }
 }

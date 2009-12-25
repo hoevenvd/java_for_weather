@@ -40,6 +40,7 @@ public class WebServiceDataPosterImpl implements DataPoster {
     sample.setDaily_rain(snap.getDayRain());
     sample.setMonthly_rain(snap.getMonthRain());
     sample.setYearly_rain(snap.getYearRain());
+    sample.setStorm_rain(snap.getStormRain());
     sample.setInside_humidity(snap.getInsideHumidity());
     sample.setInside_temperature(snap.getInsideTemp());
     sample.setTen_min_avg_wind(snap.getTenMinAvgWind());
