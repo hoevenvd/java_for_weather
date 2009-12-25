@@ -28,6 +28,7 @@ class WeatherController < ApplicationController
         :daily_rain => sample[:daily_rain],
         :monthly_rain => sample[:monthly_rain],
         :yearly_rain => sample[:yearly_rain],
+        :storm_rain => sample[:storm_rain],
         :rain_rate => sample[:rain_rate])
   end
   
@@ -49,6 +50,7 @@ class WeatherController < ApplicationController
     cond[:daily_rain] = sample[:daily_rain]
     cond[:monthly_rain] = sample[:monthly_rain]
     cond[:yearly_rain] = sample[:yearly_rain]
+    cond[:storm_rain] = sample[:storm_rain]
     cond[:uv] = sample[:uv]
     cond[:solar_radiation] = sample[:solar_radiation]
     
