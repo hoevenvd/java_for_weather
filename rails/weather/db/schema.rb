@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091223203507) do
+ActiveRecord::Schema.define(:version => 20091225011946) do
 
   create_table "archive_records", :force => true do |t|
     t.datetime "date",                                                                                     :null => false
@@ -110,6 +110,7 @@ ActiveRecord::Schema.define(:version => 20091223203507) do
     t.datetime "sunset"
     t.float    "monthly_rain"
     t.float    "yearly_rain"
+    t.float    "storm_rain"
   end
 
   add_index "current_conditions", ["location"], :name => "index_current_conditions_on_location"

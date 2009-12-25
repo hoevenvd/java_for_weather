@@ -10,6 +10,7 @@ class InputSampleStruct < ActionWebService::Struct
 	member  :daily_rain,        :float
 	member  :monthly_rain,      :float
 	member  :yearly_rain,       :float
+	member  :storm_rain,        :float
 	member  :ten_min_avg_wind,  :int
 	member  :uv,                :int
 	member  :solar_radiation,   :int

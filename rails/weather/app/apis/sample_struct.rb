@@ -13,6 +13,7 @@ class SampleStruct < ActionWebService::Struct
 	member  :daily_rain,         :float
 	member  :monthly_rain,       :float
 	member  :yearly_rain,        :float
+	member  :storm_rain,         :float
 	member  :ten_min_avg_wind,   :int
 	member  :is_raining,         :bool
   member  :inside_temperature, :float
