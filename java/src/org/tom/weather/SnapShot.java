@@ -37,6 +37,8 @@ public interface SnapShot extends Serializable {
   
   public double getRainRate();
 
+  public double getStormRain();
+
   public float getWindchill();
   
   public boolean isValid();

@@ -308,4 +308,8 @@ public class SnapShot implements org.tom.weather.SnapShot {
     public float getYearRain() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    public double getStormRain() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
