@@ -41,11 +41,6 @@ class CurrentCondition < ActiveRecord::Base
     ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\' and location = \'#{location}\'")
   end
 
-  def daily_rain
-    start_tm = Time.now.at_beginning_of_day.utc
-    ArchiveRecord.sum(:rainfall, :conditions => "date >= \'#{start_tm.to_s(:db)}\' and location = \'#{location}\'")
-  end
-
   def temp_trend
     if trend_record == nil or outside_temperature == trend_record.outside_temp then
       return nil
