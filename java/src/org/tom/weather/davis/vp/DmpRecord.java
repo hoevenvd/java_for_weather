@@ -189,11 +189,6 @@ public class DmpRecord implements ArchiveEntry {
         setInvalidReason("date in future");
     }
     
-    if (numberOfWindSamples == 0) {
-      valid = false;
-      setInvalidReason("zero wind samples");
-    }
-    
     if (outsideTemperature.getTemperatureFahrenheit() > 150) {
       valid = false;
       setInvalidReason("temp: " + outsideTemperature.getTemperatureFahrenheit());
