@@ -23,7 +23,7 @@ public class WebServiceDataPosterImpl implements DataPoster {
     return password;
   }
 
-  public void post(SnapShot snap) {
+  public void post(SnapShot snap) throws RemoteException {
     Calendar cal = Calendar.getInstance();
     cal.setTime(snap.getDate());
     InputSampleStruct sample = new InputSampleStruct();
@@ -52,6 +52,7 @@ public class WebServiceDataPosterImpl implements DataPoster {
       WxWsClient.postSample(password, location, sample);
     } catch (RemoteException e) {
       LOGGER.error(e);
+      throw new RemoteException(e.getMessage());
     }
   }
 

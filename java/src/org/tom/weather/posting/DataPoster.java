@@ -1,5 +1,6 @@
 package org.tom.weather.posting;
 
+import java.rmi.RemoteException;
 import org.tom.weather.PeriodData;
 import org.tom.weather.SnapShot;
 
@@ -9,7 +10,7 @@ import org.tom.weather.SnapShot;
  * @version
  */
 public interface DataPoster {
-  public void post(SnapShot snap);
+  public void post(SnapShot snap) throws RemoteException;
 
   public void post(PeriodData periodData);
 }

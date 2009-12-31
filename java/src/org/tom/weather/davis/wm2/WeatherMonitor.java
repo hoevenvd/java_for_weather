@@ -2,6 +2,7 @@ package org.tom.weather.davis.wm2;
 
 import java.io.*;
 
+import java.rmi.RemoteException;
 import javax.naming.*;
 
 import java.util.*;
@@ -129,7 +130,7 @@ public class WeatherMonitor extends Station {
     return loopData;
   }
 
-  private void writeToContext(org.tom.weather.SnapShot snapshot) {
+  private void writeToContext(org.tom.weather.SnapShot snapshot) throws RemoteException {
     DataPoster[] posters = WeatherMonitor.getDataPosters(props);
     if (posters != null) {
       for (int i = 0; i < MAX_DELEGATES; i++) {
