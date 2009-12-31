@@ -5,10 +5,10 @@
 package org.tom.weather.comm;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.List;
 
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -78,7 +78,7 @@ public class Main {
     }
   }
 
-  private void post(LoopPacket loop) {
+  private void post(LoopPacket loop) throws RemoteException {
     for (Iterator iter = getPosterList().iterator(); iter.hasNext();) {
       DataPoster poster = (DataPoster)iter.next();
       poster.post(loop);

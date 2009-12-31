@@ -219,7 +219,7 @@ public class Station {
     sendBytes(bs);
   }
 
-  protected void sendBytes(byte[] bytes) {
+  protected void sendBytes(byte[] bytes) throws IOException {
     int count;
     count = bytes.length;
     if (count > 0) {
@@ -235,6 +235,7 @@ public class Station {
         getOutputStream().flush();
       } catch (IOException ex) {
         LOGGER.error(ex);
+        throw ex;
       }
     }
   }
