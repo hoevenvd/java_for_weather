@@ -36,18 +36,18 @@ public class Main {
             "weather.xml");
         Main main = (Main) factory.getBean("weatherMonitor");
         main.monitorWeather();
-      } catch (BeansException e) {
+      } catch (Exception e) {
         LOGGER.error(e);
       }
     }
   }
 
-  public void monitorWeather() {
-        try {
-            getStation().test();
-        } catch (IOException ex) {
-            LOGGER.error(ex);
-        }
+  public void monitorWeather() throws Exception {
+    try {
+        getStation().test();
+    } catch (IOException ex) {
+        LOGGER.error(ex);
+    }
     while (true) {
       try {
         for (int i = 0; i < 15; i++) {
@@ -73,6 +73,7 @@ public class Main {
           LOGGER.warn("station test:" + (ok ? "ok" : "not ok"));
         } catch (Exception e1) {
           LOGGER.error(e1);
+          throw e1;
         }
       }
     }
