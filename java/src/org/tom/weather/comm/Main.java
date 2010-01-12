@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -38,6 +39,11 @@ public class Main {
         main.monitorWeather();
       } catch (Exception e) {
         LOGGER.error(e);
+          try {
+            Thread.sleep(5000);
+          } catch (InterruptedException ex) {
+            LOGGER.error(ex);
+          }
       }
     }
   }
