@@ -199,7 +199,7 @@ public class LoopPacket implements SnapShot {
       " : " + getPressure() + " : " + getBarStatus() +
       (isRaining() ? " : " + "raining at " + getRainRate() : "");
     } else {
-      return "invalid";
+      return toString();
     }
   }
 
