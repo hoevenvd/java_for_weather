@@ -1,9 +1,9 @@
 class ArchiveRecord < ActiveRecord::Base
   validates_presence_of   :date
   validates_presence_of   :location
-  validates_inclusion_of  :prevailing_wind_direction, :in => 0..359, 
+  validates_inclusion_of  :prevailing_wind_direction, :in => 0..360,
                           :allow_nil => true, :message => "invalid"
-  validates_inclusion_of  :direction_of_high_wind_speed, :in => 0..359, 
+  validates_inclusion_of  :direction_of_high_wind_speed, :in => 0..360,
                           :allow_nil => true, :message => "invalid"
   validates_inclusion_of  :outside_humidity, :in => 1..100, 
                           :allow_nil => true, :message => "invalid"
