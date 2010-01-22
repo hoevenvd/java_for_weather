@@ -91,7 +91,8 @@ class CurrentCondition < ActiveRecord::Base
          (pressure < 27 || pressure > 32)
     if (windspeed != nil && windspeed > 0)
       if (wind_direction != nil) && (wind_direction < 0 || wind_direction > 360)
-        errors.add(:wind_direction, "invalid: #{wind_direction}")
+        self.windspeed = 0
+        self.wind_direction = 0
       end
     end
   end
