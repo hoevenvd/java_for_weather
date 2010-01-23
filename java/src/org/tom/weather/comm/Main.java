@@ -59,7 +59,7 @@ public class Main {
         for (int i = 0; i < 15; i++) {
           LoopPacket loop = getStation().readLoopData();
           if (!loop.isValid()) {
-            DATA_PROBLEMS_LOGGER.info(loop.toString());
+            DATA_PROBLEMS_LOGGER.warn(loop.toString());
           }
           if (loop != null && loop.isValid()) {
             if (LOGGER.isDebugEnabled()) {
