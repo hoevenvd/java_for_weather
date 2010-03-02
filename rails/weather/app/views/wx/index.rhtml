@@ -37,8 +37,14 @@
 <%= render(:partial => "current_conditions", :layout => false  ) %>
 </table>
 </div>
+<tr align="center">
 <%= periodically_call_remote(:update => 'current_conditions',
 				 :url => { :action => :current_conditions }, :frequency => 5, :complete => visual_effect(:highlight, 'current_conditions', :startcolor => "#003333"))  %>
+</td>
+</tr>
+<table align="center">
+<td>
+<%= render(:partial => "climate_info", :layout => false  ) %>
 </td>
 </table>
 <% end %>
@@ -53,11 +59,6 @@
 				 :url => { :action => :period },
 				 :frequency => 60 ) %>
 
-</td>
-</tr>
-<tr align="center">
-<td>
-<%= render(:partial => "climate_info", :layout => false  ) %>
 </td>
 </tr>
 </table>
