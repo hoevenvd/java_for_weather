@@ -42,6 +42,9 @@
 				 :url => { :action => :current_conditions }, :frequency => 5, :complete => visual_effect(:highlight, 'current_conditions', :startcolor => "#003333"))  %>
 </td>
 </tr>
+<tr align="center">
+<%= render(:partial => "climate_info", :layout => false  ) %>
+</tr>
 <% end %>
 
 <table>
@@ -57,15 +60,12 @@
 </td>
 </tr>
 </table>
-<table align="center">
-<td>
-<%= render(:partial => "climate_info", :layout => false  ) %>
-</td>
-</table>
 <p>
 <% cache(:action => "index", :action_suffix => "radarwebcam") do %>
   <%= render(:partial => "radarwebcam", :layout => false  ) %>
 <% end %>
+
+<%= render(:partial => "sunrise", :layout => false  ) %>
 
 <% cache(:action => "index", :action_suffix => "graphs") do %>
   <%= render(:partial => "graphs", :layout => false  ) %>
