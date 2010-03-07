@@ -1,22 +1,42 @@
-<table>
+<script type="text/javascript">
+<!--
+Count = 0;
+function ImageRefresh() {
+	document.CameraImage.src = "http://home.tom.org:60002/SnapshotJPEG?Resolution=320x240&Quality=Standard&Count=" + Count;
+	Count++;
+}
+// -->
+</script>
+
+<!--
+	Refresh interval is determined by timeout.
+	onload="setTimeout('ImageRefresh()', timeout)"
+	timeout unit is milli seconds,so that 5 images / seconds, set to 200(= 1000 / 5).
+
+	(Cautioin)
+	Refresh Interval is depends on performance of PC, network band-width and traffic,
+	performance of camera, so the specified performance might not go out.
+-->
+
+<table border="1">
+<TR>
+<TD COLSPAN="2"><center>View to the South - updated every <b>two seconds</b></center></TD>
+</TR>
+<TR>
+<TD COLSPAN="2"><center><b>New: See the <a href="http://webcam.tom.org" target="_blank">live motion webcam</a></b></center></TD>
+</TR>
+<TD COLSPAN="2" align="center">
+<img src="http://home.tom.org:60002/SnapshotJPEG?Resolution=320x240&Quality=Standard&Count=0" name="CameraImage" border="0" hspace="0" vspace="0" width="320" height="240" onload="setTimeout('ImageRefresh()', 2000)" onerror="setTimeout('ImageRefresh()', 60000)" onabort="setTimeout('ImageRefresh()', 60000)" alt="" >
+</TD>
+</TR>
+<TR>
 
 <TR>
 <TD COLSPAN="2" >
 <img src="http://www.srh.weather.gov/ridge/lite/N0R/BOX_loop.gif"   width="480" height="480" alt="">
 </TD>
 </TR>
-
-<TR>
-<TD COLSPAN="2"><center>View to the South - updated every <b>minute</b></center></TD>
-</TR>
-<TR>
-<TD COLSPAN="2"><center><a href="http://webcam.tom.org" target="_blank">See the live motion webcam</a></b></center></TD>
-</TR>
-<TR>
-<TD COLSPAN="2" >
-<img src="http://tommitchell.net/~tomorg/images/weather/south-webcam.jpg"   width="480" height="360" alt="Current Webcam">
-</TD>
-</TR>
+<p>
 
 </table>
 
