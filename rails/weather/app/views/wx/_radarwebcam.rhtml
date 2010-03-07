@@ -2,7 +2,7 @@
 <!--
 Count = 0;
 function ImageRefresh() {
-	document.CameraImage.src = "http://home.tom.org:60002/SnapshotJPEG?Resolution=320x240&Quality=Standard&Count=" + Count;
+	document.CameraImage.src = "http://home.tom.org:60002/SnapshotJPEG?Resolution=640x480&Quality=Standard&Count=" + Count;
 	Count++;
 }
 // -->
@@ -23,16 +23,16 @@ function ImageRefresh() {
 <TD COLSPAN="2"><center>View to the South - updated every <b>two seconds</b></center></TD>
 </TR>
 <TR>
-<TD COLSPAN="2"><center><b>New: See the <a href="http://webcam.tom.org" target="_blank">live motion webcam</a></b></center></TD>
+<TD COLSPAN="2"><center><b>New: </b>See the <a href="http://webcam.tom.org" target="_blank">live motion webcam</a></b></center></TD>
 </TR>
 <TD COLSPAN="2" align="center">
-<img src="http://home.tom.org:60002/SnapshotJPEG?Resolution=320x240&Quality=Standard&Count=0" name="CameraImage" border="0" hspace="0" vspace="0" width="320" height="240" onload="setTimeout('ImageRefresh()', 2000)" onerror="setTimeout('ImageRefresh()', 60000)" onabort="setTimeout('ImageRefresh()', 60000)" alt="" >
+<img src="http://home.tom.org:60002/SnapshotJPEG?Resolution=640x480&Quality=Standard&Count=0" name="CameraImage" border="0" hspace="0" vspace="0" width="640" height="480" onload="setTimeout('ImageRefresh()', 2000)" onerror="setTimeout('ImageRefresh()', 60000)" onabort="setTimeout('ImageRefresh()', 60000)" alt="" >
 </TD>
 </TR>
 <TR>
 
 <TR>
-<TD COLSPAN="2" >
+<TD COLSPAN="2" align="center">
 <img src="http://www.srh.weather.gov/ridge/lite/N0R/BOX_loop.gif"   width="480" height="480" alt="">
 </TD>
 </TR>
