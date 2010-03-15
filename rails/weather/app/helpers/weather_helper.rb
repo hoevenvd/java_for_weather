@@ -64,7 +64,7 @@ module WeatherHelper
         :humidity => sample.outside_humidity,
         :tempf => sample.outside_temperature,
         :rainin => sample.hourly_rain,
-#       :dailyrainin => sample.daily_rain,
+        :dailyrainin => sample.daily_rain,
         :baromin => sample.pressure,
         :dewptf => sample.dewpoint,
         :solarradiation => sample.solar_radiation,
@@ -79,7 +79,7 @@ module WeatherHelper
     post_url += "&humidity=" + CGI::escape(new_sample[:humidity].to_s)
     post_url += "&tempf=" + CGI::escape(new_sample[:tempf].to_s)
     post_url += "&rainin=" + CGI::escape(new_sample[:rainin].to_s)
-#   post_url += "&dailyrainin=" + CGI::escape(new_sample[:dailyrainin].to_s)
+    post_url += "&dailyrainin=" + CGI::escape(new_sample[:dailyrainin].to_s)
     post_url += "&baromin=" + CGI::escape(new_sample[:baromin].to_s)
     post_url += "&dewptf=" + CGI::escape(new_sample[:dewptf].to_s)
     post_url += "&solarradiation=" + CGI::escape(new_sample[:solarradiation].to_s) unless new_sample[:solarradiation] == 32767
