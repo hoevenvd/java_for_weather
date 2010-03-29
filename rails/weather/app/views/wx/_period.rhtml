@@ -59,6 +59,29 @@
 
 </TD>
 </TR>
+<TR>
+<TD COLSPAN="4" align="center" >
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Precipitation</FONT></FONT></B></CENTER>
+<% if !@today.rain.nil? %>
+<CENTER>Today: <%= sprintf("%.02f", @today.rain) %> inches</CENTER>
+<% end %>
+<% if @yesterday != nil %>
+<% if !@yesterday.rain.nil? %>
+<CENTER>Yesterday: <%= sprintf("%.02f", @yesterday.rain) %> inches</CENTER>
+<% end %>
+<% end %>
+<% if !@this_week.rain.nil? %>
+<CENTER>This week: <%= sprintf("%.02f", @this_week.rain) %> inches</CENTER>
+<% end %>
+<% if @last_week != nil %>
+<% if !@last_week.rain.nil? %>
+<CENTER>Last week: <%= sprintf("%.02f", @last_week.rain) %> inches </CENTER>
+<% end %>
+<% end %>
+
+</TD>
+</TR>
+
 <tr>
 <TD  align="center" >
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Wind</FONT></FONT></B></CENTER>
@@ -84,29 +107,6 @@
 
 </TD>
 </tr>
-<TR>
-<TD COLSPAN="4" align="center" >
-<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Precipitation</FONT></FONT></B></CENTER>
-<% if !@today.rain.nil? %>
-<CENTER>Today: <%= sprintf("%.02f", @today.rain) %> inches</CENTER>
-<% end %>
-<% if @yesterday != nil %>
-<% if !@yesterday.rain.nil? %>
-<CENTER>Yesterday: <%= sprintf("%.02f", @yesterday.rain) %> inches</CENTER>
-<% end %>
-<% end %>
-<% if !@this_week.rain.nil? %>
-<CENTER>This week: <%= sprintf("%.02f", @this_week.rain) %> inches</CENTER>
-<% end %>
-<% if @last_week != nil %>
-<% if !@last_week.rain.nil? %>
-<CENTER>Last week: <%= sprintf("%.02f", @last_week.rain) %> inches </CENTER>
-<% end %>
-<% end %>
-
-</TD>
-</TR>
-
 <TR>
 <TD COLSPAN="4" align="center" >
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Barometer</FONT></FONT></B></CENTER>
