@@ -1,8 +1,15 @@
 class CurrentCondition < ActiveRecord::Base
   validates_uniqueness_of :location
   validates_presence_of   :location
-  validates_inclusion_of  :outside_humidity, :in => 1..100, 
-                          :allow_nil => true, :message => "invalid"
+  validates_length_of     :location, :maximum => 30
+  validates_inclusion_of  :outside_humidity, :in => 0..100,
+                          :allow_nil => true, :message => "invalid outside humidity"
+  validates_inclusion_of  :inside_humidity, :in => 0..100,
+                          :allow_nil => true, :message => "invalid inside humidity"
+  validates_inclusion_of  :pressure, :in => 25..35,
+                          :allow_nil => true, :message => "invalid pressure"
+  validates_inclusion_of  :wind_direction, :in => 0..360,
+                          :allow_nil => true, :message => "invalid wind direction"
 
   def wind_str
     return "calm" if (self[:windspeed].eql?(0))
@@ -66,34 +73,45 @@ class CurrentCondition < ActiveRecord::Base
     @trend_record
   end
 
-  def before_save    
-    if  !(outside_temperature.nil? || outside_humidity.nil?)
-      self.dewpoint = Round.round_f(WxHelper.dewpoint(outside_temperature, 
-                                outside_humidity), 1)
+  def before_save
+    # calculate metric and english dewpoints
+    if  !outside_temperature.nil? and !outside_humidity.nil?
+      dp = Round.round_f(WxHelper.dewpoint(outside_temperature,
+        outside_humidity), 1)
+      self.dewpoint = dp
+      self.dewpoint_m = Round.round_f(WxHelper.to_c(dp), 1)
+    else
+      self.dewpoint = self.dewpoint_m = nil
     end
                                   
-    if  !(outside_temperature.nil? || outside_humidity.nil? || windspeed.nil?)
-      self.apparent_temp = Round.round_f(WxHelper.apparent_temp(outside_temperature, 
+    if  !outside_temperature.nil? and !outside_humidity.nil? and !windspeed.nil?
+      at = Round.round_f(WxHelper.apparent_temp(outside_temperature,
                                 outside_humidity, windspeed), 1)
+      self.apparent_temp = at
+      self.apparent_temp_m = Round.round_f(WxHelper.to_c(at), 1)
+    else
+      self.apparent_temp = self.apparent_temp_m = nil
     end
 
-    if (!rain_rate.nil? && rain_rate > 0.0)
+    if rain_rate.nil?
+      self.is_raining = nil
+    elsif rain_rate > 0.0
       self.is_raining = true
     else
       self.is_raining = false
     end
-    return true
 
-  end
-                            
-  def validate
-    errors.add(:pressure, "invalid") if !pressure.nil? && 
-         (pressure < 27 || pressure > 32)
-    if (windspeed != nil && windspeed > 0)
-      if (wind_direction != nil) && (wind_direction < 0 || wind_direction > 360)
-        self.windspeed = 0
-        self.wind_direction = 0
-      end
-    end
+    self.windspeed_m = Round.round_f(WxHelper.mph_to_mps(self.windspeed), 1) unless self.windspeed.nil?
+    self.ten_min_avg_wind_m = Round.round_f(WxHelper.mph_to_mps(self.ten_min_avg_wind),1) unless self.ten_min_avg_wind.nil?
+    self.rain_rate_m = Round.round_f(WxHelper.inches_to_mm(self.rain_rate), 2) unless self.rain_rate.nil?
+    self.daily_rain_m = Round.round_f(WxHelper.inches_to_mm(self.daily_rain), 2) unless self.daily_rain.nil?
+    self.monthly_rain_m = Round.round_f(WxHelper.inches_to_mm(self.monthly_rain), 2) unless self.monthly_rain.nil?
+    self.yearly_rain_m = Round.round_f(WxHelper.inches_to_mm(self.yearly_rain), 2) unless self.yearly_rain.nil?
+    self.storm_rain_m = Round.round_f(WxHelper.inches_to_mm(self.storm_rain), 2) unless self.storm_rain.nil?
+    self.pressure_m = Round.round_f(WxHelper.inches_of_hg_to_mb(self.pressure), 1) unless self.pressure.nil?
+    self.outside_temperature_m = Round.round_f(WxHelper.to_c(self.outside_temperature), 1) unless self.outside_temperature.nil?
+    self.inside_temperature_m = Round.round_f(WxHelper.to_c(self.inside_temperature), 1) unless self.inside_temperature.nil?
+    
+    return true
   end
 end
