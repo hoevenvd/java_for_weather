@@ -28,11 +28,16 @@ class WeatherApi < ActionWebService::API::Base
                           {:location=>:string},
                           {:period=>:string}],
              :returns => [PeriodStruct]
-             
+
   api_method :get_rise_set,
-             :expects => [{:password=>:string},
-                          {:date=>:time},
-                          {:latitude=>:float},
-                          {:longitude=>:float}],
-             :returns => [AstroStruct]
+             :expects => [{:password => :string},
+                          {:date => :time},
+                          {:location => :string}],
+             :returns => [Riseset]
+
+  api_method :get_climate,
+             :expects => [{:password => :string},
+                          {:date => :time},
+                          {:location => :string}],
+             :returns => [Climate]
 end

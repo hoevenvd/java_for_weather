@@ -1,6 +1,7 @@
 require 'parsedate'
 
 module WxHelper
+
   def self.apparent_temp (temp, rh, wind)
     if (temp == nil)
       raise("temperature can not be nil")
@@ -67,13 +68,40 @@ module WxHelper
     dew = (237.37 * lam) / (17.27 - lam)
     dew = self.to_f(dew)
   end
-  
-  def self.to_f(c)
-    ((9.0/5.0) * c) + 32 
+
+  #1 mph = 0.45 m/s
+  #5 mph = 2,24 m/s
+  #8 mph = 3,58 m/s  # 5 m/s = 11.18468146 mph
+  # 2.23214286
+  def self.mph_to_mps(mph)
+    return mph / 2.2369362920544
   end
-  
+
+  def self.mps_to_mph
+    return mps * 2.2369362920544
+  end
+
+  def self.to_f(c)
+    ((9.0/5.0) * c) + 32
+  end
+
   def self.to_c(f)
     (5.0 / 9.0) * (f - 32)
   end
-  
+
+  # 1 inch of mercury = 25.4 mm of mercury = 33.86 millibars
+  # = 33.86 hectoPascals
+  # To convert inches of mercury to millibars, multiply the inches value by 33.8637526
+  # To convert millibars to inches of mercury, multiply the millibar value by 0.0295301.
+  #  29.79 in / 1008.7 hPa
+  def self.inches_of_hg_to_mb(inches)
+    inches * 33.8637526
+  end
+
+  # rain conversion
+  # 1 inches = 25.4 millimeters
+  def self.inches_to_mm(inches)
+    inches * 25.4
+  end
+
 end
