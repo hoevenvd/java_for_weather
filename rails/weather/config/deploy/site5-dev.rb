@@ -16,7 +16,7 @@ set :use_sudo, false
 # writable.  This stops that.
 set :group_writable, false
 
-set :repository,  "svn+ssh://tomorg@tommitchell.net/home/tomorg/svn/weather/branches/try-wm2-support/rails/#{application}"
+set :repository,  "svn+ssh://tomorg@tommitchell.net/home/tomorg/svn/weather/trunk/rails/#{application}"
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location

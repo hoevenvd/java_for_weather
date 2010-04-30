@@ -144,7 +144,7 @@ class WeatherController < ApplicationController
     rec[:outside_temp] = entry[:outside_temp] == -9999.0 ? nil : entry[:outside_temp]
     rec[:high_outside_temp] = entry[:high_outside_temp] == -9999.0 ? nil : entry[:high_outside_temp]
     rec[:low_outside_temp] = entry[:low_outside_temp] == -9999.0 ? nil : entry[:low_outside_temp]
-    rec[:pressure] = entry[:pressure]
+    rec[:pressure] = entry[:pressure] == -9999.0 ? nil : entry[:pressure]
     rec[:outside_humidity] = entry[:outside_humidity] == -9999 ? nil : entry[:outside_humidity]
     rec[:rainfall] = entry[:rainfall] == -9999.0 ? nil : entry[:rainfall]
     rec[:high_rain_rate] = entry[:high_rain_rate] == -9999.0 ? nil : entry[:high_rain_rate]
