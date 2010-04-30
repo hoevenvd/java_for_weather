@@ -1,6 +1,6 @@
 require 'pp'
 require "rubygems"
-require "activerecord"
+require "active_record"
 	
 class Period
   
