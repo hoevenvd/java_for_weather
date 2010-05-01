@@ -95,6 +95,7 @@ class WeatherControllerApiTest < ActiveSupport::TestCase
     a.outside_temp = -9999.0
     res = write_and_read_archive_record(a)
     assert res[:outside_temp].nil?
+    assert res[:outside_temp_m].nil?
   end
 
   def test_archive_high_outside_temp
@@ -102,6 +103,7 @@ class WeatherControllerApiTest < ActiveSupport::TestCase
     a.high_outside_temp = -9999.0
     res = write_and_read_archive_record(a)
     assert res[:high_outside_temp].nil?
+    assert res[:high_outside_temp_m].nil?
   end
 
   def test_archive_low_outside_temp
@@ -109,6 +111,7 @@ class WeatherControllerApiTest < ActiveSupport::TestCase
     a.low_outside_temp = -9999.0
     res = write_and_read_archive_record(a)
     assert res[:low_outside_temp].nil?
+    assert res[:low_outside_temp_m].nil?
   end
 
   def test_archive_outside_humidity
@@ -123,6 +126,7 @@ class WeatherControllerApiTest < ActiveSupport::TestCase
     a.rainfall = -9999.0
     res = write_and_read_archive_record(a)
     assert res[:rainfall].nil?
+    assert res[:rainfall_m].nil?
   end
 
   def test_archive_high_rain_rate
@@ -130,6 +134,7 @@ class WeatherControllerApiTest < ActiveSupport::TestCase
     a.high_rain_rate = -9999.0
     res = write_and_read_archive_record(a)
     assert res[:high_rain_rate].nil?
+    assert res[:high_rain_rate_m].nil?
   end
 
   def test_archive_average_wind_speed
@@ -137,6 +142,7 @@ class WeatherControllerApiTest < ActiveSupport::TestCase
     a.average_wind_speed = -9999
     res = write_and_read_archive_record(a)
     assert res[:average_wind_speed].nil?
+    assert res[:average_wind_speed_m].nil?
     assert res[:prevailing_wind_direction].nil?
   end
 
@@ -146,6 +152,7 @@ class WeatherControllerApiTest < ActiveSupport::TestCase
     res = write_and_read_archive_record(a)
     assert res[:prevailing_wind_direction].nil?
     assert res[:average_wind_speed].nil?
+    assert res[:average_wind_speed_m].nil?
   end
 
   def test_archive_high_wind_speed
@@ -153,6 +160,7 @@ class WeatherControllerApiTest < ActiveSupport::TestCase
     a.high_wind_speed = -9999
     res = write_and_read_archive_record(a)
     assert res[:high_wind_speed].nil?
+    assert res[:high_wind_speed_m].nil?
     assert res[:direction_of_high_wind].nil?
   end
 
@@ -162,6 +170,7 @@ class WeatherControllerApiTest < ActiveSupport::TestCase
     res = write_and_read_archive_record(a)
     assert res[:direction_of_high_wind_speed].nil?
     assert res[:high_wind_speed].nil?
+    assert res[:high_wind_speed_m].nil?
   end
 
   def test_archive_number_of_wind_samples
@@ -176,6 +185,15 @@ class WeatherControllerApiTest < ActiveSupport::TestCase
     a.inside_temp = -9999.0
     res = write_and_read_archive_record(a)
     assert res[:inside_temp].nil?
+    assert res[:inside_temp_m].nil?
+  end
+
+  def test_archive_pressure
+    a = create_complete_archive_struct
+    a.pressure = -9999.0
+    res = write_and_read_archive_record(a)
+    assert res[:pressure].nil?
+    assert res[:pressure_m].nil?
   end
 
   def test_archive_inside_humidity
