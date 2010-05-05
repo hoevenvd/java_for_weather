@@ -12,6 +12,7 @@ class CurrentCondition < ActiveRecord::Base
                           :allow_nil => true, :message => "invalid wind direction"
 
   def wind_str
+    return "unavailable" if self[:windspeed].nil?
     return "calm" if (self[:windspeed].eql?(0))
     return Direction.to_s(self[:wind_direction]) + " at " + windspeed.to_s + " mph"
   end
