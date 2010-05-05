@@ -2,9 +2,9 @@ class CurrentCondition < ActiveRecord::Base
   validates_uniqueness_of :location
   validates_presence_of   :location
   validates_length_of     :location, :maximum => 30
-  validates_inclusion_of  :outside_humidity, :in => 0..100,
+  validates_inclusion_of  :outside_humidity, :in => 1..100,
                           :allow_nil => true, :message => "invalid outside humidity"
-  validates_inclusion_of  :inside_humidity, :in => 0..100,
+  validates_inclusion_of  :inside_humidity, :in => 1..100,
                           :allow_nil => true, :message => "invalid inside humidity"
   validates_inclusion_of  :pressure, :in => 25..35,
                           :allow_nil => true, :message => "invalid pressure"

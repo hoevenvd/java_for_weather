@@ -11,6 +11,8 @@ class CurrentConditionTest < ActiveSupport::TestCase #Test::Unit::TestCase
     cond.outside_humidity = 99
     assert cond.save
     cond.outside_humidity = 0
+    assert !cond.save
+    cond.outside_humidity = 1
     assert cond.save
     cond.outside_humidity = -1
     assert !cond.save
@@ -27,7 +29,7 @@ class CurrentConditionTest < ActiveSupport::TestCase #Test::Unit::TestCase
     cond.inside_humidity = 99
     assert cond.save
     cond.inside_humidity = 0
-    assert cond.save
+    assert !cond.save
     cond.inside_humidity = -1
     assert !cond.save
     assert_equal "invalid inside humidity", cond.errors.on(:inside_humidity)
