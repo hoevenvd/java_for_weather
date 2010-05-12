@@ -85,7 +85,7 @@ class CurrentCondition < ActiveRecord::Base
       self.dewpoint = self.dewpoint_m = nil
     end
                                   
-    if  !outside_temperature.nil? and !outside_humidity.nil? and !windspeed.nil?
+    if  !outside_temperature.nil? and !outside_humidity.nil?
       at = Round.round_f(WxHelper.apparent_temp(outside_temperature,
                                 outside_humidity, windspeed), 1)
       self.apparent_temp = at
