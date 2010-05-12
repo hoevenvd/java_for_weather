@@ -30,7 +30,7 @@ class ArchiveRecord < ActiveRecord::Base
       self.average_dewpoint = self.average_dewpoint_m = nil
     end
                                   
-    if  !(outside_temp.nil? || outside_humidity.nil? || average_wind_speed.nil?)
+    if  !(outside_temp.nil? || outside_humidity.nil?)
       self.average_apparent_temp = Round.round_f(WxHelper.apparent_temp(outside_temp, 
                                 outside_humidity, average_wind_speed), 1)
       self.average_apparent_temp_m = Round.round_f(WxHelper.to_c(self.average_apparent_temp), 1)
