@@ -186,7 +186,7 @@ class CurrentConditionTest < ActiveSupport::TestCase #Test::Unit::TestCase
     assert c.reload
     assert !c.nil?
     assert_in_delta c[:apparent_temp], 27.0, 0.5
-    assert_in_delta c[:apparent_temp_m], WxHelper.to_c(27), 0.5
+    assert_in_delta c[:apparent_temp_m], c.to_c(27), 0.5
   end
 
   # 29.82 = 1009.8
