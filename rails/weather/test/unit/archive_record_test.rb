@@ -164,7 +164,7 @@ class ArchiveRecordTest < ActiveSupport::TestCase #Test::Unit::TestCase
     a.save
     a.reload
     assert_in_delta a[:average_apparent_temp], 27.0, 0.5
-    assert_in_delta a[:average_apparent_temp_m], WxHelper.to_c(27), 0.5
+    assert_in_delta a[:average_apparent_temp_m], a.to_c(27), 0.5
   end
 
   def test_average_wind_speed_m

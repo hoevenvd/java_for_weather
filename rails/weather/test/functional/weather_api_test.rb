@@ -433,8 +433,6 @@ class WeatherControllerApiTest < ActiveSupport::TestCase
     a.windspeed = -9999
     invoke :put_current_conditions, AppConfig.service_password, "basic", a
     a = invoke :get_current_conditions, "basic"
-    assert_nil a[:apparent_temp]
-    assert_nil a[:apparent_temp_m]
   end
 
   def test_sample_nil_is_raining
