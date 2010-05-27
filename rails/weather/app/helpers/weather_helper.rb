@@ -7,17 +7,19 @@ require 'socket'
 URL = "rtupdate.wunderground.com"
 
 module WeatherHelper
+  include WxUtils
 
   def self.post_to_cwop(location)
      c = CurrentCondition.find_by_location(location)
+     return if c.nil?
      req = AppConfig.cwop_id
      req += ">APRS,TCPXX*:"
      req += c.sample_date.utc.strftime("@%d%H%Mz")
      req += AppConfig.cwop_lat_long
-     req += sprintf("_%03d", c[:wind_direction])
-     req += sprintf("/%03d", c[:windspeed])
-     req += sprintf("g%03d", c[:gust])
-     req += sprintf("t%03d", c[:outside_temperature].to_i)
+     req += sprintf("_%03d", c[:wind_direction]) unless c[:wind_direction].nil?
+     req += sprintf("/%03d", c[:windspeed]) unless c[:windspeed].nil?
+     req += sprintf("g%03d", c[:gust]) unless c[:gust].nil?
+     req += sprintf("t%03d", c[:outside_temperature].to_i) unless c[:outside_temperature].nil?
 
      if !c.solar_radiation.nil?
        # Luminescence (Solar Radiation). 
@@ -33,11 +35,11 @@ module WeatherHelper
        req += rads
      end
      req += sprintf("")
-     req += sprintf("r%03d", c.hourly_rain * 100)
-     req += sprintf("p%03d", c.twentyfour_hour_rain * 100)
-     req += sprintf("P%03d", c.daily_rain * 100)
-     req += sprintf("h%02d", c.outside_humidity)
-     req += sprintf("b%05d", c.pressure * 33.864 * 10)
+     req += sprintf("r%03d", c[:hourly_rain] * 100) unless c[:hourly_rain].nil?
+     req += sprintf("p%03d", c[:twentyfour_hour_rain] * 100) unless c[:twentyfour_hour_rain].nil?
+     req += sprintf("P%03d", c[:daily_rain] * 100) unless c[:daily_rain].nil?
+     req += sprintf("h%02d", c[:outside_humidity]) unless c[:outside_humidity].nil?
+     req += sprintf("b%05d", c[:pressure] * 10 * 33.8637526) unless c[:pressure].nil?
      req += "eTomOrgDavisVP2"
      init_str = "user #{AppConfig.cwop_id} pass -1 vers linux-1wire 1.00"
      # rotate.aprs.net:14580
