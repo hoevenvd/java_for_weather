@@ -36,12 +36,8 @@ import uk.me.jstott.jweatherstation.util.UnsignedByte;
  * @version 1.1
  * @since 1.0
  */
-public class Station {
-  static protected final int RECORD_SIZE = 52;
+public abstract class Station {
   static protected final Logger LOGGER = Logger.getLogger(Station.class);
-  static protected final int BUFFER_SIZE = 266;
-  static protected final int LOOP_SIZE = 99;
-//  protected ArrayList dmpRecords = new ArrayList();
   private static final int ACK = 6;
   static protected final byte LF = '\n';
   static protected final byte CR = '\r';
@@ -56,9 +52,12 @@ public class Station {
   protected CRC crc = new CRC();
   protected InetAddress ip;
   protected boolean usingSerial;
+  protected List posterList;
+  protected String location;
   
-  public Station(String portName, int baudRate) throws PortInUseException,
+  public Station(String portName, int baudRate, int rainGauge) throws PortInUseException,
       NoSuchPortException, IOException {
+      LOGGER.debug("rainGauge: " + rainGauge);
       // parse the portname as an IP addr
       // if it is a vaid one, then treat baudRateOrPort as a port number
     try {
@@ -257,7 +256,17 @@ public class Station {
   }
 
   protected void readBytes(byte[] buffer) throws IOException {
-    int bytes = getInputStream().available();
+    int bytes = 0;
+    int error_count = 0;
+    while (((bytes = getInputStream().available()) != buffer.length) && (error_count++ < 20)) {
+        //LOGGER.debug("waiting for bytes available");
+        delay(100);
+    }
+    if (error_count >= 20) {
+      IOException e = new IOException("20 errors in determining bytes avaiable from stream");
+      LOGGER.error(e);
+    }
+    //LOGGER.debug(bytes + " available)");
     if (bytes == buffer.length) {
       bytes = getInputStream().read(buffer);
     } else {
@@ -277,4 +286,23 @@ public class Station {
     }
     return b;
   }
+
+  public void setPosterList(List posterList) {
+    this.posterList = posterList;
+  }
+
+  public List getPosterList() {
+    return posterList;
+  }
+
+  public abstract String getLocation();
+
+  public abstract void setLocation(String location);
+
+  public abstract boolean test() throws IOException;
+
+  public abstract void readArchiveMemory() throws Exception;
+
+  public abstract void readCurrentConditions() throws Exception;
+
 }

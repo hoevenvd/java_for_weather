@@ -24,16 +24,19 @@ public class SnapShot implements org.tom.weather.SnapShot {
   static float outsideTempCAL = 0;
   static float insideTempCAL = 0;
   static float outsideHumidityCAL = 0;
-  static float pressureCAL = 0;
   private java.util.Date date;
   private boolean valid;
+  static double convertRain = 0;
 
   public float getPressure() {
     return pressure;
   }
 
   public float getOutsideHumidity() {
-    return outsideHumidity;
+	  if (outsideHumidity > 100) // reported as missing
+	  return -9999;
+	  else
+	return outsideHumidity;
   }
 
   public String getBarStatus() {
@@ -41,14 +44,23 @@ public class SnapShot implements org.tom.weather.SnapShot {
   }
 
   public float getDewpoint() {
+	  if (getWindDirection().getDegrees() == -32768)
+		  return -9999; // no windsensor, so dew cannot be calculated
+	  else
     return dewpoint;
   }
 
   public float getOutsideTemp() {
+	  if (outsideTemp > 1000)
+		  return -9999;
+	  else
     return outsideTemp;
   }
 
   public int getWindspeed() {
+	  if (getWindDirection().getDegrees() == -9999)
+		  return -9999; // no windsensor, so windspeed cannot be calculated
+	  else
     return windSpeed;
   }
 
@@ -100,7 +112,7 @@ public class SnapShot implements org.tom.weather.SnapShot {
       adder = loopData[8];
     }
     addee += adder;
-    pressure = (float) addee / 1000.0f - pressureCAL;
+    pressure = (float) addee / 1000.0f;
     try {
       pressure = (float) Rounding.round(pressure, 3);
     } catch (NumberFormatException e) {
@@ -130,7 +142,7 @@ public class SnapShot implements org.tom.weather.SnapShot {
       adder = loopData[12];
     }
     addee += adder;
-    totalRain = (float) addee / 100.0f;
+    totalRain = ((float) addee / 100.0f)*(float)0.7874015748031496;
     setBarFlag(barFlag);
     setValid(true);
     try {
@@ -152,7 +164,7 @@ public class SnapShot implements org.tom.weather.SnapShot {
     // line that must be ignored
     // This fix is for the snapshot. The fix when inserting the archive
     // into the database is in ArchiveEnrtyImpl
-    if (getOutsideHumidity() > 100
+/*    if (getOutsideHumidity() > 100
         && getOutsideHumidity() <= 110) {
       setValid(false);
     }
@@ -160,7 +172,7 @@ public class SnapShot implements org.tom.weather.SnapShot {
         || getOutsideHumidity() > 110) {
       setValid(false);
     }
-    if (getPressure() < 27.0 || getPressure() > 33.0) {
+*/    if (getPressure() < 27.0 || getPressure() > 33.0) {
       setValid(false);
     }
 
@@ -170,12 +182,12 @@ public class SnapShot implements org.tom.weather.SnapShot {
     return (int) (insideTempCAL);
   }
 
+  public static int getOutsideHumidityCAL() {
+	    return (int) (outsideHumidityCAL);
+	  }
+  
   public static int getOutsideTempCAL() {
     return (int) (outsideTempCAL);
-  }
-
-  public static int getPressureCAL() {
-    return (int) (pressureCAL * 1000);
   }
 
   public synchronized void setBarFlag(String s) {
@@ -198,49 +210,8 @@ public class SnapShot implements org.tom.weather.SnapShot {
     outsideTempCAL = f;
   }
 
-  public static synchronized void setPressureCAL(float f) {
-    pressureCAL = f;
-  }
-
   public byte[] getData() {
     return data;
-  }
-
-  public String toString() {
-    String message;
-    message = "\n" + date.toString() + "\n";
-    message = message + "Outside temp: "
-        + Converter.showMeasureValue(outsideTemp, 1)
-        + Converter.showMeasureLabel(1);
-    message = message + "\n";
-    message = message + "Inside temp: "
-        + Converter.showMeasureValue(insideTemp, 1)
-        + Converter.showMeasureLabel(1);
-    message = message + "\n";
-    message = message + "Outside Humidity: "
-        + Converter.showMeasureValue(outsideHumidity, 4)
-        + Converter.showMeasureLabel(4);
-    message = message + "\n";
-    message = message + "Inside Humidity: "
-        + Converter.showMeasureValue(insideHumidity, 4)
-        + Converter.showMeasureLabel(4);
-    message = message + "\n";
-    message = message + "Dewpoint: " + Converter.showMeasureValue(dewpoint, 1)
-        + Converter.showMeasureLabel(1);
-    message = message + "\n";
-    if (windSpeed == 0) {
-      message = message + "Wind: Calm";
-    } else {
-      message = message + "Wind from the " + windDirection.toShortString();
-      message = message + " at " + Converter.showMeasureValue(windSpeed, 3)
-          + Converter.showMeasureLabel(3);
-    }
-    message = message + "\n";
-    message = message + "Barometer: " + Converter.showMeasureValue(pressure, 2)
-        + Converter.showMeasureLabel(2);
-    message = message + " and " + barStatus;
-    message = message + "\n";
-    return message;
   }
 
   public java.util.Date getDate() {
@@ -248,25 +219,26 @@ public class SnapShot implements org.tom.weather.SnapShot {
   }
   
   public boolean isRaining() {
-	  throw new UnsupportedOperationException("not allowed to call isRaining() on a WMII version");
+	  return false; // value not provided by WM2
   }
 
   public double getRainRate() {
-	  throw new UnsupportedOperationException("not allowed to call getRainRate() on a WMII version");
+	  return -9999; // vaue not provided by WM2
   }
 
   public float getWindchill() {
+	  if (getWindDirection().getDegrees() == -9999)
+		  return -9999;
+	  else
     return Converter.getWindChill((int)getWindspeed(), getOutsideTemp());
   }
 
   public float getDayRain() {
-    // TODO Auto-generated method stub
-    return 0;
+	  return -9999; // value not provided by WM2 
   }
 
   public int getTenMinAvgWind() {
-    // TODO Auto-generated method stub
-    return 0;
+	  return -9999; // value not provided by WM2
   }
 
   public void setValid(boolean valid) {
@@ -278,38 +250,41 @@ public class SnapShot implements org.tom.weather.SnapShot {
   }
 
   public int getUV() {
-    return 0;
+    return -9999; // value not provided by WM2
   }
 
   public int getSolarRadiation() {
-    return 0;
+    return -9999; // value not provided by WM2
   }
 
     public int getInsideHumidity() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return (int)insideHumidity;
     }
 
     public float getInsideTemp() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return insideTemp;
     }
 
     public Date getSunrise() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getDate();
+        //throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public Date getSunset() {
-        throw new UnsupportedOperationException("Not supported yet.");
+	return getDate();
+        //throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public float getMonthRain() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+        return -9999; // value not provided by WM2
+     }
 
     public float getYearRain() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+        return -9999; // value not provided by WM2
+     }
 
     public double getStormRain() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return -9999; // value not provided by WM2
     }
+    
 }

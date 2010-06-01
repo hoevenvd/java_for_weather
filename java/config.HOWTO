@@ -1,0 +1,14 @@
+This document intends to explain the steps involved in setting up a new weather
+station polling environment.
+
+Section 1.  Hardware Requirements
+Section 2.  Software Requirements
+Section 3.  Connecting a Davis Console
+Section 4.  Configuring weather.xml
+Section 5.  Configuring jweatherstation.properties
+Section 6.  Configuring log4j.properties
+Section 7.  Configuring build.properties
+Section 8.  Compiling the Software
+Section 9.  Running the Software
+Section 10. Extending the Software
+Section 11. Contacting the Authors

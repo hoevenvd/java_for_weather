@@ -113,10 +113,10 @@ public class DmpRecord implements ArchiveEntry {
     windDirection = new Direction((int)(prevailingWindDirection * 22.5)); // values
     // are
     // 0-15
-    averageUVIndex = unsignedData[28].getByte();
+    averageUVIndex = unsignedData[28].getByte() == 255 ? -9999 : unsignedData[28].getByte();
     ET = unsignedData[29].getByte();
     highSolarRadiation = Process.bytesToInt(unsignedData[30], unsignedData[31]);
-    highUVIndex = unsignedData[32].getByte();
+    highUVIndex = unsignedData[32].getByte() == 255 ? -9999 : unsignedData[32].getByte();
     forecastRule = unsignedData[33].getByte();
     leafTemperature1 = unsignedData[34].getByte();
     leafTemperature2 = unsignedData[35].getByte();

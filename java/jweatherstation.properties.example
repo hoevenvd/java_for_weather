@@ -1,0 +1,29 @@
+# if the portname is a device, it will try to use serial. if
+# it is a hostname, it will try to use TCPIP
+
+#portName=10.0.0.10 # local address on waring school network
+#portName=fc.waringschool.org
+#portName=serial-dev
+#portName=home.tom.org
+#portName=192.168.1.60
+portName=weerinlelystad.dyndns.org
+baudRate=10001
+# raingauge: 0 = no gauge, 1 = 0.01 inch, 2 = 0.2 mm
+rainGauge=1
+
+# serial settings
+#portName=/dev/ttyS99
+#baudRate=19200
+
+graph.db.Driver=com.mysql.jdbc.Driver
+graph.db.Url=jdbc:mysql://v-servers/weather_production?autoReconnect=true
+graph.db.Username=weather
+graph.db.Password=secret
+
+graph.location=LELYSTAD
+graph.baseDir=/home/maarten/tmp/charts
+#graph.baseDir=c:/tmp/graphs
+
+ws.password=secret
+ws.location=LELYSTAD
+

@@ -14,14 +14,18 @@ public class Direction implements Serializable {
 
   public Direction(int whichWay) {
     if (whichWay == 22.5 * 255) { // if n/a, station sends 255
-      degrees = 0;
+      degrees = -9999;
     }
+    else
     degrees = whichWay;
   }
 
   public int getDegrees() {
-    if (degrees == -1) {
-      return 0;
+      if (degrees == -32768) {
+          return -9999;
+      }
+	  if (degrees == -1) {
+      return -9999;
     }
     return degrees;
   }

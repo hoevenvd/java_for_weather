@@ -1,4 +1,4 @@
-log4j.rootLogger=info,A3,A1
+log4j.rootLogger=debug,A3,A1
 log4j.logger.DATA_PROBLEMS_LOGGER=debug,A4
 
 log4j.logger.org.apache=warn
@@ -38,8 +38,8 @@ log4j.appender.A4.MaxBackupIndex=5
 #log4j.appender.DB=org.apache.log4j.jdbc.JDBCAppender
 #log4j.appender.DB.URL=jdbc:mysql://192.168.1.10/newWeather
 #log4j.appender.DB.driver=org.gjt.mm.mysql.Driver
-#log4j.appender.DB.user=wx
-#log4j.appender.DB.password=wx
+#log4j.appender.DB.user=myuser
+#log4j.appender.DB.password=secret
 #log4j.appender.DB.sql=INSERT INTO log (Date, Logger, Priority, Message) VALUES ('%d', '%c', '%p', '%m')
 #log4j.appender.DB.layout=org.apache.log4j.PatternLayout
 #log4j.appender.DB.layout.ConversionPattern=%d %-4r [%t] %-5p %c (%L) %x - %m%n

@@ -13,7 +13,7 @@
 	<bean id="weatherMonitor"
 		class="org.tom.weather.comm.Main">
 		<property name="station">
-			<ref bean="wm2"/>
+			<ref bean="vp"/>
 		</property>
     <property name="checkArchive" value="true"/>
   </bean>
@@ -39,8 +39,8 @@
 		</property>
 	</bean>
 	
-	<bean id="wm2"
-		class="org.tom.weather.comm.WeatherMonitor2">
+	<bean id="vp"
+		class="org.tom.weather.comm.VantagePro">
 <!-- this is either a port or an IP address -
      try to parse it as an IP address first -->
 		<constructor-arg>

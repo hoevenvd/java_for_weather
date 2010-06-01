@@ -5,4 +5,7 @@
 package org.tom.weather;
 
 public interface WeatherStation {
+  void readCurrentConditions() throws Exception;
+  void readArchiveMemory() throws Exception;
+  boolean test() throws Exception;
 }

@@ -5,24 +5,15 @@
 package org.tom.weather.comm;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
-import java.util.Iterator;
-import java.util.List;
 
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.tom.weather.posting.DataPoster;
-import org.tom.weather.davis.vp.LoopPacket;
 
 public class Main {
   public static final Logger LOGGER = Logger.getLogger(Main.class);
-  public static final Logger DATA_PROBLEMS_LOGGER = Logger.getLogger("DATA_PROBLEMS_LOGGER");
-  private String portName = null;
-  private VantagePro station;
-  private List posterList;
+  private Station station;
+  private boolean checkArchive;
 
   /**
    * Main method
@@ -57,19 +48,11 @@ public class Main {
     while (true) {
       try {
         for (int i = 0; i < 15; i++) {
-          LoopPacket loop = getStation().readLoopData();
-          if (!loop.isValid()) {
-            DATA_PROBLEMS_LOGGER.warn(loop.toString());
-          }
-          if (loop != null && loop.isValid()) {
-            if (LOGGER.isDebugEnabled()) {
-              LOGGER.debug(loop);
-            }
-            post(loop);
-          }
-          // LOGGER.info(loop);
+          getStation().readCurrentConditions();
         }
-          getStation().dmpaft();
+        if (isCheckArchive()) {
+          getStation().readArchiveMemory();
+        }
       } catch (Exception e) {
         LOGGER.error("exception - waiting 5s", e);
         try {
@@ -85,37 +68,19 @@ public class Main {
     }
   }
 
-  private void post(LoopPacket loop) throws RemoteException {
-    for (Iterator iter = getPosterList().iterator(); iter.hasNext();) {
-      DataPoster poster = (DataPoster)iter.next();
-      poster.post(loop);
-    }
-  }
-
-  public void setPortName(String portName) {
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("portName set: " + portName);
-    }
-    this.portName = portName;
-  }
-
-  public String getPortName() {
-    return portName;
-  }
-
-  public void setStation(VantagePro station) {
+  public void setStation(Station station) {
     this.station = station;
   }
 
-  public VantagePro getStation() {
+  public Station getStation() {
     return station;
   }
 
-  public void setPosterList(List posterList) {
-    this.posterList = posterList;
+  public boolean isCheckArchive() {
+      return checkArchive;
   }
 
-  public List getPosterList() {
-    return posterList;
+  public void setCheckArchive(boolean checkArchive) {
+      this.checkArchive = checkArchive;
   }
 }

@@ -2,7 +2,7 @@
 #JAVA_HOME=/usr/jdk1.6.0_10
 
 #PATH=$JAVA_HOME/bin:$PATH
-#WX_HOME=./
+WX_HOME=./
 
 cd $WX_HOME
 
