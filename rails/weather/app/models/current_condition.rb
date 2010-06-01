@@ -1,3 +1,5 @@
+require 'active_support'
+
 class CurrentCondition < ActiveRecord::Base
   include WxUtils
 
@@ -79,19 +81,17 @@ class CurrentCondition < ActiveRecord::Base
   def before_save
     # calculate metric and english dewpoints
     if  !outside_temperature.nil? and !outside_humidity.nil?
-      dp = Round.round_f(calc_dewpoint(outside_temperature,
-        outside_humidity), 1)
+      dp = calc_dewpoint(outside_temperature, outside_humidity).round_with_precision(1)
       self.dewpoint = dp
-      self.dewpoint_m = Round.round_f(to_c(dp), 1)
+      self.dewpoint_m = to_c(dp).round_with_precision(1)
     else
       self.dewpoint = self.dewpoint_m = nil
     end
                                   
     if  !outside_temperature.nil? and !outside_humidity.nil?
-      at = Round.round_f(calc_apparent_temp(outside_temperature,
-                                outside_humidity, windspeed), 1)
+      at = calc_apparent_temp(outside_temperature, outside_humidity, windspeed) #.round_with_precision(1)
       self.apparent_temp = at
-      self.apparent_temp_m = Round.round_f(to_c(at), 1)
+      self.apparent_temp_m = to_c(at).round_with_precision(1)
     else
       self.apparent_temp = self.apparent_temp_m = nil
     end
@@ -104,16 +104,16 @@ class CurrentCondition < ActiveRecord::Base
       self.is_raining = false
     end
 
-    self.windspeed_m = Round.round_f(mph_to_mps(self.windspeed), 1) unless self.windspeed.nil?
-    self.ten_min_avg_wind_m = Round.round_f(mph_to_mps(self.ten_min_avg_wind),1) unless self.ten_min_avg_wind.nil?
-    self.rain_rate_m = Round.round_f(inches_to_mm(self.rain_rate), 2) unless self.rain_rate.nil?
-    self.daily_rain_m = Round.round_f(inches_to_mm(self.daily_rain), 2) unless self.daily_rain.nil?
-    self.monthly_rain_m = Round.round_f(inches_to_mm(self.monthly_rain), 2) unless self.monthly_rain.nil?
-    self.yearly_rain_m = Round.round_f(inches_to_mm(self.yearly_rain), 2) unless self.yearly_rain.nil?
-    self.storm_rain_m = Round.round_f(inches_to_mm(self.storm_rain), 2) unless self.storm_rain.nil?
-    self.pressure_m = Round.round_f(inches_of_hg_to_mb(self.pressure), 1) unless self.pressure.nil?
-    self.outside_temperature_m = Round.round_f(to_c(self.outside_temperature), 1) unless self.outside_temperature.nil?
-    self.inside_temperature_m = Round.round_f(to_c(self.inside_temperature), 1) unless self.inside_temperature.nil?
+    self.windspeed_m = mph_to_mps(self.windspeed).round_with_precision(1) unless self.windspeed.nil?
+    self.ten_min_avg_wind_m = mph_to_mps(self.ten_min_avg_wind).round_with_precision(1) unless self.ten_min_avg_wind.nil?
+    self.rain_rate_m = inches_to_mm(self.rain_rate) unless self.rain_rate.nil?
+    self.daily_rain_m = inches_to_mm(self.daily_rain) unless self.daily_rain.nil?
+    self.monthly_rain_m = inches_to_mm(self.monthly_rain) unless self.monthly_rain.nil?
+    self.yearly_rain_m = inches_to_mm(self.yearly_rain) unless self.yearly_rain.nil?
+    self.storm_rain_m = inches_to_mm(self.storm_rain) unless self.storm_rain.nil?
+    self.pressure_m = inches_of_hg_to_mb(self.pressure).round_with_precision(1) unless self.pressure.nil?
+    self.outside_temperature_m = to_c(self.outside_temperature).round_with_precision(1) unless self.outside_temperature.nil?
+    self.inside_temperature_m = to_c(self.inside_temperature).round_with_precision(1) unless self.inside_temperature.nil?
     
     return true
   end

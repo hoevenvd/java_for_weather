@@ -1,3 +1,6 @@
+#require 'rubygems'
+require 'activesupport'
+
 class ArchiveRecord < ActiveRecord::Base
   include WxUtils
 
@@ -25,31 +28,29 @@ class ArchiveRecord < ActiveRecord::Base
 
   def before_save    
     if  !(outside_temp.nil? || outside_humidity.nil?)
-      self.average_dewpoint = Round.round_f(calc_dewpoint(outside_temp,
-                                outside_humidity), 1)
-      self.average_dewpoint_m = Round.round_f(to_c(self.average_dewpoint), 1)
+      self.average_dewpoint = calc_dewpoint(outside_temp, outside_humidity).round_with_precision(1)
+      self.average_dewpoint_m = to_c(self.average_dewpoint).round_with_precision(1)
     else
       self.average_dewpoint = self.average_dewpoint_m = nil
     end
                                   
     if  !(outside_temp.nil? || outside_humidity.nil?)
-      self.average_apparent_temp = Round.round_f(calc_apparent_temp(outside_temp,
-                                outside_humidity, average_wind_speed), 1)
-      self.average_apparent_temp_m = Round.round_f(to_c(self.average_apparent_temp), 1)
+      self.average_apparent_temp = calc_apparent_temp(outside_temp, outside_humidity, average_wind_speed)
+      self.average_apparent_temp_m = to_c(self.average_apparent_temp).round_with_precision(1)
     else
       self.average_apparent_temp = self.average_apparent_temp_m = nil
     end
 
-    self.outside_temp_m = Round.round_f(to_c(self.outside_temp), 1) unless self.outside_temp.nil?
-    self.low_outside_temp_m = Round.round_f(to_c(self.low_outside_temp), 1) unless self.low_outside_temp.nil?
-    self.high_outside_temp_m = Round.round_f(to_c(self.high_outside_temp), 1) unless self.high_outside_temp.nil?
-    self.inside_temp_m = Round.round_f(to_c(self.inside_temp), 1) unless self.inside_temp.nil?
+    self.outside_temp_m = to_c(self.outside_temp).round_with_precision(1) unless self.outside_temp.nil?
+    self.low_outside_temp_m = to_c(self.low_outside_temp).round_with_precision(1) unless self.low_outside_temp.nil?
+    self.high_outside_temp_m = to_c(self.high_outside_temp).round_with_precision(1) unless self.high_outside_temp.nil?
+    self.inside_temp_m = to_c(self.inside_temp).round_with_precision(1) unless self.inside_temp.nil?
 
-    self.pressure_m = Round.round_f(inches_of_hg_to_mb(self.pressure), 1) unless self.pressure.nil?
-    self.rainfall_m = Round.round_f(inches_to_mm(self.rainfall), 1) unless self.rainfall.nil?
-    self.high_rain_rate_m = Round.round_f(inches_to_mm(self.high_rain_rate), 1) unless self.high_rain_rate.nil?
-    self.average_wind_speed_m = Round.round_f(mph_to_mps(self.average_wind_speed), 1) unless self.average_wind_speed.nil?
-    self.high_wind_speed_m = Round.round_f(mph_to_mps(self.high_wind_speed), 1) unless self.high_wind_speed.nil?
+    self.pressure_m = inches_of_hg_to_mb(self.pressure).round_with_precision(1) unless self.pressure.nil?
+    self.rainfall_m = inches_to_mm(self.rainfall).round_with_precision(1) unless self.rainfall.nil?
+    self.high_rain_rate_m = inches_to_mm(self.high_rain_rate).round_with_precision(1) unless self.high_rain_rate.nil?
+    self.average_wind_speed_m = mph_to_mps(self.average_wind_speed).round_with_precision(1) unless self.average_wind_speed.nil?
+    self.high_wind_speed_m = mph_to_mps(self.high_wind_speed).round_with_precision(1) unless self.high_wind_speed.nil?
  end
 
   def self.last_rain_date(location)
