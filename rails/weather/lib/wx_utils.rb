@@ -5,11 +5,11 @@ module WxUtils
     if (temp == nil)
       raise("temperature can not be nil")
     elsif temp < 68 && wind != nil
-      return calc_windchill(temp, wind)
+      return calc_windchill(temp, wind).to_f.round(1)
     elsif temp > 80 && rh != nil
-      return calc_heat_index(temp, rh)
+      return calc_heat_index(temp, rh).to_f.round(1)
     else
-      return temp
+      return temp.to_f.round(1)
     end
   end
 
@@ -42,7 +42,7 @@ module WxUtils
     if hi < temp
       hi = temp
     end
-    hi.to_i
+    hi.to_f.round_with_precision(1)
   end
 
   def calc_windchill (temp, wind)
@@ -76,10 +76,6 @@ module WxUtils
     return mph / 2.2369362920544
   end
 
-  def mps_to_mph
-    return mps * 2.2369362920544
-  end
-
   def to_f(c)
     ((9.0/5.0) * c) + 32
   end
@@ -100,7 +96,7 @@ module WxUtils
   # rain conversion
   # 1 inches = 25.4 millimeters
   def inches_to_mm(inches)
-    inches * 25.4
+    (inches * 25.4).to_f.round_with_precision(2)
   end
 
 end
