@@ -2,12 +2,11 @@
 #JAVA_HOME=/usr/jdk1.6.0_10
 
 PATH=$JAVA_HOME/bin:$PATH
-TZ=America/New_York
 
-#cd $WX_HOME
+TZ=Europe/Amsterdam
 
-cp -f jweatherstation.properties.vp jweatherstation.properties
-cp -f weather.xml.vp weather.xml
+cp -f jweatherstation.properties.wm jweatherstation.properties
+cp -f weather.xml.wm weather.xml
 
 while true 
 do

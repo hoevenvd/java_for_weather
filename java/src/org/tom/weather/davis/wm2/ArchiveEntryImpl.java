@@ -12,6 +12,7 @@ public class ArchiveEntryImpl extends BaseArchiveEntryImpl implements
    * 
    */
   private static final long serialVersionUID = 6325890235352573713L;
+  static final int ARCHIVE_RECORD_SIZE = 21;
   int avgInTemp;
   int avgOutTemp;
   int hiOutTemp;
@@ -41,7 +42,6 @@ public class ArchiveEntryImpl extends BaseArchiveEntryImpl implements
     intBuffer[0] = image[0];
     intBuffer[1] = image[1];
     barometer = getUnsigned(intBuffer);
-    barometer -= SnapShot.getPressureCAL();
     inHumidity = (int) image[2];
     outHumidity = (int) image[3];
     intBuffer[0] = image[4];
@@ -108,11 +108,11 @@ public class ArchiveEntryImpl extends BaseArchiveEntryImpl implements
 
   public static ArchiveEntryImpl[] parseByteArray(byte[] bytes) {
     Vector entries = new Vector();
-    byte[] buffer = new byte[WeatherMonitor.ARCHIVE_RECORD_SIZE];
-    int recordCount = bytes.length / WeatherMonitor.ARCHIVE_RECORD_SIZE;
+    byte[] buffer = new byte[ARCHIVE_RECORD_SIZE];
+    int recordCount = bytes.length / ARCHIVE_RECORD_SIZE;
     for (int i = 0; i < recordCount; i++) {
-      for (int j = WeatherMonitor.ARCHIVE_RECORD_SIZE * i, k = 0; j < (WeatherMonitor.ARCHIVE_RECORD_SIZE * i)
-          + WeatherMonitor.ARCHIVE_RECORD_SIZE; j++) {
+      for (int j = ARCHIVE_RECORD_SIZE * i, k = 0; j < (ARCHIVE_RECORD_SIZE * i)
+          + ARCHIVE_RECORD_SIZE; j++) {
         buffer[k++] = bytes[j];
       }
       ArchiveEntryImpl e = new ArchiveEntryImpl(buffer);

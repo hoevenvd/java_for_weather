@@ -1,0 +1,5 @@
+1. copy weather.xml.vp to weather.xml
+2. change jweatherstation.properties to point to the right hostname and port
+
+to change back to wm2, copy weather.xml.wm2 to weather.xml
+

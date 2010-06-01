@@ -76,6 +76,7 @@ public class LoopPacket implements SnapShot {
     outsideHumidity = new Humidity(unsignedPacket[33].getByte());
     insideHumidity = new Humidity(unsignedPacket[11].getByte());
     uv = unsignedPacket[43].getByte();
+    if (uv == 255) uv = -9999;
     wind = new Wind(unsignedPacket[14].getByte(), unsignedPacket[15].getByte(),
         (unsignedPacket[17].getByte() * 256) + unsignedPacket[16].getByte());
     rainRate = ((((unsignedPacket[42].getByte() * 256) + unsignedPacket[41]

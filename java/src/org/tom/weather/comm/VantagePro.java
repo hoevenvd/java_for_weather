@@ -4,8 +4,6 @@
 package org.tom.weather.comm;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -15,17 +13,17 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import javax.comm.CommPortIdentifier;
 import javax.comm.NoSuchPortException;
 import javax.comm.PortInUseException;
-import javax.comm.SerialPort;
 
 import org.tom.weather.ArchiveEntry;
+import org.tom.weather.WeatherStation;
 import org.tom.weather.upload.DataUploader;
 import org.tom.weather.ws.client.WxWsClient;
 
 import org.tom.weather.davis.vp.DmpRecord;
 import org.tom.weather.davis.vp.LoopPacket;
+import org.tom.weather.posting.DataPoster;
 import uk.me.jstott.jweatherstation.util.Process;
 import uk.me.jstott.jweatherstation.util.UnsignedByte;
 
@@ -36,14 +34,17 @@ import uk.me.jstott.jweatherstation.util.UnsignedByte;
  * @version 1.0
  * @since 1.0
  */
-public class VantagePro extends Station {
+public class VantagePro extends Station implements WeatherStation {
+  static protected final int RECORD_SIZE = 52;
+  static protected final int BUFFER_SIZE = 266;
+  static protected final int LOOP_SIZE = 99;
+  private static final Logger LOGGER = Logger.getLogger(VantagePro.class);
+  private static final Logger DATA_PROBLEMS_LOGGER = Logger.getLogger("DATA_PROBLEMS_LOGGER");
   
-  private String location;
-  static protected final Logger LOGGER = Logger.getLogger(VantagePro.class);
-  
-  public VantagePro(String portName, int baudRate) throws PortInUseException,
+  public VantagePro(String portName, int baudRate, int rainGauge) throws PortInUseException,
       NoSuchPortException, IOException {
-    super(portName, baudRate);
+    super(portName, baudRate, rainGauge);
+    LOGGER.debug("rainGauge: " + rainGauge);
   }
 
   private void processDmpAftPacket(byte[] page, int pageOffset) throws Exception {
@@ -283,6 +284,7 @@ public class VantagePro extends Station {
       delay(500);
     } catch (IOException ex) {
       LOGGER.error("Cannot read input stream", ex);
+      throw ex;
     }
   }
   private UnsignedByte[] getlLastArchiveRecord() {
@@ -314,10 +316,38 @@ public class VantagePro extends Station {
     wakeup();
     sendBytes(str.getBytes());
   }
+
   public void setLocation(String location) {
     this.location = location;
   }
+  
   public String getLocation() {
     return location;
   }
+
+  public void readCurrentConditions() throws Exception {
+    LoopPacket loop = readLoopData();
+    if (!loop.isValid()) {
+      DATA_PROBLEMS_LOGGER.warn(loop.toString());
+    }
+    if (loop != null && loop.isValid()) {
+      if (LOGGER.isDebugEnabled()) {
+        LOGGER.debug(loop);
+      }
+      post(loop);
+    }
+  }
+
+  public void readArchiveMemory() throws Exception {
+    dmpaft();
+  }
+
+  private void post(LoopPacket loop) throws RemoteException {
+    for (Iterator iter = getPosterList().iterator(); iter.hasNext();) {
+      DataPoster poster = (DataPoster)iter.next();
+      poster.post(loop);
+    }
+  }
+
+
 }

@@ -1,5 +1,8 @@
 # the url of the soap server you want to point to
 #wsdl.url=http://servers:3000/wx/weather/wsdl
 # default to localhost:3000 for development
-wsdl.url=http://localhost:3000/weather/wsdl
+#wsdl.url=http://raid:y000/weather/wsdl
 #wsdl.url=http://raid:3000/weather/wsdl
+#wsdl.url=http://localhost:3000/weather/wsdl
+wsdl.url=http://henrymitchell.org/weather/weather/wsdl
+

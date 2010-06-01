@@ -1,7 +1,6 @@
 package org.tom.weather;
 
 import org.tom.util.Rounding;
-import org.tom.weather.davis.wm2.WeatherMonitor;
 
 public class Converter {
   /*
@@ -204,73 +203,4 @@ public class Converter {
     return (float) Rounding.round((precipitation / 0.03937f), 1);
   }
 
-  public static String showMeasureValue(float value, int kindOfValue) {
-    String valueString = "";
-    if (WeatherMonitor.useMetrics()) {
-      if (kindOfValue == 1) {
-        valueString = new Float(toCelsius(value)).toString();
-      }
-      if (kindOfValue == 2) {
-        valueString = new Float(toHPa(value)).toString();
-      }
-      if (kindOfValue == 3) {
-        valueString = new Float(toMps(value)).toString();
-      }
-      if (kindOfValue == 4) {
-        valueString = new Integer((int) value).toString();
-      }
-      return (String) valueString;
-    } else {
-      if (kindOfValue == 1) {
-        valueString = new Float(Rounding.round(value, 1)).toString();
-      }
-      if (kindOfValue == 2) {
-        valueString = new Float(Rounding.round(value, 1)).toString();
-      }
-      if (kindOfValue == 3) {
-        valueString = new Integer((int) value).toString();
-      }
-      if (kindOfValue == 4) {
-        valueString = new Integer((int) value).toString();
-      }
-      return (String) valueString;
-    }
-  }
-
-  public static String showMeasureLabel(int kindOfValue) {
-    String labelString = "";
-    if (WeatherMonitor.useMetrics()) {
-      if (kindOfValue == 1) {
-        labelString = " C";
-      }
-      if (kindOfValue == 2) {
-        labelString = " hPa";
-      }
-      if (kindOfValue == 3) {
-        labelString = " m/s";
-      }
-      ;
-      if (kindOfValue == 4) {
-        labelString = " %";
-      }
-      ;
-      return (String) labelString;
-    } else {
-      if (kindOfValue == 1) {
-        labelString = " F";
-      }
-      if (kindOfValue == 2) {
-        labelString = " inch";
-      }
-      if (kindOfValue == 3) {
-        labelString = " mph";
-      }
-      ;
-      if (kindOfValue == 4) {
-        labelString = " %";
-      }
-      ;
-      return (String) labelString;
-    }
-  }
 }
