@@ -1,6 +1,11 @@
 --- !ruby/object:Gem::Specification 
 name: tzinfo
 version: !ruby/object:Gem::Version 
+  prerelease: false
+  segments: 
+  - 0
+  - 3
+  - 16
   version: 0.3.16
 platform: ruby
 authors: 
@@ -659,18 +664,20 @@ required_ruby_version: !ruby/object:Gem::Requirement
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      segments: 
+      - 0
       version: "0"
-  version: 
 required_rubygems_version: !ruby/object:Gem::Requirement 
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      segments: 
+      - 0
       version: "0"
-  version: 
 requirements: []
 
 rubyforge_project: tzinfo
-rubygems_version: 1.3.5
+rubygems_version: 1.3.6
 signing_key: 
 specification_version: 3
 summary: Daylight-savings aware timezone library
