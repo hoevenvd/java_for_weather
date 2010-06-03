@@ -47,15 +47,8 @@ task :symlink_config_yml, :roles => :app do
        #{release_path}/config/service_providers.yml"
 end
 
-#desc "Symlink root directory under public_html"
-task :symlink_public, :roles => :app do
-#  run "ln -nsf #{current_path}/public
-#       /var/www/wx"
-  run "cp #{shared_path}/config/dot_htaccess \
-       #{release_path}/public/.htaccess"
-end
 
-after 'deploy:update_code', 'symlink_config_yml', 'symlink_public'
+after 'deploy:update_code', 'symlink_config_yml'
 
 namespace(:deploy) do
   desc "Shared phusion passenger restart"
