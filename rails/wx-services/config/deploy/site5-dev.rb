@@ -53,18 +53,7 @@ task :symlink_config_yml, :roles => :app do
        #{release_path}/config/service_providers.yml"
 end
 
-#desc "Symlink root directory under public_html"
-task :symlink_public, :roles => :app do
-  run "ln -nsf #{current_path}/public
-       /home/#{user}/public_html/#{deploy_dir}"
-
-# fixup .htaccess for passenger
-# example can be found in config/dot_htaccess_passenger
-  run "cp #{shared_path}/config/dot_htaccess
-       #{release_path}/public/.htaccess"
-end
-
-after 'deploy:update_code', 'symlink_config_yml', 'symlink_public'
+after 'deploy:update_code', 'symlink_config_yml'
 
 namespace(:deploy) do
   desc "Shared phusion passenger restart"
@@ -82,8 +71,3 @@ desc "tail -f production log"
 task :tail_prod_log, :roles => :app do
   stream "tail -f #{shared_path}/log/production.log"
 end
-
-#desc "reset awstats config"
-#task :reset_awstata, :roles => :app do
-#    send(run_method, "cp ~/tmp/awstats/awstats.tom.org.conf.good ~/tmp/awstats/awstats.tom.org.conf")
-#end

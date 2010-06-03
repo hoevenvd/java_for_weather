@@ -2,6 +2,7 @@ require 'pp'
 require 'period'
  
 class WxPeriod < Period
+  include WxUtils
   
   def WxPeriod.add_to_db(summary, location)
     s = PastSummary.find_or_initialize_by_period_and_location(summary.period, location)
