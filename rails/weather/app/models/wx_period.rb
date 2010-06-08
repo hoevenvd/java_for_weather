@@ -66,6 +66,42 @@ class WxPeriod < Period
     end
   end
 
+  def dewpoint_date(pd, temp, location)
+    a = ArchiveRecord.find(:first, :conditions => "location = '#{location}' and date >= '#{pd.start_time_sql}' and date < '#{pd.end_time_sql}' and average_dewpoint = '#{temp}'", :order => "date desc")
+    if (a != nil) then
+      a.date != nil ? a.date : nil
+    else
+      nil
+    end
+  end
+
+  def apparent_temp_date(pd, temp, location)
+    a = ArchiveRecord.find(:first, :conditions => "location = '#{location}' and date >= '#{pd.start_time_sql}' and date < '#{pd.end_time_sql}' and average_apparent_temp = '#{temp}'", :order => "date desc")
+    if (a != nil) then
+      a.date != nil ? a.date : nil
+    else
+      nil
+    end
+  end
+
+  def humidity_date(pd, pct, location)
+    a = ArchiveRecord.find(:first, :conditions => "location = '#{location}' and date >= '#{pd.start_time_sql}' and date < '#{pd.end_time_sql}' and outside_humidity = '#{pct}'", :order => "date desc")
+    if (a != nil) then
+      a.date != nil ? a.date : nil
+    else
+      nil
+    end
+  end
+
+  def pressure_date(pd, pressure, location)
+    a = ArchiveRecord.find(:first, :conditions => "location = '#{location}' and date >= '#{pd.start_time_sql}' and date < '#{pd.end_time_sql}' and pressure = '#{pressure}'", :order => "date desc")
+    if (a != nil) then
+      a.date != nil ? a.date : nil
+    else
+      nil
+    end
+  end
+
   def hi_temp_date(pd, temp, location)
     a = ArchiveRecord.find(:first, :conditions => "location = '#{location}' and date >= '#{pd.start_time_sql}' and date < '#{pd.end_time_sql}' and high_outside_temp = '#{temp}'", :order => "date desc")
     if (a != nil) then
@@ -108,11 +144,19 @@ class WxPeriod < Period
                                     from archive_records d 
                                     where d.location = '#{location}' 
                                        and d.date > '#{pd.start_time_sql}'
-                                       and d.date <= '#{pd.end_time_sql}';");
+                                       and d.date <= '#{pd.end_time_sql}';")
     #FIXME - needs massive refactoring of this class to get rid of the statics
     my_pd = WxPeriod.new(pd.start_time, pd.end_time)
     rs[0]["hiTempDate"] = my_pd.hi_temp_date(my_pd, rs[0]["hiTemp"], location)
     rs[0]["lowTempDate"] = my_pd.low_temp_date(my_pd, rs[0]["lowTemp"], location)
+    rs[0]["hiPressureDate"] = my_pd.pressure_date(my_pd, rs[0]["hiPressure"], location)
+    rs[0]["lowPressureDate"] = my_pd.pressure_date(my_pd, rs[0]["lowPressure"], location)
+    rs[0]["hiDewpointDate"] = my_pd.dewpoint_date(my_pd, rs[0]["hiDewpoint"], location)
+    rs[0]["lowDewpointDate"] = my_pd.dewpoint_date(my_pd, rs[0]["lowDewpoint"], location)
+    rs[0]["hiWindchillDate"] = my_pd.apparent_temp_date(my_pd, rs[0]["hiWindchill"], location)
+    rs[0]["lowWindchillDate"] = my_pd.apparent_temp_date(my_pd, rs[0]["lowWindchill"], location)
+    rs[0]["hiOutsideHumidityDate"] = my_pd.humidity_date(my_pd, rs[0]["hiOutsideHumidity"], location)
+    rs[0]["lowOutsideHumidity"] = my_pd.humidity_date(my_pd, rs[0]["lowOutsideHumidity"], location)
     rs[0]["gustDate"] = my_pd.gust(my_pd, rs[0]["hiWindspeed"], location)[:date]
     rs[0]["gustDir"] = my_pd.gust(my_pd, rs[0]["hiWindspeed"], location)[:dir]
     rs[0]["startdate"] = pd.start_time.utc
