@@ -156,7 +156,7 @@ class WxPeriod < Period
     rs[0]["hiWindchillDate"] = my_pd.apparent_temp_date(my_pd, rs[0]["hiWindchill"], location)
     rs[0]["lowWindchillDate"] = my_pd.apparent_temp_date(my_pd, rs[0]["lowWindchill"], location)
     rs[0]["hiOutsideHumidityDate"] = my_pd.humidity_date(my_pd, rs[0]["hiOutsideHumidity"], location)
-    rs[0]["lowOutsideHumidity"] = my_pd.humidity_date(my_pd, rs[0]["lowOutsideHumidity"], location)
+    rs[0]["lowOutsideHumidityDate"] = my_pd.humidity_date(my_pd, rs[0]["lowOutsideHumidity"], location)
     rs[0]["gustDate"] = my_pd.gust(my_pd, rs[0]["hiWindspeed"], location)[:date]
     rs[0]["gustDir"] = my_pd.gust(my_pd, rs[0]["hiWindspeed"], location)[:dir]
     rs[0]["startdate"] = pd.start_time.utc
