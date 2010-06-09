@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100423124615) do
+ActiveRecord::Schema.define(:version => 20100608235707) do
 
   create_table "archive_records", :force => true do |t|
     t.datetime "date",                                                                                     :null => false
@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(:version => 20100423124615) do
     t.decimal  "outside_temp",                               :precision => 4, :scale => 1
     t.decimal  "high_outside_temp",                          :precision => 4, :scale => 1
     t.decimal  "low_outside_temp",                           :precision => 4, :scale => 1
-    t.float    "pressure"
+    t.decimal  "pressure",                                   :precision => 5, :scale => 3
     t.integer  "outside_humidity",             :limit => 2
     t.float    "rainfall"
     t.float    "high_rain_rate"
@@ -230,24 +230,24 @@ ActiveRecord::Schema.define(:version => 20100423124615) do
 
   create_table "past_summaries", :force => true do |t|
     t.string   "period"
-    t.decimal  "avgDewpoint",                      :precision => 6, :scale => 1
+    t.decimal  "avgDewpoint",                          :precision => 6, :scale => 1
     t.integer  "avgHumidity"
-    t.decimal  "avgPressure",                      :precision => 6, :scale => 2
-    t.decimal  "avgTemp",                          :precision => 6, :scale => 1
+    t.decimal  "avgPressure",                          :precision => 6, :scale => 2
+    t.decimal  "avgTemp",                              :precision => 6, :scale => 1
     t.integer  "avgWindspeed"
     t.integer  "avgWindchill"
     t.integer  "hiDewpoint"
     t.integer  "hiWindspeed"
     t.integer  "hiHumidity"
-    t.decimal  "hiPressure",                       :precision => 6, :scale => 1
-    t.decimal  "hiTemp",                           :precision => 6, :scale => 1
+    t.decimal  "hiPressure",                           :precision => 6, :scale => 1
+    t.decimal  "hiTemp",                               :precision => 6, :scale => 1
     t.integer  "hiWindchill"
     t.integer  "lowDewpoint"
     t.integer  "lowOutsideHumidity"
-    t.decimal  "lowPressure",                      :precision => 6, :scale => 1
-    t.decimal  "lowTemp",                          :precision => 6, :scale => 1
+    t.decimal  "lowPressure",                          :precision => 6, :scale => 1
+    t.decimal  "lowTemp",                              :precision => 6, :scale => 1
     t.integer  "lowWindchill"
-    t.decimal  "rain",                             :precision => 6, :scale => 2
+    t.decimal  "rain",                                 :precision => 6, :scale => 2
     t.datetime "hiTempDate"
     t.datetime "lowTempDate"
     t.datetime "gustDate"
@@ -256,8 +256,16 @@ ActiveRecord::Schema.define(:version => 20100423124615) do
     t.datetime "startdate"
     t.datetime "enddate"
     t.integer  "degreeDays"
-    t.string   "location",           :limit => 30,                               :null => false
+    t.string   "location",               :limit => 30,                               :null => false
     t.integer  "gustDir"
+    t.datetime "hiPressureDate"
+    t.datetime "lowPressureDate"
+    t.datetime "hiDewpointDate"
+    t.datetime "lowDewpointDate"
+    t.datetime "hiWindchillDate"
+    t.datetime "lowWindchillDate"
+    t.datetime "hiOutsideHumidityDate"
+    t.datetime "lowOutsideHumidityDate"
   end
 
   add_index "past_summaries", ["location", "period"], :name => "index_past_summaries_on_location_and_period", :unique => true
