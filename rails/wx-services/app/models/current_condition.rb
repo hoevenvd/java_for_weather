@@ -22,6 +22,7 @@ class CurrentCondition < ActiveRecord::Base
   end
   
   def wind
+    { :windspeed => self[:windspeed], :direction => self[:wind_direction] }
   end
 
 #  class Event
