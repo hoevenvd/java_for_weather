@@ -55,7 +55,7 @@ class ArchiveRecord < ActiveRecord::Base
 
   def self.last_rain_date(location)
     last = ArchiveRecord.last_rain(location)[0]
-    last == nil ? nil : last.date
+    last == nil ? nil : last.date.localtime
   end
   
   def self.last_rolling_hour_rain
