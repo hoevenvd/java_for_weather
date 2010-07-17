@@ -15,15 +15,15 @@ class WxPeriod < Period
   end
   
   def WxPeriod.today_summary(location)
-    return WxPeriod.query(today, location)
+    PastSummary.find_by_period_and_location(:today, location)
   end
   
   def WxPeriod.this_week_summary(location)
-    return WxPeriod.query(this_week, location)
+    PastSummary.find_by_period_and_location(:this_week, location)
   end
   
   def WxPeriod.this_month_summary(location)
-    return WxPeriod.query(this_month, location)
+    PastSummary.find_by_period_and_location(:this_month, location)
   end
   
   def WxPeriod.last_hour_summary(location)
@@ -133,13 +133,22 @@ class WxPeriod < Period
   def WxPeriod.query(pd, location)
     rs = ArchiveRecord.find_by_sql("select avg(average_dewpoint) as avgDewpoint, 
                                        avg(outside_humidity) as avgHumidity, 
-                                       avg(pressure) as avgPressure, avg(outside_temp) as avgTemp, 
-                                       avg(average_wind_speed)as avgWindspeed, avg(average_apparent_temp) as avgWindchill, 
-                                       max(average_dewpoint) as hiDewpoint, max(high_wind_speed) as hiWindspeed, 
-                                       max(outside_humidity) as hiHumidity, max(pressure) as hiPressure, max(high_outside_temp) as hiTemp, 
-                                       max(average_apparent_temp) as hiWindchill, min(average_dewpoint) as lowDewpoint,
-                                       min(outside_humidity) as lowOutsideHumidity, min(pressure) as lowPressure, 
-                                       min(low_outside_temp) as lowTemp, min(average_apparent_temp) as lowWindchill, sum(rainfall) as rain,
+                                       avg(pressure) as avgPressure,
+                                       avg(outside_temp) as avgTemp,
+                                       avg(average_wind_speed) as avgWindspeed,
+                                       avg(average_apparent_temp) as avgWindchill,
+                                       max(average_dewpoint) as hiDewpoint,
+                                       max(high_wind_speed) as hiWindspeed,
+                                       max(outside_humidity) as hiOutsideHumidity,
+                                       max(pressure) as hiPressure,
+                                       max(high_outside_temp) as hiTemp,
+                                       max(average_apparent_temp) as hiWindchill,
+                                       min(average_dewpoint) as lowDewpoint,
+                                       min(outside_humidity) as lowOutsideHumidity,
+                                       min(pressure) as lowPressure,
+                                       min(low_outside_temp) as lowTemp,
+                                       min(average_apparent_temp) as lowWindchill,
+                                       sum(rainfall) as rain,
                                        avg(high_outside_temp) - 65.0 as degreeDays
                                     from archive_records d 
                                     where d.location = '#{location}' 
@@ -155,7 +164,7 @@ class WxPeriod < Period
     rs[0]["lowDewpointDate"] = my_pd.dewpoint_date(my_pd, rs[0]["lowDewpoint"], location)
     rs[0]["hiWindchillDate"] = my_pd.apparent_temp_date(my_pd, rs[0]["hiWindchill"], location)
     rs[0]["lowWindchillDate"] = my_pd.apparent_temp_date(my_pd, rs[0]["lowWindchill"], location)
-    rs[0]["hiOutsideHumidityDate"] = my_pd.humidity_date(my_pd, rs[0]["hiHumidity"], location)
+    rs[0]["hiOutsideHumidityDate"] = my_pd.humidity_date(my_pd, rs[0]["hiOutsideHumidity"], location)
     rs[0]["lowOutsideHumidityDate"] = my_pd.humidity_date(my_pd, rs[0]["lowOutsideHumidity"], location)
     rs[0]["gustDate"] = my_pd.gust(my_pd, rs[0]["hiWindspeed"], location)[:date]
     rs[0]["gustDir"] = my_pd.gust(my_pd, rs[0]["hiWindspeed"], location)[:dir]
