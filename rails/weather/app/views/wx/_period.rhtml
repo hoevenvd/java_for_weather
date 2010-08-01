@@ -62,7 +62,7 @@
 <TR>
 <TD COLSPAN="4" align="center" >
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Precipitation</FONT></FONT></B></CENTER>
-<% if !@today.rain.nil? %>
+<% if !@today.nil? and !@today.rain.nil? %>
 <CENTER>Today: <%= sprintf("%.02f", @today.rain) %> inches</CENTER>
 <% end %>
 <% if @yesterday != nil %>
@@ -70,7 +70,7 @@
 <CENTER>Yesterday: <%= sprintf("%.02f", @yesterday.rain) %> inches</CENTER>
 <% end %>
 <% end %>
-<% if !@this_week.rain.nil? %>
+<% if !@this_week.nil? and !@this_week.rain.nil? %>
 <CENTER>This week: <%= sprintf("%.02f", @this_week.rain) %> inches</CENTER>
 <% end %>
 <% if @last_week != nil %>
@@ -95,7 +95,7 @@
 <Center>Last Hour: <%= sprintf("%.1f", @last_hour.avgWindspeed) %> mph</Center>
 <% end %>
 <% end %>
-
+<% if @today != nil %>
 <% if !@today.avgWindspeed.nil? %>
 <CENTER>Today: <%= sprintf("%.1f", @today.avgWindspeed) %> mph</CENTER>
 <% end %>
@@ -104,16 +104,17 @@
     <Center>Today's High: <%= Direction.to_s(@today.gustDir) %> at <%= @today.hiWindspeed %> mph (<%= @today.gustDate.in_time_zone.strftime "%I:%M %p" %>)</Center>
   <% end %>
 <% end %>
+<% end %>
 
 </TD>
 </tr>
 <TR>
 <TD COLSPAN="4" align="center" >
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Barometer</FONT></FONT></B></CENTER>
-<% if !@today.hiPressure.nil? %>
+<% if !@today.nil? and !@today.hiPressure.nil? %>
 <CENTER>Today's High: <%= sprintf("%.2f", @today.hiPressure) %></CENTER>
 <% end %>
-<% if !@today.lowPressure.nil? %>
+<% if !@today.nil? and !@today.lowPressure.nil? %>
 <CENTER>Today's Low:  <%= sprintf("%.2f", @today.lowPressure) %></CENTER>
 <% end %>
 </TD>

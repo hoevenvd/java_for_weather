@@ -62,16 +62,18 @@ class WxController < ApplicationController
     get_noaa_conditions
     @current = CurrentCondition.find_by_location(AppConfig.location)
     # kludge for time sync problems btw station time and web server
-    @current.sample_date = Time.now if @current.sample_date > Time.now
+    @current.sample_date = Time.now if !@current.nil? and @current.sample_date > Time.now
     @today = WxPeriod.today_summary(AppConfig.location)
-    if (@current.outside_temperature.to_f >= @today.hiTemp.to_f) 
-      @highlo = "<br>(daily high)</br>"
-    else
-      if (@current.outside_temperature.to_f <= @today.lowTemp.to_f) 
-        @highlo = "<br>(daily low)</br>"
+    if @today != nil
+      if (@current.outside_temperature.to_f >= @today.hiTemp.to_f) 
+        @highlo = "<br>(daily high)</br>"
+      else
+        if (@current.outside_temperature.to_f <= @today.lowTemp.to_f)
+          @highlo = "<br>(daily low)</br>"
+        end
       end
-    end 
-    @last_rain = last_rain
+      @last_rain = last_rain
+    end
     get_climate
     get_riseset
   end
