@@ -25,7 +25,7 @@ class Period
   def Period.this_hour
     end_tm = Time.now.in_time_zone
     start_tm = end_tm.change(:min => 0)
-    return Period.new(start_tm, end_tm, "ROLLLING_HOUR")
+    return Period.new(start_tm, end_tm, :this_hour)
   end
   		
   def Period.last_hour
