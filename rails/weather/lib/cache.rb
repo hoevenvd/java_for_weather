@@ -17,8 +17,6 @@
 
 module Cache
 
-  HIGH_LOW_FIELDS = [:Temp, :Pressure, :Dewpoint, :Windchill, :OutsideHumidity]
-
   # look at each attribute
   # if it starts with hi and does not end with date
   #  construct a method name and see if the passed-in record's call result is a new high
@@ -26,6 +24,14 @@ module Cache
   # same with lows
 
   def update_current_cache(location, archive_record)
+    #check today
+    this_hour = PastSummary.find_by_period_and_location(:this_hour, location)
+    # update extremes here
+    if this_hour.nil? or this_hour.updated_at < 2.minutes.ago # TODO make this a config parameter w/ a default of 10 mins
+      pd = WxPeriod.query(Period.this_hour, location)
+      WxPeriod.add_to_db(pd, location) unless pd.avgTemp == nil
+    end
+
     #check today
     today = PastSummary.find_by_period_and_location(:today, location)
     # update extremes here
@@ -59,10 +65,63 @@ module Cache
     # check to see if the current record being posted represents new highs, lows, etc.
     # check year, month, week, day in that order
     # if it is the largest period extreme, then all the others too
-    cache = PastSummary.current_periods
-
     if (archive_record.rainfall > 0)
 
     end
+# TODO: make sure this works with an empty database
+    
+    #check_this_month(archive_record)
+    #check_this_week(archive_record)
+    #check_today(archive_record)
+    #check_this_hour(archive_record)
+  end
+
+  HIGH_LOW_FIELDS = [:Temp, :Pressure, :Dewpoint, :Windchill, :OutsideHumidity]
+
+  def check_this_month(archive_record)
+    month = PastSummary.find_by_period(:this_month)
+    # high outside temp
+    if month != nil and archive_record[:high_outside_temp] >= month[:hiTemp]
+      month[:hiTemp] = archive_record[:high_outside_temp]
+      month[:hiTempDate] = archive_record[:date]
+      # if it is the high for the month, it must also be the high for the week
+      week = PastSummary.find_by_period(:this_week)
+      week[:hiTemp] = archive_record[:high_outside_temp]
+      week[:hiTempDate] = archive_record[:date]
+      week.save!
+      # if it is the high for the month, it must also be the high for the week
+      today = PastSummary.find_by_period(:today)
+      today[:hiTemp] = archive_record[:high_outside_temp]
+      today[:hiTempDate] = archive_record[:date]
+      today.save!
+    end
+
+    # low outside temp
+    if month != nil and archive_record[:low_outside_temp] <= month[:lowTemp]
+      month[:lowTemp] = archive_record[:low_outside_temp]
+      month[:lowTempDate] = archive_record[:date]
+      # if it is the low for the month, it must also be the low for the week
+      week = PastSummary.find_by_period(:this_week)
+      week[:lowTemp] = archive_record[:low_outside_temp]
+      week[:lowTempDate] = archive_record[:date]
+      week.save!
+      # if it is the low for the month, it must also be the low for the week
+      today = PastSummary.find_by_period(:today)
+      today[:lowTemp] = archive_record[:low_outside_temp]
+      today[:lowTempDate] = archive_record[:date]
+      today.save!
+    end
+  end
+
+  def check_this_week(archive_record)
+    # code here
+  end
+
+  def check_today(archive_record)
+    # code here
+  end
+
+  def check_this_hour(archive_record)
+    # code here
   end
 end

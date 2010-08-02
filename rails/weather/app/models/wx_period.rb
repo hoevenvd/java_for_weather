@@ -11,7 +11,8 @@ class WxPeriod < Period
   end
 
   def WxPeriod.this_hour_summary(location)
-    return WxPeriod.query(this_hour, location)
+#    return WxPeriod.query(this_hour, location)
+    PastSummary.find_by_period_and_location(:this_hour, location)
   end
   
   def WxPeriod.today_summary(location)

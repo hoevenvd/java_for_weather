@@ -85,7 +85,7 @@
 <tr>
 <TD  align="center" >
 <CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Wind</FONT></FONT></B></CENTER>
-<% if !@this_hour.avgWindspeed.nil? %>
+<% if !@this_hour.nil? and !@this_hour.avgWindspeed.nil? %>
 <Center>This Hour: <%= sprintf("%.1f", @this_hour.avgWindspeed) %> mph</Center>
 <% end %>
 
