@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100714104650) do
+ActiveRecord::Schema.define(:version => 20100803100010) do
 
   create_table "archive_records", :force => true do |t|
     t.datetime "date",                                                                                     :null => false
@@ -113,6 +113,7 @@ ActiveRecord::Schema.define(:version => 20100714104650) do
     t.integer  "wind_direction"
     t.boolean  "is_raining"
     t.float    "rain_rate"
+    t.integer  "ten_min_avg_wind"
     t.integer  "uv"
     t.integer  "solar_radiation"
     t.float    "daily_rain"
@@ -120,7 +121,6 @@ ActiveRecord::Schema.define(:version => 20100714104650) do
     t.datetime "updated_at"
     t.float    "inside_temperature"
     t.integer  "inside_humidity"
-    t.integer  "ten_min_avg_wind"
     t.datetime "sunrise"
     t.datetime "sunset"
     t.float    "monthly_rain"
@@ -166,6 +166,7 @@ ActiveRecord::Schema.define(:version => 20100714104650) do
     t.text     "conditions_xml"
   end
 
+  add_index "noaa_conditions", ["as_of"], :name => "index_noaa_conditions_on_as_of"
   add_index "noaa_conditions", ["created_at"], :name => "created_at"
   add_index "noaa_conditions", ["location"], :name => "location"
 
@@ -296,6 +297,7 @@ ActiveRecord::Schema.define(:version => 20100714104650) do
   add_index "past_summaries", ["lowOutsideHumidityDate"], :name => "index_past_summaries_on_lowOutsideHumidityDate"
   add_index "past_summaries", ["lowPressureDate"], :name => "index_past_summaries_on_lowPressureDate"
   add_index "past_summaries", ["lowWindchillDate"], :name => "index_past_summaries_on_lowWindchillDate"
+  add_index "past_summaries", ["period"], :name => "index_past_summaries_on_period", :unique => true
 
   create_table "risesets", :force => true do |t|
     t.string  "location", :limit => 30, :null => false
