@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100803100010) do
+ActiveRecord::Schema.define(:version => 20100808111432) do
 
   create_table "archive_records", :force => true do |t|
     t.datetime "date",                                                                                     :null => false
@@ -113,7 +113,6 @@ ActiveRecord::Schema.define(:version => 20100803100010) do
     t.integer  "wind_direction"
     t.boolean  "is_raining"
     t.float    "rain_rate"
-    t.integer  "ten_min_avg_wind"
     t.integer  "uv"
     t.integer  "solar_radiation"
     t.float    "daily_rain"
@@ -121,6 +120,7 @@ ActiveRecord::Schema.define(:version => 20100803100010) do
     t.datetime "updated_at"
     t.float    "inside_temperature"
     t.integer  "inside_humidity"
+    t.integer  "ten_min_avg_wind"
     t.datetime "sunrise"
     t.datetime "sunset"
     t.float    "monthly_rain"
@@ -249,7 +249,7 @@ ActiveRecord::Schema.define(:version => 20100803100010) do
   add_index "old_archive_records", ["pressure"], :name => "index_old_archive_records_on_pressure"
 
   create_table "past_summaries", :force => true do |t|
-    t.string   "period"
+    t.string   "period",                 :limit => 20,                               :null => false
     t.decimal  "avgDewpoint",                          :precision => 6, :scale => 1
     t.integer  "avgHumidity",            :limit => 8
     t.decimal  "avgPressure",                          :precision => 6, :scale => 2
@@ -297,7 +297,6 @@ ActiveRecord::Schema.define(:version => 20100803100010) do
   add_index "past_summaries", ["lowOutsideHumidityDate"], :name => "index_past_summaries_on_lowOutsideHumidityDate"
   add_index "past_summaries", ["lowPressureDate"], :name => "index_past_summaries_on_lowPressureDate"
   add_index "past_summaries", ["lowWindchillDate"], :name => "index_past_summaries_on_lowWindchillDate"
-  add_index "past_summaries", ["period"], :name => "index_past_summaries_on_period", :unique => true
 
   create_table "risesets", :force => true do |t|
     t.string  "location", :limit => 30, :null => false
