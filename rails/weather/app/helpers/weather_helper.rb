@@ -38,7 +38,13 @@ module WeatherHelper
      req += sprintf("r%03d", c[:hourly_rain] * 100) unless c[:hourly_rain].nil?
      req += sprintf("p%03d", c[:twentyfour_hour_rain] * 100) unless c[:twentyfour_hour_rain].nil?
      req += sprintf("P%03d", c[:daily_rain] * 100) unless c[:daily_rain].nil?
-     req += sprintf("h%02d", c[:outside_humidity]) unless c[:outside_humidity].nil?
+     if (!c[:outside_humidity].nil?)
+       if (c[:outside_humidity] == 100)
+         req += sprintf("h00", c[:outside_humidity])
+       else
+         req += sprintf("h%02d", c[:outside_humidity])
+       end
+     end
      req += sprintf("b%05d", c[:pressure] * 10 * 33.8637526) unless c[:pressure].nil?
      req += "eTomOrgDavisVP2"
      init_str = "user #{AppConfig.cwop_id} pass -1 vers linux-1wire 1.00"
