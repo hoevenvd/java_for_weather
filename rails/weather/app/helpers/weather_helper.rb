@@ -40,7 +40,7 @@ module WeatherHelper
      req += sprintf("P%03d", c[:daily_rain] * 100) unless c[:daily_rain].nil?
      if (!c[:outside_humidity].nil?)
        if (c[:outside_humidity] == 100)
-         req += sprintf("h00", c[:outside_humidity])
+         req += "h00"
        else
          req += sprintf("h%02d", c[:outside_humidity])
        end
