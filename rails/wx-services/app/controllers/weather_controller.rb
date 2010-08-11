@@ -1,4 +1,22 @@
+# caching strategy
+
+# since the data structures are the same as past_summaries, look into sti to allow for simple method overrides for
+#  stuff like asking a record if it has expired, encapsulating updating extremes, etc
+# provide reasonable defaults for cache ttls by current period and allow override via config
+# reading: make sure a record is not too stale
+
+# archive record posting:
+#   if no record, create it
+#   check to see if the ttl has expired and refresh if necessary
+#   update extremes for all cached current periods - stuff like highs/lows, etc
+
+# current conditions posting:
+#   if no record, create it
+#   check to see if a record has expired and create it if necessary
+#   update extremes for all periods
+
 class WeatherController < ApplicationController
+  include Cache
   wsdl_service_name 'Weather'
   web_service_scaffold :invoke
   before_invocation :authenticate, :except => [:get_current_conditions,
@@ -60,7 +78,7 @@ class WeatherController < ApplicationController
     cond[:storm_rain] = sample[:storm_rain] == -9999.0 ? nil : sample[:storm_rain]
     cond[:uv] = sample[:uv] == -9999 ? nil : sample[:uv]
     cond[:solar_radiation] = sample[:solar_radiation] == -9999 ? nil : sample[:solar_radiation]
-    
+
     if !cond.save
       raise cond.errors.full_messages.to_s
     end
@@ -172,9 +190,13 @@ class WeatherController < ApplicationController
     rec[:high_uv_index] = entry[:high_uv_index] == -9999 ? nil : entry[:high_uv_index]
     rec[:average_solar_radiation] = entry[:average_solar_radiation] == -9999 ? nil : entry[:average_solar_radiation]
     rec[:high_solar_radiation] = entry[:high_solar_radiation] == -9999 ? nil : entry[:high_solar_radiation]
+
     if !rec.save
       raise rec.errors.full_messages.to_s
     end
+
+    update_current_cache(location, entry)
+
   end
 
   def get_rise_set(password, date, location)
