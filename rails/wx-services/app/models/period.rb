@@ -25,7 +25,7 @@ class Period
   def Period.this_hour
     end_tm = Time.now.in_time_zone
     start_tm = end_tm.change(:min => 0)
-    return Period.new(start_tm, end_tm, "ROLLLING_HOUR")
+    return Period.new(start_tm, end_tm, :this_hour)
   end
   		
   def Period.last_hour
@@ -36,10 +36,9 @@ class Period
   end
   		
   def Period.today
-    now = Time.now.in_time_zone
-    start_tm = now.at_midnight # midnight today
-    end_tm = start_tm.tomorrow
-    return Period.new(start_tm, end_tm, "TODAY")
+    start_tm = Time.now.at_beginning_of_day.in_time_zone
+    end_tm = Time.now.midnight.in_time_zone + 1.day
+    return Period.new(start_tm, end_tm, :today)
   end
 
   def Period.yesterday
@@ -49,21 +48,21 @@ class Period
   end
   
   def Period.this_week
-    end_tm = Time.now.in_time_zone
-    start_tm = end_tm.at_beginning_of_week
-    return Period.new(start_tm, end_tm, "THIS_WEEK")
+    start_tm = Time.now.at_beginning_of_week.in_time_zone
+    end_tm = Time.now.at_end_of_week.in_time_zone
+    return Period.new(start_tm, end_tm, :this_week)
   end
 
   def Period.this_month
-    end_tm = Time.now.in_time_zone
-    start_tm = end_tm.at_beginning_of_month
-    return Period.new(start_tm, end_tm, "THIS_MONTH")
+    start_tm = Time.now.at_beginning_of_month.in_time_zone
+    end_tm = Time.now.at_end_of_month.in_time_zone
+    return Period.new(start_tm, end_tm, :this_month)
   end
 
   def Period.this_year
-    end_tm = Time.now.in_time_zone
-    start_tm = end_tm.at_beginning_of_year
-    return Period.new(start_tm, end_tm, "THIS_YEAR")
+    start_tm = Time.now.at_beginning_of_year.in_time_zone
+    end_tm = Time.now.at_end_of_year.in_time_zone
+    return Period.new(start_tm, end_tm, :this_year)
   end
 
   def Period.last_week
