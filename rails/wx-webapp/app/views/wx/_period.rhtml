@@ -1,0 +1,131 @@
+<TABLE BORDER WIDTH="480" BGCOLOR="#C0C0C0" >
+<TR>
+<TD COLSPAN="4" align="center" >
+<CENTER><B><FONT FACE="Arial">Temperature</FONT></B></CENTER>
+<% if !@today.nil? %>
+<center><FONT FACE="Arial">Today's Low: </FONT><%= @today.lowTemp %>
+<% if @today.lowTempDate != nil then %>
+  (<%= @today.lowTempDate.in_time_zone.strftime "%I:%M %p" %>)
+<% end %></center>
+<center>Today's High: <%= @today.hiTemp %>
+<% if @today.hiTempDate != nil then %>
+ (<%= @today.hiTempDate.in_time_zone.strftime "%I:%M %p" %>)
+<% end %></center>
+<center>Today's Low Wind Chill: <%= @today.lowWindchill %>
+<% end %></center>
+
+<% if @yesterday != nil %>
+<% if !@yesterday.lowTemp.nil? %>
+<center>Yesterday's Low: <%= @yesterday.lowTemp %>
+<% if @yesterday.lowTempDate != nil then %>
+ (<%= @yesterday.lowTempDate.in_time_zone.strftime "%I:%M %p" %>)</center>
+<% end %>
+<center>Yesterday's High: <%= @yesterday.hiTemp %> 
+<% if @yesterday.hiTempDate != nil then %>
+ (<%= @yesterday.hiTempDate.in_time_zone.strftime "%I:%M %p" %>)
+<% end %>
+<% end %>
+<% end %></center>
+
+<% if @yesterday != nil %>
+<% if !@yesterday.degreeDays.nil? %>
+<center>Yesterday's <%= (@yesterday.degreeDays < 0 ? "Heating" : "Cooling") %> Degree Days: <%= @yesterday.degreeDays.abs %></center>
+<% end %>
+<% end %>
+
+<% if @this_week != nil %>
+<% if !@this_week.avgTemp.nil? %>
+<center>This Week Avg.: <%= sprintf("%.1f", @this_week.avgTemp) %></center>
+<% end %>
+<% end %>
+
+<% if @last_week != nil %>
+<% if !@last_week.avgTemp.nil? %>
+<center>Last Week Avg.: <%= sprintf("%.1f", @last_week.avgTemp) %></center>
+<% end %>
+<% end %>
+
+<% if @this_month != nil %>
+<% if !@this_month.avgTemp.nil? %>
+<center>This Month Avg.: <%= sprintf("%.1f", @this_month.avgTemp) %></center>
+<% end %>
+<% end %>
+
+<% if @last_month != nil %>
+<% if !@last_month.avgTemp.nil? %>
+<center>Last Month Avg.: <%= sprintf("%.1f", @last_month.avgTemp) %></center>
+<% end %>
+<% end %>
+
+</TD>
+</TR>
+<TR>
+<TD COLSPAN="4" align="center" >
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Precipitation</FONT></FONT></B></CENTER>
+<% if !@today.nil? and !@today.rain.nil? %>
+<CENTER>Today: <%= sprintf("%.02f", @today.rain) %> inches</CENTER>
+<% end %>
+<% if @yesterday != nil %>
+<% if !@yesterday.rain.nil? %>
+<CENTER>Yesterday: <%= sprintf("%.02f", @yesterday.rain) %> inches</CENTER>
+<% end %>
+<% end %>
+<% if !@this_week.nil? and !@this_week.rain.nil? %>
+<CENTER>This week: <%= sprintf("%.02f", @this_week.rain) %> inches</CENTER>
+<% end %>
+<% if @last_week != nil %>
+<% if !@last_week.rain.nil? %>
+<CENTER>Last week: <%= sprintf("%.02f", @last_week.rain) %> inches </CENTER>
+<% end %>
+<% end %>
+
+</TD>
+</TR>
+
+<tr>
+<TD  align="center" >
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Wind</FONT></FONT></B></CENTER>
+<% if !@this_hour.nil? and !@this_hour.avgWindspeed.nil? %>
+<Center>This Hour: <%= sprintf("%.1f", @this_hour.avgWindspeed) %> mph</Center>
+<% end %>
+
+
+<% if @last_hour != nil %>
+<% if !@last_hour.avgWindspeed.nil? %>
+<Center>Last Hour: <%= sprintf("%.1f", @last_hour.avgWindspeed) %> mph</Center>
+<% end %>
+<% end %>
+<% if @today != nil %>
+<% if !@today.avgWindspeed.nil? %>
+<CENTER>Today: <%= sprintf("%.1f", @today.avgWindspeed) %> mph</CENTER>
+<% end %>
+<% if !@today.hiWindspeed.nil? %>
+  <% if @today.hiWindspeed != nil and @today.gustDir != nil then %>
+    <Center>Today's High: <%= Direction.to_s(@today.gustDir) %> at <%= @today.hiWindspeed %> mph (<%= @today.gustDate.in_time_zone.strftime "%I:%M %p" %>)</Center>
+  <% end %>
+<% end %>
+<% end %>
+
+</TD>
+</tr>
+<TR>
+<TD COLSPAN="4" align="center" >
+<CENTER><B><FONT FACE="Arial"><FONT SIZE=-1>Barometer</FONT></FONT></B></CENTER>
+<% if !@today.nil? and !@today.hiPressure.nil? %>
+<CENTER>Today's High: <%= sprintf("%.2f", @today.hiPressure) %></CENTER>
+<% end %>
+<% if !@today.nil? and !@today.lowPressure.nil? %>
+<CENTER>Today's Low:  <%= sprintf("%.2f", @today.lowPressure) %></CENTER>
+<% end %>
+</TD>
+
+</TR>
+
+<TR>
+  <TD COLSPAN="4" align="center" >
+    <CENTER>N 42&deg;33'41.54, W 70&deg;50'58.28</CENTER>
+  </TD>
+</TR>
+
+</TABLE>
+
