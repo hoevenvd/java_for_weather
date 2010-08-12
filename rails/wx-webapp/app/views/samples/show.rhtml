@@ -1,0 +1,7 @@
+<b><%= @conditions %></b><p>
+<b>Vis: </b><%= @visibility %><p>
+<% for column in Sample.content_columns %>
+<p>
+  <b><%= column.human_name %>:</b> <%=h @sample.send(column.name) %>
+</p>
+<% end %>
