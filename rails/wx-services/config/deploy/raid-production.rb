@@ -63,17 +63,7 @@ namespace(:deploy) do
   end
 end
 
-desc "tail -f development log"
-task :tail_dev_log, :roles => :app do 
-  stream "tail -f #{shared_path}/log/development.log" 
-end 
-
 desc "tail -f production log"
 task :tail_prod_log, :roles => :app do
   stream "tail -f #{shared_path}/log/production.log"
 end
-
-#desc "reset awstats config"
-#task :reset_awstata, :roles => :app do
-#    send(run_method, "cp ~/tmp/awstats/awstats.tom.org.conf.good ~/tmp/awstats/awstats.tom.org.conf")
-#end
