@@ -2,6 +2,7 @@ PassengerEnabled on
 
 PassengerAppRoot /home/tom/apps/weather/current/
 
+#RailsEnv development
 
 #RailsBaseURI /weather
 
