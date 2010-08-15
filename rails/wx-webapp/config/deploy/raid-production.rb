@@ -1,6 +1,6 @@
-set :application, "weather"
+set :application, "wx-webapp"
 
-set :deploy_dir, "/weather"
+#set :deploy_dir, "/wx-webapp"
 
 set :user, "tom"
 ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "id_rsa")] 
@@ -80,8 +80,3 @@ desc "tail -f production log"
 task :tail_prod_log, :roles => :app do
   stream "tail -f #{shared_path}/log/production.log"
 end
-
-#desc "reset awstats config"
-#task :reset_awstata, :roles => :app do
-#    send(run_method, "cp ~/tmp/awstats/awstats.tom.org.conf.good ~/tmp/awstats/awstats.tom.org.conf")
-#end

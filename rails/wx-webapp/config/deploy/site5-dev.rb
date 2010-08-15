@@ -1,6 +1,6 @@
 set :application, "wx-webapp"
 
-#set :deploy_dir, "/weather"
+set :deploy_dir, "/wx-webapp"
 
 set :user, "henry"
 ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "id_rsa")] 
