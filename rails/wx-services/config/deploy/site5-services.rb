@@ -1,6 +1,6 @@
-set :application, "weather"
+set :application, "wx-services"
 
-set :deploy_dir, "/weather"
+set :deploy_dir, "/wx-services"
 
 set :user, "tomorg"
 ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "id_rsa")] 
@@ -53,7 +53,18 @@ task :symlink_config_yml, :roles => :app do
        #{release_path}/config/service_providers.yml"
 end
 
-after 'deploy:update_code', 'symlink_config_yml'
+#desc "Symlink root directory under public_html"
+task :symlink_public, :roles => :app do
+  run "ln -nsf #{current_path}/public
+       /home/#{user}/public_html/#{deploy_dir}"
+
+# fixup .htaccess for passenger
+# example can be found in config/dot_htaccess_passenger
+  run "cp #{shared_path}/config/dot_htaccess
+       #{release_path}/public/.htaccess"
+end
+
+after 'deploy:update_code', 'symlink_config_yml', 'symlink_public'
 
 namespace(:deploy) do
   desc "Shared dispatch.fcgi restart"
