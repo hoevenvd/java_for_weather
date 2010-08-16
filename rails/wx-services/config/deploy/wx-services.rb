@@ -1,4 +1,4 @@
-set :application, "weather"
+set :application, "wx-services"
 
 set :user, "tom"
 ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "identity")] 
