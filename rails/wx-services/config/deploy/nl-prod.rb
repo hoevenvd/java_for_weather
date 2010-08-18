@@ -1,6 +1,12 @@
+# steps
+# 0 - mkdir /home/maarten/apps, configure apache to serve from /home/maarten/apps/wx-services/current
+# 1 - from workstation containing cap, run 'cap nl-prod deploy:setup' - look for issues
+# 2 - ssh into webserver and copy the directory weather/shared/config (and its contents) to wx-services/shared/config
+# 3 - run 'cap nl-prod deploy'
+
 set :application, "wx-services"
 
-set :user, "tom"
+set :user, "maarten"
 ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "id_rsa")] 
 ssh_options[:port] = 2010
 
@@ -29,9 +35,9 @@ set :scm, :subversion
 
 set :deploy_via, :export 
 
-role :app, "weerinlelystad.dyndns.org"
-role :web, "weerinlelystad.dyndns.org"
-role :db,  "weerinlelystad.dyndns.org", :primary => true
+role :app, "webserver"
+role :web, "webserver"
+role :db,  "webserver", :primary => true
 
 
 task :symlink_config_yml, :roles => :app do
