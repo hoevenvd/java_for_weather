@@ -12,19 +12,23 @@ class WxPeriod < Period
 
   def WxPeriod.this_hour_summary(location)
 #    return WxPeriod.query(this_hour, location)
-    PastSummary.find_by_period_and_location(:this_hour, location)
+    s = PastSummary.find_by_period_and_location(:this_hour, location)
+    return (!s.nil? and s.enddate < Time.now.utc) ? nil : s
   end
-  
+
   def WxPeriod.today_summary(location)
-    PastSummary.find_by_period_and_location(:today, location)
+    s = PastSummary.find_by_period_and_location(:today, location)
+    return (!s.nil? and s.enddate < Time.now.utc) ? nil : s
   end
   
   def WxPeriod.this_week_summary(location)
-    PastSummary.find_by_period_and_location(:this_week, location)
+    s = PastSummary.find_by_period_and_location(:this_week, location)
+    return (!s.nil? and s.enddate < Time.now.utc) ? nil : s
   end
   
   def WxPeriod.this_month_summary(location)
-    PastSummary.find_by_period_and_location(:this_month, location)
+    s = PastSummary.find_by_period_and_location(:this_month, location)
+    return nil if s.enddate < Time.now.utc
   end
   
   def WxPeriod.last_hour_summary(location)
