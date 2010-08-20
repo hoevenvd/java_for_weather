@@ -21,6 +21,10 @@ class WeatherController < ApplicationController
   web_service_scaffold :invoke
   before_invocation :authenticate, :except => [:get_current_conditions,
                                                :get_last_archive]
+
+  def clear_cache(password, location)
+    PastSummary.delete_all("location = #{location}")
+  end
   
   def get_current_conditions(location)
     sample = CurrentCondition.find_by_location(location)
