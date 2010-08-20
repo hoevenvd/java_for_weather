@@ -1,4 +1,9 @@
 class WeatherApi < ActionWebService::API::Base
+  api_method :clear_cache,
+             :expects => [{:password=>:string},
+                          {:location=>:string}],
+             :returns => nil
+
   api_method :get_current_conditions,
              :expects => [{:location=>:string}],
              :returns => [SampleStruct]
