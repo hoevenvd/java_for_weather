@@ -26,6 +26,12 @@ class WeatherController < ApplicationController
     PastSummary.delete_all("location = #{location}")
     update_current_cache(location)
   end
+
+  def update_last_rain(location, date)
+    l = LastRain.find_or_create_by_location(location)
+    l.last_rain = date
+    l.save!
+  end
   
   def get_current_conditions(location)
     sample = CurrentCondition.find_by_location(location)
@@ -72,6 +78,11 @@ class WeatherController < ApplicationController
     end
     
     cond[:rain_rate] = sample[:rain_rate] == -9999.0 ? nil : sample[:rain_rate]
+
+    if !cond[:rain_rate].nil? and cond[:rain_rate] > 0
+      #update_last_rain(location, cond[:sample_date])
+    end
+
     cond[:ten_min_avg_wind] = sample[:ten_min_avg_wind] == -9999 ? nil : sample[:ten_min_avg_wind]
     cond[:inside_temperature] = sample[:inside_temperature] == -9999.0 ? nil : sample[:inside_temperature]
     cond[:inside_humidity] = sample[:inside_humidity] == -9999 ? nil : sample[:inside_humidity]
@@ -170,6 +181,11 @@ class WeatherController < ApplicationController
     rec[:pressure] = entry[:pressure] == -9999.0 ? nil : entry[:pressure]
     rec[:outside_humidity] = entry[:outside_humidity] == -9999 ? nil : entry[:outside_humidity]
     rec[:rainfall] = entry[:rainfall] == -9999.0 ? nil : entry[:rainfall]
+
+    if !rec[:rainfall].nil? and rec[:rainfall] > 0
+      update_last_rain(location, date)
+    end
+
     rec[:high_rain_rate] = entry[:high_rain_rate] == -9999.0 ? nil : entry[:high_rain_rate]
 
     if entry[:average_wind_speed] == -9999 or entry[:prevailing_wind_direction] == -9999

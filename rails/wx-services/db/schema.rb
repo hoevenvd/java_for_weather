@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100808111432) do
+ActiveRecord::Schema.define(:version => 20100822173434) do
 
   create_table "archive_records", :force => true do |t|
     t.datetime "date",                                                                                     :null => false
@@ -21,39 +21,39 @@ ActiveRecord::Schema.define(:version => 20100808111432) do
     t.integer  "outside_humidity"
     t.float    "rainfall"
     t.float    "high_rain_rate"
-    t.integer  "average_wind_speed",           :limit => 2
-    t.integer  "high_wind_speed",              :limit => 2
-    t.integer  "direction_of_high_wind_speed", :limit => 2
-    t.integer  "prevailing_wind_direction",    :limit => 2
+    t.integer  "average_wind_speed"
+    t.integer  "high_wind_speed"
+    t.integer  "direction_of_high_wind_speed"
+    t.integer  "prevailing_wind_direction"
     t.decimal  "inside_temp",                                :precision => 4, :scale => 1
     t.decimal  "average_dewpoint",                           :precision => 4, :scale => 1
-    t.integer  "average_apparent_temp",        :limit => 2
-    t.integer  "inside_humidity",              :limit => 2
-    t.integer  "average_solar_radiation"
-    t.integer  "average_uv_index"
-    t.integer  "et"
-    t.integer  "high_solar_radiation"
-    t.integer  "high_uv_index"
-    t.integer  "forecastRule"
-    t.integer  "leaf_temp_1"
-    t.integer  "leaf_temp_2"
-    t.integer  "leaf_wetness1"
-    t.integer  "leaf_wetness2"
-    t.integer  "soil_temp1"
-    t.integer  "soil_temp2"
-    t.integer  "soil_temp3"
-    t.integer  "soil_temp4"
-    t.integer  "extra_humidity1"
-    t.integer  "extra_humidity2"
-    t.integer  "extra_temp1"
-    t.integer  "extra_temp2"
-    t.integer  "extra_temp3"
-    t.integer  "soil_moisture1"
-    t.integer  "soil_moisture2"
-    t.integer  "soil_moisture3"
-    t.integer  "soil_moisture4"
-    t.integer  "number_of_wind_samples"
-    t.integer  "download_record_type"
+    t.integer  "average_apparent_temp"
+    t.integer  "inside_humidity"
+    t.integer  "average_solar_radiation",      :limit => 8
+    t.integer  "average_uv_index",             :limit => 8
+    t.integer  "et",                           :limit => 8
+    t.integer  "high_solar_radiation",         :limit => 8
+    t.integer  "high_uv_index",                :limit => 8
+    t.integer  "forecastRule",                 :limit => 8
+    t.integer  "leaf_temp_1",                  :limit => 8
+    t.integer  "leaf_temp_2",                  :limit => 8
+    t.integer  "leaf_wetness1",                :limit => 8
+    t.integer  "leaf_wetness2",                :limit => 8
+    t.integer  "soil_temp1",                   :limit => 8
+    t.integer  "soil_temp2",                   :limit => 8
+    t.integer  "soil_temp3",                   :limit => 8
+    t.integer  "soil_temp4",                   :limit => 8
+    t.integer  "extra_humidity1",              :limit => 8
+    t.integer  "extra_humidity2",              :limit => 8
+    t.integer  "extra_temp1",                  :limit => 8
+    t.integer  "extra_temp2",                  :limit => 8
+    t.integer  "extra_temp3",                  :limit => 8
+    t.integer  "soil_moisture1",               :limit => 8
+    t.integer  "soil_moisture2",               :limit => 8
+    t.integer  "soil_moisture3",               :limit => 8
+    t.integer  "soil_moisture4",               :limit => 8
+    t.integer  "number_of_wind_samples",       :limit => 8
+    t.integer  "download_record_type",         :limit => 8
     t.datetime "created_at"
     t.datetime "updated_at"
     t.float    "outside_temp_m"
@@ -104,13 +104,13 @@ ActiveRecord::Schema.define(:version => 20100808111432) do
     t.string   "location",              :limit => 30,                               :default => "", :null => false
     t.datetime "sample_date"
     t.decimal  "outside_temperature",                 :precision => 4, :scale => 1
-    t.integer  "outside_humidity",      :limit => 2
+    t.integer  "outside_humidity"
     t.decimal  "dewpoint",                            :precision => 4, :scale => 1
-    t.integer  "apparent_temp",         :limit => 2
+    t.integer  "apparent_temp"
     t.float    "pressure"
     t.string   "bar_status",            :limit => 25
-    t.integer  "windspeed",             :limit => 2
-    t.integer  "wind_direction",        :limit => 2
+    t.integer  "windspeed"
+    t.integer  "wind_direction"
     t.boolean  "is_raining"
     t.float    "rain_rate"
     t.integer  "uv"
@@ -143,26 +143,35 @@ ActiveRecord::Schema.define(:version => 20100808111432) do
   add_index "current_conditions", ["location"], :name => "index_current_conditions_on_location"
 
   create_table "forecast_periods", :force => true do |t|
-    t.integer  "noaa_forecast_id",               :default => 0,  :null => false
+    t.integer  "noaa_forecast_id", :limit => 8,  :default => 0,  :null => false
     t.string   "name",             :limit => 20, :default => "", :null => false
     t.text     "text"
     t.datetime "created_at"
     t.string   "icon_location",                  :default => "", :null => false
     t.datetime "updated_at"
-    t.integer  "temp"
+    t.integer  "temp",             :limit => 8
     t.text     "weather"
-    t.integer  "pop"
+    t.integer  "pop",              :limit => 8
   end
 
   add_index "forecast_periods", ["noaa_forecast_id"], :name => "noaa_forecast_id"
+
+  create_table "last_rains", :force => true do |t|
+    t.string   "location",   :limit => 30, :null => false
+    t.datetime "last_rain"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "last_rains", ["location"], :name => "index_last_rains_on_location"
 
   create_table "noaa_conditions", :force => true do |t|
     t.datetime "created_at"
     t.string   "location",       :limit => 30, :default => "", :null => false
     t.datetime "updated_at"
-    t.text     "conditions"
+    t.text     "conditions",                                   :null => false
     t.datetime "as_of"
-    t.integer  "visibility"
+    t.integer  "visibility",     :limit => 8
     t.text     "conditions_xml"
   end
 
@@ -171,7 +180,7 @@ ActiveRecord::Schema.define(:version => 20100808111432) do
   add_index "noaa_conditions", ["location"], :name => "location"
 
   create_table "noaa_forecasts", :force => true do |t|
-    t.text     "forecast_xml",                                 :null => false
+    t.text     "forecast_xml"
     t.datetime "created_at"
     t.string   "location",       :limit => 30, :default => "", :null => false
     t.datetime "updated_at"
