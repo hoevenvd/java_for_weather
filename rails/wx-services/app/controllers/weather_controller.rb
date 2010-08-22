@@ -22,8 +22,9 @@ class WeatherController < ApplicationController
   before_invocation :authenticate, :except => [:get_current_conditions,
                                                :get_last_archive]
 
-  def clear_cache(password, location)
+  def reset_cache(password, location)
     PastSummary.delete_all("location = #{location}")
+    update_current_cache(location)
   end
   
   def get_current_conditions(location)
@@ -199,7 +200,7 @@ class WeatherController < ApplicationController
       raise rec.errors.full_messages.to_s
     end
 
-    update_current_cache(location, entry)
+    update_current_cache(location)
 
   end
 

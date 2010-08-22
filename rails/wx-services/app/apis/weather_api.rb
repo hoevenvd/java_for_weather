@@ -1,5 +1,5 @@
 class WeatherApi < ActionWebService::API::Base
-  api_method :clear_cache,
+  api_method :reset_cache,
              :expects => [{:password=>:string},
                           {:location=>:string}],
              :returns => nil

@@ -23,7 +23,7 @@ module Cache
   #    if so, set the attribute and construct a method call for that field's date setter and call it
   # same with lows
 
-  def update_current_cache(location, archive_record)
+  def update_current_cache(location)
     #check today
     this_hour = PastSummary.find_by_period_and_location(:this_hour, location)
     # update extremes here
@@ -58,7 +58,7 @@ module Cache
       WxPeriod.add_to_db(pd, location) unless pd.avgTemp == nil
     end
 
-    update_extremes(archive_record)
+    #update_extremes(archive_record)
   end
 
   def update_extremes(archive_record)
