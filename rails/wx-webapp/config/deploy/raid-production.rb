@@ -58,8 +58,8 @@ end
 task :symlink_public, :roles => :app do
 # fixup .htaccess for passenger
 # example can be found in config/dot_htaccess_passenger
-  run "cp #{shared_path}/config/dot_htaccess
-       #{release_path}/public/.htaccess"
+#  run "cp #{shared_path}/config/dot_htaccess
+#       #{release_path}/public/.htaccess"
 end
 
 after 'deploy:update_code', 'symlink_config_yml', 'symlink_public'
