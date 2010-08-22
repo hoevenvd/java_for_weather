@@ -72,7 +72,7 @@ class WxController < ApplicationController
           @highlo = "<br>(daily low)</br>"
         end
       end
-      @last_rain = last_rain
+      @last_rain = LastRain.find_by_location(AppConfig.location).last_rain
     end
     get_climate
     get_riseset
