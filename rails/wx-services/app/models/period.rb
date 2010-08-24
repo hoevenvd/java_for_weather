@@ -32,7 +32,7 @@ class Period
     tm = Time.now.in_time_zone
     end_tm = tm.change(:min => 0)
     start_tm = end_tm.ago(1.hour)
-    return Period.new(start_tm, end_tm, "LAST_HOUR")
+    return Period.new(start_tm, end_tm, :last_hour)
   end
   		
   def Period.today
@@ -44,7 +44,7 @@ class Period
   def Period.yesterday
     end_tm = Time.now.in_time_zone.at_midnight # midnight today
     start_tm = end_tm.ago(1.day)
-    return Period.new(start_tm, end_tm, "YESTERDAY")
+    return Period.new(start_tm, end_tm, :yesterday)
   end
   
   def Period.this_week
@@ -68,13 +68,13 @@ class Period
   def Period.last_week
     end_tm = Time.now.in_time_zone.at_beginning_of_week
     start_tm = end_tm.ago(1.week)
-    return Period.new(start_tm, end_tm, "LAST_WEEK")
+    return Period.new(start_tm, end_tm, :last_week)
   end
 
   def Period.last_month
     end_tm = Time.now.in_time_zone.at_beginning_of_month
     start_tm = end_tm.ago(1.month)
-    return Period.new(start_tm, end_tm, "LAST_MONTH")
+    return Period.new(start_tm, end_tm, :last_month)
   end
   
 end

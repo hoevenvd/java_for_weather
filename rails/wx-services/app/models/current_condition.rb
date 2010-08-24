@@ -55,27 +55,25 @@ class CurrentCondition < ActiveRecord::Base
   end
 
   def temp_trend
-    if trend_record == nil or outside_temperature == trend_record.outside_temp then
+    if trend_record == nil or outside_temperature == trend_record.avgTemp then
       return nil
     else 
-      outside_temperature > trend_record.outside_temp ? "Rising" : "Falling"
+      outside_temperature > trend_record.avgTemp ? "Rising" : "Falling"
     end
   end
           
   def dewpoint_trend
-    if trend_record == nil or dewpoint == trend_record.average_dewpoint then
+    if trend_record == nil or dewpoint == trend_record.avgDewpoint then
       return nil
     else 
-      dewpoint > trend_record.average_dewpoint ? "Rising" : "Falling"
+      dewpoint > trend_record.avgDewpoint ? "Rising" : "Falling"
     end
   end
           
   protected
     
   def trend_record
-    bt = Time.now - 2.hours
-    et = Time.now - 1.hour
-    @trend_record = ArchiveRecord.find(:first,:conditions => "date > \'#{bt.utc.to_s(:db)} and date < #{et.utc.to_s(:db)}\' and location = \'#{location}\'", :order => 'date') unless @trend_record != nil
+    @trend_record = PastSummary.find_by_location_and_period(location, :last_hour)
     @trend_record
   end
 

@@ -23,8 +23,8 @@ class ArchiveRecord < ActiveRecord::Base
                                    Time.now.utc.at_beginning_of_year,
                                    Time.now.utc.at_beginning_of_year - 1.year],
                                    :order => "date desc"}}
-  named_scope :last_rain, lambda { |location| {:conditions => ["rainfall > 0 and location = \'#{AppConfig.location}\'", location],
-                            :limit => 1, :order => "date desc"} }
+  #named_scope :last_rain, lambda { |location| {:conditions => ["rainfall > 0 and location = \'#{AppConfig.location}\'", location],
+  #                          :limit => 1, :order => "date desc"} }
 
   def before_save    
     if  !(outside_temp.nil? || outside_humidity.nil?)
