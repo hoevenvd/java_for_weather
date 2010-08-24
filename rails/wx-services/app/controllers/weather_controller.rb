@@ -80,7 +80,7 @@ class WeatherController < ApplicationController
     cond[:rain_rate] = sample[:rain_rate] == -9999.0 ? nil : sample[:rain_rate]
 
     if !cond[:rain_rate].nil? and cond[:rain_rate] > 0
-      #update_last_rain(location, cond[:sample_date])
+      update_last_rain(location, cond[:sample_date])
     end
 
     cond[:ten_min_avg_wind] = sample[:ten_min_avg_wind] == -9999 ? nil : sample[:ten_min_avg_wind]

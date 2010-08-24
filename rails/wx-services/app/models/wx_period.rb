@@ -28,7 +28,7 @@ class WxPeriod < Period
   
   def WxPeriod.this_month_summary(location)
     s = PastSummary.find_by_period_and_location(:this_month, location)
-    return nil if s.enddate < Time.now.utc
+    return (!s.nil? and s.enddate < Time.now.utc) ? nil : s
   end
   
   def WxPeriod.last_hour_summary(location)
