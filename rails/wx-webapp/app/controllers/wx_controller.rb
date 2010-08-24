@@ -55,7 +55,7 @@ class WxController < ApplicationController
   end
 
   def last_rain
-    ArchiveRecord.last_rain_date(AppConfig.location)
+    LastRain.find_by_location(AppConfig.location).last_rain
   end
   
   def get_current_conditions
@@ -72,7 +72,7 @@ class WxController < ApplicationController
           @highlo = "<br>(daily low)</br>"
         end
       end
-      @last_rain = LastRain.find_by_location(AppConfig.location).last_rain
+      @last_rain = last_rain
     end
     get_climate
     get_riseset
