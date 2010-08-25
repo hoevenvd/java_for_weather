@@ -32,7 +32,7 @@ class WxPeriod < Period
   end
   
   def WxPeriod.last_hour_summary(location)
-    s = PastSummary.find_by_period_and_location("LAST_HOUR", location)
+    s = PastSummary.find_by_period_and_location(:last_hour, location)
     if s.nil? or s.startdate.utc != Period.last_hour.start_time.utc
       pd = WxPeriod.query(last_hour, location)
       return WxPeriod.add_to_db(pd, location) unless pd.avgTemp == nil
@@ -42,7 +42,7 @@ class WxPeriod < Period
   end
   
   def WxPeriod.yesterday_summary(location)
-    s = PastSummary.find_by_period_and_location("YESTERDAY", location)
+    s = PastSummary.find_by_period_and_location(:yesterday, location)
     if s.nil? or s.startdate.utc != Period.yesterday.start_time.utc
       pd = WxPeriod.query(yesterday, location)
       return WxPeriod.add_to_db(pd, location) unless pd.avgTemp == nil
@@ -52,7 +52,7 @@ class WxPeriod < Period
   end
   
   def WxPeriod.last_week_summary(location)
-    s = PastSummary.find_by_period_and_location("LAST_WEEK", location)
+    s = PastSummary.find_by_period_and_location(:last_week, location)
     if s.nil? or s.startdate.utc != Period.last_week.start_time.utc
       pd = WxPeriod.query(last_week, location)
       return WxPeriod.add_to_db(pd, location) unless pd.avgTemp == nil
@@ -62,7 +62,7 @@ class WxPeriod < Period
   end
   
   def WxPeriod.last_month_summary(location)
-    s = PastSummary.find_by_period_and_location("LAST_MONTH", location)
+    s = PastSummary.find_by_period_and_location(:last_month, location)
     if s.nil? or s.startdate.utc != Period.last_month.start_time.utc
       pd = WxPeriod.query(last_month, location)
       return WxPeriod.add_to_db(pd, location) unless pd.avgTemp == nil
