@@ -218,6 +218,10 @@ class WeatherController < ApplicationController
 
     update_current_cache(location)
 
+    if AppConfig.rrd_enabled and !AppConfig.rrd_graphs[location].nil?
+      WeatherHelper.update_rrd(location, rec)
+    end
+
   end
 
   def get_rise_set(password, date, location)

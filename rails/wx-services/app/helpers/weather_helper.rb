@@ -9,6 +9,11 @@ URL = "rtupdate.wunderground.com"
 module WeatherHelper
   include WxUtils
 
+  def self.update_rrd(location, a)
+    RRDWriter.write_to_rrd(location, a)
+  end
+
+
   def self.post_to_cwop(location)
      c = CurrentCondition.find_by_location(location)
      return if c.nil?
