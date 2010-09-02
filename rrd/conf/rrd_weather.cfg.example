@@ -3,18 +3,19 @@
 ########################################################################
 
 # Where is executable rrdtool found?
-RRDTOOL_BIN=/usr/bin
+RRDTOOL_BIN=/opt/local/bin
 
 # Where are the rrd scripts found?
-RRD_SCRIPT=~/apps/weather/current/script/custom
+RRD_SCRIPT=~/dev/weather/rrd/bin
 
 # Where are the rrd databases found? 
-RRD_DATABASE=~/rrd/database
+RRD_DATABASE=~/dev/rrd-data
+#RRD_DATABASE=~/tmp
 
 # Where should the rrd graphs go?
-RRD_GRAPH=/data/website/graphs
+RRD_GRAPH=~/dev/rrd-data/graphs
 
-export TZ="CET-1CEST-2";
+export TZ="EST5EDT";
 #Boston:EST5EDT
 #Amsterdam:CET-1CEST-2
 # see http://www.sonoracomm.com/support/20-voice-support/107-uclibc-tz
@@ -165,8 +166,8 @@ TEMPERATURE_UOM_I="f"
 #
 # Use RRD formatting (\c = center) -see `rrdgraph_graph > GPRINT'
 #
-TEMPERATURE_FOOTER_M='Wind Chill only valid below 1.68 캜; Humidex valid at 9.0 캜 and above\c'
-TEMPERATURE_FOOTER_I='Wind Chill only valid below 35.02 캟; Humidex valid at 48.2 캟 and above\c'
+TEMPERATURE_FOOTER_M='Wind Chill only valid below 1.68 째C; Humidex valid at 9.0 째C and above\c'
+TEMPERATURE_FOOTER_I='Wind Chill only valid below 35.02 째F; Humidex valid at 48.2 째F and above\c'
 
 #
 # Legend labels
@@ -411,8 +412,8 @@ HUMIDITY="Humidity"
 #
 # Use RRD formatting (\c = center) -see `rrdgraph_graph > GPRINT'
 #
-HUMIDITY_FOOTER_M='Relative Humidity is only valid at -10 캜 and above\c'
-HUMIDITY_FOOTER_I='Relative Humidity is only valid at 14 캟 and above\c'
+HUMIDITY_FOOTER_M='Relative Humidity is only valid at -10 째C and above\c'
+HUMIDITY_FOOTER_I='Relative Humidity is only valid at 14 째F and above\c'
 
 #
 # Add spaces and/or <TAB>'s (\t) _before_ the Max/Min/Last labels.  This helps with
