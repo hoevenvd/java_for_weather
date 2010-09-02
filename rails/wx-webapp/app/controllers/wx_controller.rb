@@ -55,7 +55,8 @@ class WxController < ApplicationController
   end
 
   def last_rain
-    LastRain.find_by_location(AppConfig.location).last_rain
+    l = LastRain.find_by_location(AppConfig.location)
+    l.nil? ? nil : l.last_rain
   end
   
   def get_current_conditions
