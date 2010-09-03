@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(:version => 20100822173434) do
     t.decimal  "low_outside_temp",                           :precision => 4, :scale => 1
     t.decimal  "pressure",                                   :precision => 5, :scale => 3
     t.integer  "outside_humidity",             :limit => 2
-    t.float    "rainfall"
-    t.float    "high_rain_rate"
+    t.float    "rainfall",                     :limit => 5
+    t.float    "high_rain_rate",               :limit => 6
     t.integer  "average_wind_speed",           :limit => 2
     t.integer  "high_wind_speed",              :limit => 2
     t.integer  "direction_of_high_wind_speed", :limit => 2
@@ -107,16 +107,16 @@ ActiveRecord::Schema.define(:version => 20100822173434) do
     t.integer  "outside_humidity",      :limit => 2
     t.decimal  "dewpoint",                            :precision => 4, :scale => 1
     t.integer  "apparent_temp",         :limit => 2
-    t.float    "pressure"
+    t.float    "pressure",              :limit => 5
     t.string   "bar_status",            :limit => 25
     t.integer  "windspeed",             :limit => 2
     t.integer  "wind_direction",        :limit => 2
     t.boolean  "is_raining"
-    t.float    "rain_rate"
+    t.float    "rain_rate",             :limit => 5
     t.integer  "ten_min_avg_wind",      :limit => 2
     t.integer  "uv",                    :limit => 2
     t.integer  "solar_radiation",       :limit => 2
-    t.float    "daily_rain"
+    t.float    "daily_rain",            :limit => 5
     t.datetime "created_at"
     t.datetime "updated_at"
     t.float    "inside_temperature"
@@ -169,7 +169,7 @@ ActiveRecord::Schema.define(:version => 20100822173434) do
     t.datetime "created_at"
     t.string   "location",       :limit => 30, :default => "", :null => false
     t.datetime "updated_at"
-    t.text     "conditions"
+    t.text     "conditions",                                   :null => false
     t.datetime "as_of"
     t.integer  "visibility"
     t.text     "conditions_xml"
@@ -319,5 +319,9 @@ ActiveRecord::Schema.define(:version => 20100822173434) do
   add_index "risesets", ["day"], :name => "index_risesets_on_day"
   add_index "risesets", ["location"], :name => "index_risesets_on_location"
   add_index "risesets", ["month"], :name => "index_risesets_on_month"
+
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version"
+  end
 
 end

@@ -79,7 +79,7 @@ class WeatherController < ApplicationController
     
     cond[:rain_rate] = sample[:rain_rate] == -9999.0 ? nil : sample[:rain_rate]
 
-    if !cond[:rain_rate].nil? and cond[:rain_rate] > 0
+    if (!cond[:rain_rate].nil? and cond[:rain_rate] > 0) or cond[:is_raining]
       update_last_rain(location, cond[:sample_date])
     end
 
@@ -182,7 +182,7 @@ class WeatherController < ApplicationController
     rec[:outside_humidity] = entry[:outside_humidity] == -9999 ? nil : entry[:outside_humidity]
     rec[:rainfall] = entry[:rainfall] == -9999.0 ? nil : entry[:rainfall]
 
-    if !rec[:rainfall].nil? and rec[:rainfall] > 0
+    if !rec[:rainfall].nil? and rec[:rainfall] > 0.0
       update_last_rain(location, date)
     end
 
