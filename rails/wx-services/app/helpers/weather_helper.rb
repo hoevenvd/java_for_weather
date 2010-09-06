@@ -1,6 +1,9 @@
 require 'net/http'
 require 'socket'
 
+log = Logger.new(STDOUT)
+log.level = Logger::WARN
+
 #      sb.append("&action=updateraw&realtime=1&rtfreq=3.0");
 # weather.wunderground.realtime.uploadUrl=http://rtupdate.wunderground.com/weatherstation/updateweatherstation.php
 
@@ -65,9 +68,6 @@ module WeatherHelper
 
   def self.post_to_wunderground(location, id, password)
 
-    log = Logger.new(STDOUT)
-    log.level = Logger::DEBUG
-
     sample = CurrentCondition.find_by_location(location)
     raise ArgumentError if sample == nil
     new_sample =
@@ -106,8 +106,12 @@ module WeatherHelper
     post_url += "&action=updateraw&realtime=1&rtfreq=3.0"
 
     log.debug(post_url)
-
-    response = Net::HTTP.get_response(URL, post_url)
+    begin
+      response = Net::HTTP.get_response(URL, post_url)
+    rescue Exception
+      log.warn($!)
+    end
+      
   end
 
 end
