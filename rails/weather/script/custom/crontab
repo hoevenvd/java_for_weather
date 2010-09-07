@@ -1,6 +1,0 @@
-# m h  dom mon dow   command
-#MAILTO="tom@tom.org"
-*/15 * * * * ~/bin/noaa.sh
-#*/10 * * * * ~/bin/cwop.sh
-#5,20,35,50 * * * * ~/bin/scp-charts.sh
-*/15 * * * * ~/bin/build-charts.sh
