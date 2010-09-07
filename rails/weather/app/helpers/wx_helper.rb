@@ -1,2 +1,0 @@
-module WxHelper
-end
