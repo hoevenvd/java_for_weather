@@ -1,8 +1,8 @@
 require 'net/http'
 require 'socket'
 
-log = Logger.new(STDOUT)
-log.level = Logger::WARN
+#log = Logger.new(STDOUT)
+#log.level = Logger::WARN
 
 #      sb.append("&action=updateraw&realtime=1&rtfreq=3.0");
 # weather.wunderground.realtime.uploadUrl=http://rtupdate.wunderground.com/weatherstation/updateweatherstation.php
@@ -105,11 +105,11 @@ module WeatherHelper
     post_url += "&softwaretype=" + CGI::escape(new_sample[:softwaretype].to_s)
     post_url += "&action=updateraw&realtime=1&rtfreq=3.0"
 
-    log.debug(post_url)
+ #   log.debug(post_url)
     begin
       response = Net::HTTP.get_response(URL, post_url)
-    rescue Exception
-      log.warn($!)
+ #   rescue Exception
+ #     log.warn($!)
     end
       
   end
