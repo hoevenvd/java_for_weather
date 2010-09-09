@@ -78,19 +78,19 @@ module Cache
 
   HIGH_LOW_FIELDS = [:Temp, :Pressure, :Dewpoint, :Windchill, :OutsideHumidity]
 
-  def check_this_month(archive_record)
-    month = PastSummary.find_by_period(:this_month)
+  def check_this_month(archive_record, location)
+    month = PastSummary.find_by_period_and_location(:this_month, location)
     # high outside temp
     if month != nil and archive_record[:high_outside_temp] >= month[:hiTemp]
       month[:hiTemp] = archive_record[:high_outside_temp]
       month[:hiTempDate] = archive_record[:date]
       # if it is the high for the month, it must also be the high for the week
-      week = PastSummary.find_by_period(:this_week)
+      week = PastSummary.find_by_period_and_location(:this_week, location)
       week[:hiTemp] = archive_record[:high_outside_temp]
       week[:hiTempDate] = archive_record[:date]
       week.save!
       # if it is the high for the month, it must also be the high for the week
-      today = PastSummary.find_by_period(:today)
+      today = PastSummary.find_by_period_and_location(:today, location)
       today[:hiTemp] = archive_record[:high_outside_temp]
       today[:hiTempDate] = archive_record[:date]
       today.save!
@@ -101,12 +101,12 @@ module Cache
       month[:lowTemp] = archive_record[:low_outside_temp]
       month[:lowTempDate] = archive_record[:date]
       # if it is the low for the month, it must also be the low for the week
-      week = PastSummary.find_by_period(:this_week)
+      week = PastSummary.find_by_period_and_location(:this_week, location)
       week[:lowTemp] = archive_record[:low_outside_temp]
       week[:lowTempDate] = archive_record[:date]
       week.save!
       # if it is the low for the month, it must also be the low for the week
-      today = PastSummary.find_by_period(:today)
+      today = PastSummary.find_by_period_and_location(:today, location)
       today[:lowTemp] = archive_record[:low_outside_temp]
       today[:lowTempDate] = archive_record[:date]
       today.save!
