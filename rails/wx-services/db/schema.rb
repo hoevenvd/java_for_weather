@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100822173434) do
+ActiveRecord::Schema.define(:version => 20100914145047) do
 
   create_table "archive_records", :force => true do |t|
     t.datetime "date",                                                                                     :null => false
@@ -301,12 +301,12 @@ ActiveRecord::Schema.define(:version => 20100822173434) do
   add_index "past_summaries", ["hiOutsideHumidityDate"], :name => "index_past_summaries_on_hiOutsideHumidityDate"
   add_index "past_summaries", ["hiPressureDate"], :name => "index_past_summaries_on_hiPressureDate"
   add_index "past_summaries", ["hiWindchillDate"], :name => "index_past_summaries_on_hiWindchillDate"
-  add_index "past_summaries", ["location", "period"], :name => "index_past_summaries_on_location_and_period", :unique => true
+  add_index "past_summaries", ["location", "period"], :name => "index_past_summaries_on_location_and_period"
   add_index "past_summaries", ["lowDewpointDate"], :name => "index_past_summaries_on_lowDewpointDate"
   add_index "past_summaries", ["lowOutsideHumidityDate"], :name => "index_past_summaries_on_lowOutsideHumidityDate"
   add_index "past_summaries", ["lowPressureDate"], :name => "index_past_summaries_on_lowPressureDate"
   add_index "past_summaries", ["lowWindchillDate"], :name => "index_past_summaries_on_lowWindchillDate"
-  add_index "past_summaries", ["period"], :name => "index_past_summaries_on_period", :unique => true
+  add_index "past_summaries", ["period"], :name => "index_past_summaries_on_period"
 
   create_table "risesets", :force => true do |t|
     t.string  "location", :limit => 30, :null => false
