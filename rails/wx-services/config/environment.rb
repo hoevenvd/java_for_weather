@@ -88,6 +88,8 @@ Rails::Initializer.run do |config|
 # config rack as a frozen gem
   config.gem 'rack'
 
+  config.gem 'test-unit', :lib => 'test/unit'
+
 end
 
 #require 'actionwebservice'
