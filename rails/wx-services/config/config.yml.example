@@ -3,7 +3,6 @@
 # use rake time:zones:all|local|us to see list of options
 
 common:
-#  service_password:
   latitude:          42.56212
   longitude:        -70.84997
   location:         01915
@@ -20,13 +19,6 @@ common:
     WARING:
       rrd_files_location: /Users/tom/dev/rrd-data-waring
 
-#  cwop_id:          CW0169
-#  cwop_lat_long:    4233.72N/07050.97W
-
-#  wunderground:
-#    01915:
-#      id: KMABEVER3
-#      password: secret
 development:
   service_password: secret
 
@@ -35,18 +27,11 @@ lelystad-development:
 
 test:
   service_password: secret
-#  wunderground:
-#    01915:
-#      id: KMABLAH
-#      password: secret
 
 production:
   service_password: secret
   sync_src: http://wx/weather/wsdl
   sync_dest: http://tommitchell.net/weather/weather/wsdl
-#  wunderground:
-#    01915:
-#      id: KMABLAH
-#      password: secret
+
 vservers-development:
   service_password: secret
