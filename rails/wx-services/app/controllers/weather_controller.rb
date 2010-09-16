@@ -102,7 +102,12 @@ class WeatherController < ApplicationController
     if SVC_CONFIG != nil && SVC_CONFIG["wunderground"] != nil
       SVC_CONFIG["wunderground"].each do |l|
         if (location == l["location"])
-          WeatherHelper.post_to_wunderground(l["location"], l["id"], l["password"])
+          begin
+            WeatherHelper.post_to_wunderground(l["location"], l["id"], l["password"])
+          rescue Exception => ex
+            logger.error(ex.message + " - conditions were saved before this error\n")
+            logger.error(ex.backtrace)
+          end
         end
       end
     end
@@ -219,7 +224,12 @@ class WeatherController < ApplicationController
     update_current_cache(location)
 
     if AppConfig.rrd_enabled and !AppConfig.rrd_graphs[location].nil?
-      WeatherHelper.update_rrd(location, rec)
+      begin
+        WeatherHelper.update_rrd(location, rec)
+      rescue Exception => ex
+        logger.error(ex.message + " - archive_entry was saved before this error\n")
+        logger.error(ex.backtrace)
+      end
     end
 
   end

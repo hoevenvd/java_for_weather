@@ -1,0 +1,13 @@
+development:
+#  wunderground:
+#    - location: 01915
+#      id: KMAXXXXXX
+#      password: secret
+#    - location: another_db_key
+#      id: IFLEEEEE
+#      password: secret
+
+test:
+
+production:
+
