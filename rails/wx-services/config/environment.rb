@@ -19,7 +19,9 @@ class Rails::Configuration
 end
 
 Rails::Initializer.run do |config|
-  
+  # Rotate the log at 10 megabyte, keeping the last 10
+  RAILS_DEFAULT_LOGGER = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}.log", 5, 10 * 1024 * 1024)
+
   config.frameworks += [ :action_web_service]
   config.action_web_service = Rails::OrderedOptions.new
   config.load_paths += %W( #{RAILS_ROOT}/app/apis )
@@ -94,10 +96,8 @@ end
 
 #require 'actionwebservice'
 
-# Rotate the log at 10 megabyte, keeping the last 10
-#RAILS_DEFAULT_LOGGER = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}.log", 10, 10000000)
 
-# Add new inflection rules using the following format 
+# Add new inflection rules using the following format
 # (all these examples are active by default):
 # Inflector.inflections do |inflect|
 #   inflect.plural /^(ox)$/i, '\1en'
