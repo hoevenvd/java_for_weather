@@ -1,6 +1,6 @@
 set :application, "wx-services"
 
-set :user, "tom"
+set :user, "maarten"
 ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "id_rsa")] 
 ssh_options[:port] = 2010
 
