@@ -16,7 +16,6 @@ import uk.me.jstott.jweatherstation.datatypes.Humidity;
 import uk.me.jstott.jweatherstation.datatypes.Pressure;
 import uk.me.jstott.jweatherstation.datatypes.Temperature;
 import uk.me.jstott.jweatherstation.datatypes.Wind;
-import uk.me.jstott.jweatherstation.sql.SQLManager;
 import uk.me.jstott.jweatherstation.util.CRC;
 import uk.me.jstott.jweatherstation.util.UnsignedByte;
 
@@ -195,10 +194,10 @@ public class LoopPacket implements SnapShot {
 
   public String shortToString() {
     if (isValid()) {
-    return SQLManager.getSqlDate(getDate()) + " : " + getOutsideTemp() +
-      " : " + getWindspeed() + " : " + getWindDirection().toShortString() +
-      " : " + getPressure() + " : " + getBarStatus() +
-      (isRaining() ? " : " + "raining at " + getRainRate() : "");
+      return DateUtils.getSqlDate(getDate()) + " : " + getOutsideTemp() +
+        " : " + getWindspeed() + " : " + getWindDirection().toShortString() +
+        " : " + getPressure() + " : " + getBarStatus() +
+        (isRaining() ? " : " + "raining at " + getRainRate() : "");
     } else {
       return toString();
     }
