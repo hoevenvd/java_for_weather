@@ -14,6 +14,7 @@ import uk.me.jstott.jweatherstation.util.UnsignedByte;
 public class DateUtils {
   static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
   static SimpleDateFormat shortTimeFormat = new SimpleDateFormat("HH:mm");
+  static SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
   public static String getTime(Date d) {
     return timeFormat.format(d);
@@ -21,6 +22,10 @@ public class DateUtils {
 
   public static String getShortTime(Date d) {
     return shortTimeFormat.format(d);
+  }
+
+  public static String getSqlDate(java.util.Date d) {
+    return sqlDateFormat.format(d);
   }
 
   public static Date getDateUtc(Date d) {
