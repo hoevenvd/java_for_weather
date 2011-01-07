@@ -62,6 +62,7 @@ class WxController < ApplicationController
   def get_current_conditions
     get_noaa_conditions
     @current = CurrentCondition.find_by_location(AppConfig.location)
+    @dark = Riseset.dark?(AppConfig.location, Time.now.utc)
     # kludge for time sync problems btw station time and web server
     @current.sample_date = Time.now if !@current.nil? and @current.sample_date > Time.now
     @today = WxPeriod.today_summary(AppConfig.location)
