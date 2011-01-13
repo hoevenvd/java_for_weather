@@ -7,7 +7,8 @@
 ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.3.8' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.9' unless defined? RAILS_GEM_VERSION
+#RAILS_GEM_VERSION = '2.3.8' unless defined? RAILS_GEM_VERSION
 #RAILS_GEM_VERSION = '2.3.5' unless defined? RAILS_GEM_VERSION
 #RAILS_GEM_VERSION = '2.0.2' unless defined? RAILS_GEM_VERSION
 
@@ -22,7 +23,7 @@ Rails::Initializer.run do |config|
   
   config.frameworks += [ :action_web_service]
   config.action_web_service = Rails::OrderedOptions.new
-  config.load_paths += %W( #{RAILS_ROOT}/app/apis )
+  config.autoload_paths += %W( #{RAILS_ROOT}/app/apis )
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
@@ -38,7 +39,7 @@ Rails::Initializer.run do |config|
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
   # Add additional load paths for your own custom dirs
-  # config.load_paths += %W( #{RAILS_ROOT}/extras )
+  # config.autoload_paths += %W( #{RAILS_ROOT}/extras )
 
   # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)
@@ -75,13 +76,13 @@ Rails::Initializer.run do |config|
 
   ENV['TZ'] = 'US/Eastern'
   
-  config.load_paths += %W( #{RAILS_ROOT}/app/apis )
-  config.load_paths += Dir["#{RAILS_ROOT}/vendor/gems/**"].map do |dir|
+  config.autoload_paths += %W( #{RAILS_ROOT}/app/apis )
+  config.autoload_paths += Dir["#{RAILS_ROOT}/vendor/gems/**"].map do |dir|
     File.directory?(lib = "#{dir}/lib") ? lib : dir
   end
 
 # TODO - fix this kludge and get rid of the components directory
-  config.load_paths += %W( #{RAILS_ROOT}/components )
+  config.autoload_paths += %W( #{RAILS_ROOT}/components )
 
   config.cache_store = :file_store, "#{RAILS_ROOT}/tmp/cache"
   
