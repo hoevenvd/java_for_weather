@@ -62,9 +62,8 @@
 
 </table>
 <p>
-<% cache(:action => "index", :action_suffix => "radarwebcam") do %>
-  <%= render(:partial => "radarwebcam", :layout => false  ) %>
-<% end %>
+
+<%= render(:partial => "radarwebcam", :layout => false  ) %>
 
 <% cache(:action => "index", :action_suffix => "graphs") do %>
   <%= render(:partial => "graphs", :layout => false  ) %>
