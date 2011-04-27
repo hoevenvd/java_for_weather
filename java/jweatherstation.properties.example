@@ -17,3 +17,9 @@ rainGauge=1
 
 ws.password=secret
 ws.location=LELYSTAD
+
+#gae.post.url=http://localhost:8080/conditionsservice.post_condition
+gae.post.url=http://org-tom-wx.appspot.com/conditionsservice.post_condition
+gae.upload.url=
+gae.password=secret
+gae.location=01915
