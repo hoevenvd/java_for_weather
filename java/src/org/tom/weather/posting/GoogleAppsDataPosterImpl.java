@@ -34,7 +34,7 @@ public class GoogleAppsDataPosterImpl implements DataPoster {
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
     String json = gson.toJson(snap);
     try {
-      postData(gson.toJson(new RequestEnvelope(password, json)));
+      postData(gson.toJson(new RequestEnvelope(location, password, json)));
     } catch (Exception e) {
       LOGGER.error(e);
       throw new RemoteException(e.getMessage());
@@ -99,10 +99,12 @@ public class GoogleAppsDataPosterImpl implements DataPoster {
   }
 
   class RequestEnvelope {
+    private final String location;
     private final String password;
     private final String json;
 
-    RequestEnvelope(String password, String json) {
+    RequestEnvelope(String location, String password, String json) {
+      this.location = location;
       this.password = password;
       this.json = json;
     }
