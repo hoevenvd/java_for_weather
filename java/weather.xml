@@ -13,7 +13,7 @@
 	<bean id="weatherMonitor"
 		class="org.tom.weather.comm.Main">
 		<property name="station">
-			<ref bean="wm2"/>
+			<ref bean="vp"/>
 		</property>
     <property name="checkArchive" value="true"/>
   </bean>
@@ -27,7 +27,20 @@
 			<value>${ws.location}</value>
 		</property>
 	</bean>
-	
+
+	<bean id="gaeDataPoster"
+		class="org.tom.weather.posting.GoogleAppsDataPosterImpl">
+		<property name="password">
+			<value>${gae.password}</value>
+		</property>
+		<property name="location">
+			<value>${gae.location}</value>
+		</property>
+		<property name="url">
+			<value>${gae.post.url}</value>
+		</property>
+	</bean>
+
 
 	<bean id="wsDataUploader"
 		class="org.tom.weather.upload.ws.DataUploaderImpl">
@@ -39,8 +52,8 @@
 		</property>
 	</bean>
 	
-	<bean id="wm2"
-		class="org.tom.weather.comm.WeatherMonitor2">
+	<bean id="vp"
+		class="org.tom.weather.comm.VantagePro">
 <!-- this is either a port or an IP address -
      try to parse it as an IP address first -->
 		<constructor-arg>
@@ -63,6 +76,7 @@
 		<property name="posterList">
 			<list>
 				<ref bean="wsDataPoster"/>
+				<ref bean="gaeDataPoster"/>
 			</list>
 		</property>
 
