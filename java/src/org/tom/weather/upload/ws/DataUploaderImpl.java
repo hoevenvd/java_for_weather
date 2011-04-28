@@ -8,11 +8,12 @@ package org.tom.weather.upload.ws;
 import java.util.Calendar;
 import org.apache.log4j.Logger;
 import org.tom.weather.ArchiveEntry;
+import org.tom.weather.Cacheable;
 import org.tom.weather.upload.DataUploader;
 import org.tom.weather.ws.client.generated.ArchiveStruct;
 import org.tom.weather.ws.client.WxWsClient;
 
-public class DataUploaderImpl implements DataUploader {
+public class DataUploaderImpl implements DataUploader, Cacheable {
   private static final Logger LOGGER = Logger.getLogger(DataUploaderImpl.class);
 
   private String password;
@@ -74,5 +75,9 @@ public class DataUploaderImpl implements DataUploader {
 
   public String getLocation() {
     return location;
+  }
+
+  public void resetCache() throws Exception {
+    WxWsClient.resetCache(password, location);
   }
 }
