@@ -39,6 +39,9 @@
 		<property name="url">
 			<value>${gae.post.url}</value>
 		</property>
+		<property name="station">
+			<value>${gae.station}</value>
+		</property>
 	</bean>
 
 

@@ -23,3 +23,4 @@ gae.post.url=http://org-tom-wx.appspot.com/conditionsservice.post_condition
 gae.upload.url=
 gae.password=secret
 gae.location=01915
+gae.station_type=vp2 # vp, vp2, wm2 are valid
