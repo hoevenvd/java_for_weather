@@ -17,6 +17,7 @@ import javax.comm.NoSuchPortException;
 import javax.comm.PortInUseException;
 
 import org.tom.weather.ArchiveEntry;
+import org.tom.weather.Cacheable;
 import org.tom.weather.WeatherStation;
 import org.tom.weather.upload.DataUploader;
 import org.tom.weather.ws.client.WxWsClient;
@@ -242,6 +243,9 @@ public class VantagePro extends Station implements WeatherStation {
         readDmpData();
       }
     }
+    if (pages > 2) {
+        resetCache();
+    }
    }
   private void uploadDmpRecords(List dmpRecords2)  throws Exception {
     
@@ -332,7 +336,7 @@ public class VantagePro extends Station implements WeatherStation {
     }
     if (loop != null && loop.isValid()) {
       if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug(loop);
+        LOGGER.debug(loop.to_json());
       }
       post(loop);
     }
@@ -346,6 +350,16 @@ public class VantagePro extends Station implements WeatherStation {
     for (Iterator iter = getPosterList().iterator(); iter.hasNext();) {
       DataPoster poster = (DataPoster)iter.next();
       poster.post(loop);
+    }
+  }
+
+  private void resetCache() throws Exception {
+    for (Iterator iter = getUploaderList().iterator(); iter.hasNext();) {
+      DataUploader myUploader = (DataUploader)iter.next();
+      if (myUploader instanceof Cacheable) {
+        Cacheable c = (Cacheable)myUploader;
+        c.resetCache();
+      }
     }
   }
 

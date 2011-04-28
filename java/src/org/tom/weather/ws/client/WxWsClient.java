@@ -35,6 +35,10 @@ public class WxWsClient {
     binding.setTimeout(60000);
   }
 
+  public static void resetCache(String password, String location) throws RemoteException {
+    binding.resetCache(password, location);
+  }
+
   private WxWsClient() {
   }
 
