@@ -335,9 +335,6 @@ public class VantagePro extends Station implements WeatherStation {
       DATA_PROBLEMS_LOGGER.warn(loop.toString());
     }
     if (loop != null && loop.isValid()) {
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug(loop.to_json());
-      }
       post(loop);
     }
   }
