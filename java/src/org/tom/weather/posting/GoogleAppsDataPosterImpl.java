@@ -9,8 +9,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.rmi.RemoteException;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import org.apache.log4j.Logger;
 import org.tom.weather.PeriodData;
 import org.tom.weather.SnapShot;
@@ -21,6 +19,7 @@ public class GoogleAppsDataPosterImpl implements DataPoster {
   private String password;
   private String location;
   private String target;
+  private String station;
   
   public void setPassword(String password) {
     this.password = password;
@@ -34,7 +33,7 @@ public class GoogleAppsDataPosterImpl implements DataPoster {
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
     String json = gson.toJson(snap);
     try {
-      postData(gson.toJson(new RequestEnvelope(location, password, json)));
+      postData(gson.toJson(new RequestEnvelope(location, password, json, station)));
     } catch (Exception e) {
       LOGGER.error(e);
       throw new RemoteException(e.getMessage());
@@ -98,15 +97,31 @@ public class GoogleAppsDataPosterImpl implements DataPoster {
     return response;
   }
 
+  /**
+   * @return the stationType
+   */
+  public String getStation() {
+    return station;
+  }
+
+  /**
+   * @param stationType the stationType to set
+   */
+  public void setStation(String station) {
+    this.station = station;
+  }
+
   class RequestEnvelope {
     private final String location;
     private final String password;
     private final String json;
+    private final String station;
 
-    RequestEnvelope(String location, String password, String json) {
+    RequestEnvelope(String location, String password, String json, String station) {
       this.location = location;
       this.password = password;
       this.json = json;
+      this.station = station;
     }
 
   }
