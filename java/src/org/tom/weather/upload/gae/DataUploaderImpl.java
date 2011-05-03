@@ -171,7 +171,7 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
 
 	@Override
 	public Date getLatestArchiveRecord() {
-		return new Date(new Date().getTime() - 3600L);
+		return new Date(new Date().getTime() - 3600 * 1000L);
 	}
 
 }
