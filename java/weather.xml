@@ -63,8 +63,11 @@
     <property name="location">
       <value>${gae.location}</value>
     </property>
-    <property name="url">
+    <property name="uploadUrl">
       <value>${gae.upload.url}</value>
+    </property>
+    <property name="lastDateTarget">
+      <value>${gae.lastdate.url}</value>
     </property>
     <property name="station">
       <value>${gae.station}</value>

@@ -46,7 +46,7 @@ public class VantagePro extends Station implements WeatherStation {
 		LOGGER.debug("rainGauge: " + rainGauge);
 	}
 
-	private void processDmpAftPacket(byte[] page, int pageOffset)
+	private void processDmpAftPacket(DataUploader myUploader, byte[] page, int pageOffset)
 			throws Exception {
 		List dmpRecords = new ArrayList();
 		for (int i = pageOffset; i < 5; i++) {
@@ -77,7 +77,7 @@ public class VantagePro extends Station implements WeatherStation {
 				}
 			}
 		}
-		uploadDmpRecords(dmpRecords);
+		uploadDmpRecords(myUploader, dmpRecords);
 	}
 
 	private void wakeup() throws IOException {
@@ -155,7 +155,7 @@ public class VantagePro extends Station implements WeatherStation {
 	 * @throws IOException
 	 * @since 1.0
 	 */
-	public void dmpaft(Date date) throws Exception {
+	public void dmpaft(DataUploader myUploader, Date date) throws Exception {
 		UnsignedByte[] datetime = dateToBytes(date);
 		LOGGER.debug(datetime);
 		// t lastDate
@@ -243,9 +243,9 @@ public class VantagePro extends Station implements WeatherStation {
 						+ sequenceNumber);
 			}
 			if (i == 0) {
-				readDmpData(startRecord);
+				readDmpData(myUploader, startRecord);
 			} else {
-				readDmpData();
+				readDmpData(myUploader);
 			}
 		}
 		if (pages > 2) {
@@ -253,7 +253,7 @@ public class VantagePro extends Station implements WeatherStation {
 		}
 	}
 
-	private void uploadDmpRecords(List dmpRecords2) throws Exception {
+	private void uploadDmpRecords(DataUploader myUploader, List dmpRecords2) throws Exception {
 
 		if (getUploaderList().size() > 0) {
 			ArchiveEntry[] entries = new ArchiveEntry[dmpRecords2.size()];
@@ -262,18 +262,15 @@ public class VantagePro extends Station implements WeatherStation {
 			while (iterator.hasNext()) {
 				entries[i++] = (ArchiveEntry) iterator.next();
 			}
-			for (Iterator iter = getUploaderList().iterator(); iter.hasNext();) {
-				DataUploader myUploader = (DataUploader) iter.next();
-				myUploader.upload(entries);
-			}
+			myUploader.upload(entries);
 		}
 	}
 
-	private void readDmpData() throws Exception {
-		readDmpData(0);
+	private void readDmpData(DataUploader myUploader) throws Exception {
+		readDmpData(myUploader, 0);
 	}
 
-	private void readDmpData(int offset) throws Exception {
+	private void readDmpData(DataUploader myUploader, int offset) throws Exception {
 
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("reading dmp data at offset: " + offset);
@@ -291,7 +288,7 @@ public class VantagePro extends Station implements WeatherStation {
 					LOGGER.debug("looking for: " + localBuffer.length
 							+ " retrieved: " + bytes + " bytes");
 				}
-				processDmpAftPacket(localBuffer, offset);
+				processDmpAftPacket(myUploader, localBuffer, offset);
 			}
 			delay(500);
 		} catch (IOException ex) {
@@ -356,7 +353,7 @@ public class VantagePro extends Station implements WeatherStation {
 		for (Iterator iter = getUploaderList().iterator(); iter.hasNext();) {
 			DataUploader myUploader = (DataUploader) iter.next();
 			Date datetime = myUploader.getLatestArchiveRecord();
-			dmpaft(datetime);
+			dmpaft(myUploader, datetime);
 		}
 	}
 

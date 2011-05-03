@@ -55,9 +55,9 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
     String json = gson.toJson(entry);
     if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("uploading: " + json);
+        //LOGGER.debug("uploading: " + json);
     }
-    sendReceiveData(getUploadUrl(), gson.toJson(new RequestEnvelope(entry.getDate(), location, password, json, station)));
+    sendReceiveData(getUploadUrl(), gson.toJson(new PutArchiveRequestEnvelope(entry.getDate(), location, password, json, station)));
 
     /*
     ArchiveStruct struct = new ArchiveStruct();
@@ -149,30 +149,39 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
 		    return response;
 		  }
 	
-	  class RequestEnvelope {
+	  class PutArchiveRequestEnvelope {
 		  	private final String date;
 		    private final String location;
 		    private final String password;
 		    private final String json;
 		    private final String station;
 
-		    RequestEnvelope(Date date, String location, String password, String json, String station) {
-		    	TimeZone gmt = TimeZone.getTimeZone("UTC");
-		    	DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
-		    	formatter.setTimeZone(gmt);
-
-		    	this.date = formatter.format(date);
+		    PutArchiveRequestEnvelope(Date date, String location, String password, String json, String station) {
+		      this.date = getDateString(date);
 		      this.location = location;
 		      this.password = password;
 		      this.json = json;
 		      this.station = station;
 		    }
+	  }
 
-		  }
+	  class GetLastArchiveRequestEnvelope {
+		    private final String location;
+		    private final String password;
+
+		    GetLastArchiveRequestEnvelope(String location, String password) {
+		      this.location = location;
+		      this.password = password;
+		    }
+	  }
 
 	@Override
 	public Date getLatestArchiveRecord() {
-		return new Date(new Date().getTime() - 3600 * 1000L);
+	    Gson gson = new Gson();
+		String resp = 
+			sendReceiveData(getLastDateTarget(), gson.toJson(new GetLastArchiveRequestEnvelope(location, password)));
+		LOGGER.debug(resp);
+		return new Date(new Date().getTime() - 360 * 1000L);
 	}
 
 	public void setLastDateTarget(String lastDateTarget) {
@@ -181,6 +190,13 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
 
 	public String getLastDateTarget() {
 		return lastDateTarget;
+	}
+
+	static String getDateString(Date date) {
+		TimeZone gmt = TimeZone.getTimeZone("UTC");
+    	DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
+    	formatter.setTimeZone(gmt);
+    	return formatter.format(date);
 	}
 
 }
