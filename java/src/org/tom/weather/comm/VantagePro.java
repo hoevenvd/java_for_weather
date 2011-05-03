@@ -151,9 +151,8 @@ public class VantagePro extends Station implements WeatherStation {
    * @throws IOException
    * @since 1.0
    */
-  public void dmpaft() throws Exception {
-    UnsignedByte[] datetime = null;
-    datetime = getlLastArchiveRecord();
+  public void dmpaft(Date date) throws Exception {
+    UnsignedByte[] datetime = dateToBytes(date);
     LOGGER.debug(datetime);
     // t lastDate
     sendString("DMPAFT\n");
@@ -291,15 +290,9 @@ public class VantagePro extends Station implements WeatherStation {
       throw ex;
     }
   }
-  private UnsignedByte[] getlLastArchiveRecord() {
+  
+  private UnsignedByte[] dateToBytes(Date dbLastDate) {
     UnsignedByte[] datetime;
-    Timestamp dbLastDate = null;
-    try {
-      dbLastDate = new Timestamp(WxWsClient.getLatestArchiveRecordDate(getLocation()));
-    } catch (RemoteException e) {
-      LOGGER.warn(e);
-      dbLastDate = new Timestamp(new Date().getTime() - 172800); // use two days ago
-    }
     getLastDate().setTime(dbLastDate);
     datetime = Process.dmpTimeStamp(// 26, 1, 2004, 15, 0);
         dbLastDate.getDate(), 
@@ -338,9 +331,20 @@ public class VantagePro extends Station implements WeatherStation {
       post(loop);
     }
   }
-
+/* read archive memory from the station. since we will be sending the data to more than one uploader (data sink)
+ * we have to make as many passes through the data as necessary since we want to optimize for the shortest time
+ * to upload the data. could optimize this to check with each and then get the smallest amount of data, but that
+ * can wait.
+ * (non-Javadoc)
+ * @see org.tom.weather.comm.Station#readArchiveMemory()
+ */
   public void readArchiveMemory() throws Exception {
-    dmpaft();
+	    for (Iterator iter = getUploaderList().iterator(); iter.hasNext();) {
+	        DataUploader myUploader = (DataUploader)iter.next();  // get next uploader (sink) - each has its own idea
+	        //														 of when the last archive was received.
+	        Date datetime = myUploader.getLatestArchiveRecord();
+	        dmpaft(datetime);
+	    }
   }
 
   private void post(LoopPacket loop) throws RemoteException {

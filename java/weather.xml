@@ -45,15 +45,31 @@
 	</bean>
 
 
-	<bean id="wsDataUploader"
-		class="org.tom.weather.upload.ws.DataUploaderImpl">
-		<property name="password">
-			<value>${ws.password}</value>
-		</property>
-		<property name="location">
-			<value>${ws.location}</value>
-		</property>
-	</bean>
+  <bean id="wsDataUploader"
+    class="org.tom.weather.upload.ws.DataUploaderImpl">
+    <property name="password">
+      <value>${ws.password}</value>
+    </property>
+    <property name="location">
+      <value>${ws.location}</value>
+    </property>
+  </bean>
+
+  <bean id="gaeDataUploader"
+    class="org.tom.weather.upload.gae.DataUploaderImpl">
+    <property name="password">
+      <value>${gae.password}</value>
+    </property>
+    <property name="location">
+      <value>${gae.location}</value>
+    </property>
+    <property name="url">
+      <value>${gae.upload.url}</value>
+    </property>
+    <property name="station">
+      <value>${gae.station}</value>
+    </property>
+  </bean>
 	
 	<bean id="vp"
 		class="org.tom.weather.comm.VantagePro">
@@ -72,8 +88,8 @@
 
 		<property name="uploaderList">
 			<list>
-<!--				<ref bean="dataUploader"/> -->
-				<ref bean="wsDataUploader"/>
+        <ref bean="wsDataUploader"/>
+        <ref bean="gaeDataUploader"/>
 			</list>
 		</property>
 		<property name="posterList">
