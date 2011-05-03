@@ -31,7 +31,8 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
   private String password;
   private String location;
   private String station;
-  private String target;
+  private String uploadUrl;
+  private String lastDateTarget;
   
   private DataUploaderImpl() {
   }
@@ -56,7 +57,7 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
     if (LOGGER.isDebugEnabled()) {
         LOGGER.debug("uploading: " + json);
     }
-    uploadData(gson.toJson(new RequestEnvelope(entry.getDate(), location, password, json, station)));
+    sendReceiveData(getUploadUrl(), gson.toJson(new RequestEnvelope(entry.getDate(), location, password, json, station)));
 
     /*
     ArchiveStruct struct = new ArchiveStruct();
@@ -109,15 +110,15 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
 		return station;
 	}
 
-	public void setUrl(String url) {
-		this.target = url;
+	public void setUploadUrl(String uploadUrl) {
+		this.uploadUrl = uploadUrl;
 	}
 
-	public String getUrl() {
-		return target;
+	public String getUploadUrl() {
+		return uploadUrl;
 	}
 
-	public String uploadData(String content) {
+	public String sendReceiveData(String target, String content) {
 		    String response = null;
 		    try {
 		      URL url = new URL(target);
@@ -172,6 +173,14 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
 	@Override
 	public Date getLatestArchiveRecord() {
 		return new Date(new Date().getTime() - 3600 * 1000L);
+	}
+
+	public void setLastDateTarget(String lastDateTarget) {
+		this.lastDateTarget = lastDateTarget;
+	}
+
+	public String getLastDateTarget() {
+		return lastDateTarget;
 	}
 
 }
