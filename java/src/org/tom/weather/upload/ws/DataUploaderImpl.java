@@ -5,7 +5,11 @@
  */
 package org.tom.weather.upload.ws;
 
+import java.rmi.RemoteException;
+import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
+
 import org.apache.log4j.Logger;
 import org.tom.weather.ArchiveEntry;
 import org.tom.weather.Cacheable;
@@ -80,4 +84,17 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
   public void resetCache() throws Exception {
     WxWsClient.resetCache(password, location);
   }
+
+	@Override
+	public Date getLatestArchiveRecord() {
+		Timestamp dbLastDate = null;
+	    try {
+	        dbLastDate = new Timestamp(WxWsClient.getLatestArchiveRecordDate(getLocation()));
+	      } catch (RemoteException e) {
+	        LOGGER.warn(e);
+	        dbLastDate = new Timestamp(new Date().getTime() - 172800); // use two days ago
+	      }
+	
+		return new Date(dbLastDate.getTime());
+	}
 }
