@@ -53,6 +53,10 @@ public class Wind implements Serializable {
   public int getSpeed() {
     return speed;
   }
+  
+  public void setSpeed(int speed) {
+	  this.speed = speed;
+  }
 
   public int getTenMinAverage() {
     return tenMinAverage;

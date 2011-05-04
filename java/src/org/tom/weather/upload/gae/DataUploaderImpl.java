@@ -122,6 +122,10 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
 		    String response = null;
 		    try {
 		      URL url = new URL(target);
+		      if (LOGGER.isDebugEnabled()) {
+		    	  LOGGER.debug("sending to: " + url.toString());
+		    	  LOGGER.debug("sending: " + content);
+		      }
 		      URLConnection conn = url.openConnection();
 		      // Set connection parameters.
 		      conn.setDoInput (true);
