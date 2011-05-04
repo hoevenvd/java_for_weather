@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -56,6 +58,9 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
     String json = gson.toJson(entry);
     if (LOGGER.isDebugEnabled()) {
         //LOGGER.debug("uploading: " + json);
+    }
+    if (LOGGER.isInfoEnabled()) {
+        LOGGER.info(entry);
     }
     sendReceiveData(getUploadUrl(), gson.toJson(new PutArchiveRequestEnvelope(entry.getDate(), location, password, json, station)));
 
@@ -119,7 +124,7 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
 	}
 
 	public String sendReceiveData(String target, String content) {
-		    String response = null;
+		    StringBuffer response = new StringBuffer();
 		    try {
 		      URL url = new URL(target);
 		      if (LOGGER.isDebugEnabled()) {
@@ -142,15 +147,17 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
 		      BufferedReader in = new BufferedReader (new InputStreamReader(conn.getInputStream ()));
 		      String temp;
 		      while ((temp = in.readLine()) != null){
-		        response += temp + "\n";
+			    	LOGGER.debug("received: [" + temp + "]");
+		        response.append(temp);
+		    	LOGGER.debug("response so far: [" + response + "]");
 		       }
 		      temp = null;
 		      in.close ();
 		    } catch (Exception e) {
 		      LOGGER.error("** Exception caught:", e);
 		    }
-		    LOGGER.debug(response);
-		    return response;
+		    LOGGER.debug("[" + response + "]");
+		    return response.toString();
 		  }
 	
 	  class PutArchiveRequestEnvelope {
@@ -179,13 +186,47 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
 		    }
 	  }
 
+	  class GetLastArchiveResponseEnvelope {
+		    private final String location;
+		    private final String date;
+
+		    GetLastArchiveResponseEnvelope(String location, String date) {
+		      this.location = location;
+		      this.date = date;
+		    }
+
+			public String getLastDate() {
+				return date;
+			}
+			
+			public String toString() {
+				return "[" + this.getClass() + "]" +
+				"[" + this.location  + "]" + "[" + this.date + "]";
+			}
+	  }
+
 	@Override
 	public Date getLatestArchiveRecord() {
-	    Gson gson = new Gson();
+	    Gson gson = new GsonBuilder().serializeNulls().create();
 		String resp = 
 			sendReceiveData(getLastDateTarget(), gson.toJson(new GetLastArchiveRequestEnvelope(location, password)));
-		LOGGER.debug(resp);
-		return new Date(new Date().getTime() - 360 * 1000L);
+		LOGGER.debug("[" + resp + "]");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ");
+		GetLastArchiveResponseEnvelope response = gson.fromJson(resp, GetLastArchiveResponseEnvelope.class);
+		if (response == null) {
+			LOGGER.error("null returned from getLastArchive()");
+			System.exit(1);
+		}
+		LOGGER.debug(response);
+	    try {
+	    	Date returnDate = (Date)formatter.parse(response.date);
+	    	LOGGER.debug("returning: " + returnDate.toGMTString());
+			return new Date(returnDate.getTime() + returnDate.getTimezoneOffset()); 
+		} catch (ParseException e1) {
+			return (Date)null;
+		}
+
+		//return new Date(new Date().getTime() - 360 * 1000L);
 	}
 
 	public void setLastDateTarget(String lastDateTarget) {
