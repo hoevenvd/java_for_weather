@@ -78,6 +78,7 @@ public class LoopPacket implements SnapShot {
     if (uv == 255) uv = -9999;
     wind = new Wind(unsignedPacket[14].getByte(), unsignedPacket[15].getByte(),
         (unsignedPacket[17].getByte() * 256) + unsignedPacket[16].getByte());
+    if (wind.getSpeed() == 255) wind.setSpeed(0);
     rainRate = ((((unsignedPacket[42].getByte() * 256) + unsignedPacket[41]
         .getByte()) / 100.0D));
     stormRain = ((((unsignedPacket[47].getByte() * 256) + unsignedPacket[46]
