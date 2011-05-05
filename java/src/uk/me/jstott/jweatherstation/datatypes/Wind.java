@@ -47,7 +47,7 @@ public class Wind implements Serializable {
   public Wind(int speed, int tenMinAverage, int dir) {
     this.speed = speed;
     this.tenMinAverage = tenMinAverage;
-    this.direction = new Direction(dir);
+    this.setDirection(new Direction(dir));
   }
 
   public int getSpeed() {
@@ -69,4 +69,8 @@ public class Wind implements Serializable {
   public String toString() {
     return "speed: " + getSpeed() + " from " + getDirection();
   }
+
+public void setDirection(Direction direction) {
+	this.direction = direction;
+}
 }

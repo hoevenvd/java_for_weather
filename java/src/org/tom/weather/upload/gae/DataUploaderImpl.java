@@ -214,8 +214,7 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ");
 		GetLastArchiveResponseEnvelope response = gson.fromJson(resp, GetLastArchiveResponseEnvelope.class);
 		if (response == null) {
-			LOGGER.error("null returned from getLastArchive()");
-			System.exit(1);
+			LOGGER.error("null returned from getLastArchiveRecord()");
 		}
 		LOGGER.debug(response);
 	    try {
@@ -223,6 +222,7 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
 	    	LOGGER.debug("returning: " + returnDate.toGMTString());
 			return new Date(returnDate.getTime() + returnDate.getTimezoneOffset()); 
 		} catch (ParseException e1) {
+			LOGGER.error("", e1);
 			return (Date)null;
 		}
 
