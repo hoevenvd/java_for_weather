@@ -104,7 +104,6 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
 	}
 	
 	public void resetCache() throws Exception {
-	  WxWsClient.resetCache(password, location);
 	}
 	
 	public void setStation(String station) {
