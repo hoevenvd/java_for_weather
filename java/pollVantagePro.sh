@@ -6,8 +6,8 @@ TZ=America/New_York
 
 #cd $WX_HOME
 
-cp -f jweatherstation.properties.vp jweatherstation.properties
-cp -f weather.xml.vp weather.xml
+#cp -f jweatherstation.properties.vp jweatherstation.properties
+#cp -f weather.xml.vp weather.xml
 
 while true 
 do
