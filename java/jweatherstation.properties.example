@@ -24,4 +24,4 @@ gae.upload.url=http://localhost:8080/archiveservice.upload_archive
 gae.lastdate.url=http://localhost:8080/archiveservice.get_last_archive_date
 gae.password=secret
 gae.location=01915
-gae.station_type=vp2 # vp, vp2, wm2 are valid
+gae.station=vp2 # vp, vp2, wm2 are valid
