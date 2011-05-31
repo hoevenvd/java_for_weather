@@ -1,0 +1,49 @@
+http://oss.wxnet.org/pyweather/pydoc/private/weather-module.html
+
+>>> import weather
+>>> from weather import units
+>>> units.temp.calc_dewpoint(100, 100)
+100.0000544
+>>> units.temp.calc_dewpoint(80, 95)
+78.41257479192575
+
+>>> units.temp.calc_heat_index(80, 95)
+86.39806179999984
+
+calc_wind_chill(t, windspeed, windspeed10min)
+calculates the wind chill value based upon the temperature (F) and wind.
+
+>>> units.temp.calc_wind_chill(23, 10, 20)
+8.178482246814218
+>>> 
+
+<Condition
+ password: u'wx'
+ json: u'{"valid":true,
+ "date":"2011-04-27T06:28:23-0400",
+ "pressure":{"pressure":29938,"trend":236},
+ "insideTemp":{"temperature":651},
+ "insideHumidity":{"humidity":43},
+ "outsideTemperature":{"temperature":466},
+ "wind":{"speed":0,"tenMinAverage":1,"direction":{"degrees":157}},
+ "outsideHumidity":{"humidity":97},
+ "rainRate":0.0,
+ "uv":-9999,
+ "solarRadiation":9,
+ "stormRain":0.0,
+ "dayRain":0.01,
+ "monthRain":4.68,
+ "yearRain":11.4,
+ "dayET":0,
+ "monthET":0,
+ "yearET":0,
+ "transmitterBatteryStatus":0,
+ "consoleBatteryVoltage":0,
+ "forecastIcon":0,
+ "forecastRuleNumber":0,
+ "isRaining":false,
+ "sunrise":"2011-04-27T04:45:00-0400",
+ "sunset":"2011-04-27T18:40:00-0400",
+ "crc":8608,
+ "unsignedData":[{"b":76},{"b":79},{"b":79},{"b":-20},{"b":0},{"b":19},{"b":5},{"b":-14},{"b":116},{"b":-117},{"b":2},{"b":43},{"b":-46},{"b":1},{"b":0},{"b":1},{"b":-99},{"b":0},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":97},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":0},{"b":0},{"b":-1},{"b":9},{"b":0},{"b":0},{"b":0},{"b":-1},{"b":-1},{"b":1},{"b":0},{"b":-44},{"b":1},{"b":116},{"b":4},{"b":0},{"b":0},{"b":-33},{"b":0},{"b":126},{"b":2},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":-1},{"b":0},{"b":0},{"b":0},{"b":0},{"b":0},{"b":0},{"b":0},{"b":0},{"b":0},{"b":0},{"b":0},{"b":0},{"b":0},{"b":0},{"b":0},{"b":0},{"b":0},{"b":0},{"b":32},{"b":3},{"b":6},{"b":45},{"b":-67},{"b":1},{"b":48},{"b":7},{"b":10},{"b":13},{"b":33},{"b":-96}]}'>
+ 

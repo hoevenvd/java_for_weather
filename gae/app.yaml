@@ -1,0 +1,32 @@
+application: org-tom-wx
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+
+- url: /favicon\.ico
+  static_files: static/images/favicon.ico
+  upload: static/images/favicon\.ico
+
+- url: /conditions.*
+  script: main_handler.py
+
+- url: /delete_archive.*
+  script: delete_archive_handler.py
+
+- url: /clean_cache.*
+  script: clean_cache_handler.py
+
+- url: /test.*
+  login: admin
+  script: gaeunit.py
+
+# catch-all
+- url: .*
+  script: main_handler.py
+
+builtins:
+- datastore_admin: on
+#- appstats: on
+- remote_api: on
