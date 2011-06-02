@@ -8,18 +8,20 @@ locations:
     tz: America/New_York
     post: True
     upload: True
-#    wunderground:
-#      station: KMABEVER3
-#      password: wx2005
+    wunderground:
+      station: KMABEVER3
+      password: wx2005
+      conditions: True
+      archives: True
   01915-dev:
     # this is for translating incoming condition posts in the proper TZ on the web page
     tz: America/New_York
     post: True
     upload: True
-    wunderground:
-      station: KMABEVER3
-      password: wx2005
-      conditions: False
-      archives: True
+#    wunderground:
+#      station: KMABEVER3
+#      password: wx2005
+#      conditions: True
+#      archives: True
   WARING:
     tz: America/New_York
