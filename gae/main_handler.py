@@ -12,7 +12,7 @@ from google.appengine.api import memcache
 from google.appengine.ext import db
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
-from protorpc import service_handlers
+from protorpc.webapp import service_handlers
 import simplejson
 import conditionsservice
 import archiveservice

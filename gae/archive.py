@@ -34,7 +34,7 @@ class ArchiveFactory:
         a = memcache.get(location, namespace='archive')
         logging.info("retrieved: " + str(a) + " from cache")
         if not a:
-            logging.info("no cache hit - querying data store")
+            logging.info("no cache hit for last archive - querying data store")
             q = DbArchive.all()
             q.filter("location =", location)
             q.order("-date")

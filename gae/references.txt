@@ -1,3 +1,5 @@
+s /Applications/Google\ App\ Engine/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/lib/
+
 >>> class X(object):
 ...   val = 0
 ...
