@@ -17,6 +17,7 @@ handlers:
 
 - url: /clean_cache.*
   script: clean_cache_handler.py
+  login: admin
 
 - url: /test.*
   login: admin
