@@ -2,7 +2,7 @@
 <div id="CUR">
 <TR>
   <TD ALIGN="CENTER" VALIGN="TOP" COLSPAN="3" WIDTH="100%">
-  <B>Live Conditions as of <%= @current.sample_date.in_time_zone.strftime("%I:%M:%S %p") %></B><br>(<%= distance_of_time_in_words_to_now(@current.sample_date, true) %> ago)
+  <B>Conditions as of <%= @current.sample_date.in_time_zone.strftime("%I:%M:%S %p %m-%d-%y") %></B><br>(<%= distance_of_time_in_words_to_now(@current.sample_date, true) %> ago)
   </TD>
 </TR>
 
