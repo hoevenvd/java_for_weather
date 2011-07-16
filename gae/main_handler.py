@@ -85,6 +85,10 @@ class MainHandler(webapp.RequestHandler):
       self.response.out.write('last rain: ' + str(wxutils.last_rain(location)) + '<p>')
       if forecast:
         self.response.out.write('\nForecast:')
+      f = wunder_forecast.ForecastFactory.get(location)
+      self.response.out.write(f.as_of + '<p>')
+      for day in f.days:
+        self.response.out.write(day.forecast + '<p>')
       self.response.out.write('</body></html>')
 
 current_conditions_factory = service_handlers.ServiceHandlerFactory.default(

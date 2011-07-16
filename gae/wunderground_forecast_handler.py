@@ -22,10 +22,6 @@ class WundergroundForecastHandler(webapp.RequestHandler):
       station_settings = appconfig.load_settings(location)
       if station_settings and 'tz' in station_settings: localtz = pytz.timezone(station_settings['tz'])
       ForecastFactory.put(location)
-      f = ForecastFactory.get(location)
-      self.response.out.write(f.as_of + '<p>')
-      for day in f.days:
-        self.response.out.write(day.forecast + '<p>')
 
 def main():
   # Register mapping with application.
