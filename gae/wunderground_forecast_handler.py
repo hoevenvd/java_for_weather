@@ -16,7 +16,7 @@ class WundergroundForecastHandler(webapp.RequestHandler):
       if len(self.request.get("location")):
         location = self.request.get("location")
       else:
-        location = "01915"
+        location = "KBVY"
         localtz = pytz.timezone('America/New_York')
       # defaults
       station_settings = appconfig.load_settings(location)

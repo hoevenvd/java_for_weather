@@ -27,13 +27,13 @@ class ForecastFactory:
   def put(location):
     feed = urllib.urlopen(URL+location)
     tree = ElementTree.parse(feed)
-    dayname = tree.find('txt_forecast/date').text
-    if dayname:
-      forecast = Forecast(dayname)
-      print "forecast as of %s" % (dayname)
+    as_of = tree.find('txt_forecast/date').text
+    if as_of:
+      forecast = Forecast(as_of)
       forecasts = tree.findall('txt_forecast/forecastday')
       for day in forecasts:
+        pd = day.find('title').text
         fc = day.find('fcttext').text
-        forecast.append(dayname, fc)
+        forecast.append(pd, fc)
       memcache.set(location, forecast, time=7200, namespace='forecast')
       return forecast
