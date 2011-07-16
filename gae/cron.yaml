@@ -2,3 +2,4 @@ cron:
 - description: wunderground forecast fetch job
   url: /store_forecast?location=KBVY
   schedule: every 15 minutes synchronized
+  login: admin
