@@ -1,11 +1,8 @@
-import logging
-import datetime
-import pytz
+#import logging
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 
-import appconfig
 from wunder_forecast import ForecastFactory
 
 #    forecast_location: KBVY
@@ -17,10 +14,6 @@ class WundergroundForecastHandler(webapp.RequestHandler):
         location = self.request.get("location")
       else:
         location = "KBVY"
-        localtz = pytz.timezone('America/New_York')
-      # defaults
-      station_settings = appconfig.load_settings(location)
-      if station_settings and 'tz' in station_settings: localtz = pytz.timezone(station_settings['tz'])
       ForecastFactory.put(location)
 
 def main():
