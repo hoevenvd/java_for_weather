@@ -8,13 +8,13 @@ locations:
     tz: America/New_York
     post: True
     upload: True
+    forecast_location: KBVY
+    conditions_location: KBVY
     wunderground:
       station: KMABEVER3
       password: wx2005
       conditions: True
       archives: True
-    forecast_location: KBVY
-    conditions_location: KBVY
   01915-dev:
     # this is for translating incoming condition posts in the proper TZ on the web page
     tz: America/New_York

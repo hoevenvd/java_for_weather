@@ -28,12 +28,20 @@ class MainHandler(webapp.RequestHandler):
     def get(self):
       if len(self.request.get("location")):
         location = self.request.get("location")
-        station_settings = appconfig.load_settings(location)
-        if station_settings and 'tz' in station_settings: localtz = pytz.timezone(station_settings['tz'])
+      else:
+        location = '01915'
+      station_settings = appconfig.load_settings(location)
+      if station_settings:
+        if 'tz' in station_settings:
+          localtz = pytz.timezone(station_settings['tz'])
+        else:
+          localtz = pytz.timezone('America/New_York')
+        if 'forecast_location' in station_settings:
+          forecast_location = station_settings['forecast_location']
+        else:
+          forecast_location = 'KBVY'
       else:
         location = "01915"
-        localtz = pytz.timezone('America/New_York')
-      forecast = wunder_forecast.ForecastFactory.get(location)
       self.response.out.write('<html><head><meta HTTP-EQUIV="Refresh" CONTENT="3">')
       
       self.response.out.write("""<script type="text/javascript">"""
@@ -83,12 +91,12 @@ class MainHandler(webapp.RequestHandler):
         logging.info('no conditions found')
       self.response.out.write('latest archive record: ' + str(archive.ArchiveFactory.find_latest_datetime(location)) + '<p>')
       self.response.out.write('last rain: ' + str(wxutils.last_rain(location)) + '<p>')
+      forecast = wunder_forecast.ForecastFactory.get(forecast_location)
       if forecast:
-        self.response.out.write('\nForecast:')
-      f = wunder_forecast.ForecastFactory.get(location)
-      self.response.out.write(f.as_of + '<p>')
-      for day in f.days:
-        self.response.out.write(day.forecast + '<p>')
+        self.response.out.write('\nForecast as of ')
+        self.response.out.write(forecast.as_of + '<p>')
+        for day in forecast.days:
+          self.response.out.write(day.dayname + ': ' + day.forecast + '<p>')
       self.response.out.write('</body></html>')
 
 current_conditions_factory = service_handlers.ServiceHandlerFactory.default(
