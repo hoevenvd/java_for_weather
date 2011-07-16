@@ -18,7 +18,10 @@ handlers:
 - url: /clean_cache.*
   script: clean_cache_handler.py
   login: admin
-
+  
+- url: /store_forecast.*
+  script: wunderground_forecast_handler.py
+  
 - url: /test.*
   login: admin
   script: gaeunit.py

@@ -20,6 +20,7 @@ import condition
 import archive
 import wxutils
 import appconfig
+import wunder_forecast
 
 from weather.units import wind
 
@@ -32,6 +33,7 @@ class MainHandler(webapp.RequestHandler):
       else:
         location = "01915"
         localtz = pytz.timezone('America/New_York')
+      forecast = wunder_forecast.ForecastFactory.get(location)
       self.response.out.write('<html><head><meta HTTP-EQUIV="Refresh" CONTENT="3">')
       
       self.response.out.write("""<script type="text/javascript">"""
@@ -81,6 +83,8 @@ class MainHandler(webapp.RequestHandler):
         logging.info('no conditions found')
       self.response.out.write('latest archive record: ' + str(archive.ArchiveFactory.find_latest_datetime(location)) + '<p>')
       self.response.out.write('last rain: ' + str(wxutils.last_rain(location)) + '<p>')
+      if forecast:
+        self.response.out.write('\nForecast:')
       self.response.out.write('</body></html>')
 
 current_conditions_factory = service_handlers.ServiceHandlerFactory.default(
