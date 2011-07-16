@@ -1,4 +1,4 @@
 cron:
 - description: wunderground forecast fetch job
   url: /store_forecast?location=01915
-  schedule: every 15 minues synchronized
+  schedule: every 15 minutes synchronized
