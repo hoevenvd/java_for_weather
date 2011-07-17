@@ -20,7 +20,7 @@ import condition
 import archive
 import wxutils
 import appconfig
-import wunder_forecast
+from weather.services.wunder_forecast import ForecastFactory
 
 from weather.units import wind
 
@@ -61,42 +61,42 @@ class MainHandler(webapp.RequestHandler):
         metric = False
       cond = condition.ConditionFactory.find(location, metric)
       if cond:
-        self.response.out.write("current date: " + datetime.datetime.strftime(datetime.datetime.now(tz=localtz),"%Y-%m-%d %H:%M:%S%z") + "<p>")
-        self.response.out.write("Conditions for: " + location + "<p>")
-        self.response.out.write("station type: " + cond.station + "<p>")
-        self.response.out.write(str(cond.date) + '<p>')
-        self.response.out.write('temp: ' + str(cond.outside_temp) + '<p>')
-        self.response.out.write('feels like: ' + str(cond.apparent_temp) + '<p>')
-        self.response.out.write('dewpoint: ' + str(cond.dewpoint) + '<p>')
+        self.response.out.write("current date: " + datetime.datetime.strftime(datetime.datetime.now(tz=localtz),"%Y-%m-%d %H:%M:%S%z") + "<br>")
+        self.response.out.write("Conditions for: " + location + "<br>")
+        self.response.out.write("station type: " + cond.station + "<br>")
+        self.response.out.write(str(cond.date) + '<br>')
+        self.response.out.write('temp: ' + str(cond.outside_temp) + '<br>')
+        self.response.out.write('feels like: ' + str(cond.apparent_temp) + '<br>')
+        self.response.out.write('dewpoint: ' + str(cond.dewpoint) + '<br>')
         if not cond.wind_speed:
-          self.response.out.write('wind: calm <p>')
+          self.response.out.write('wind: calm <br>')
         else:
           self.response.out.write('wind: ' + str(cond.wind_speed) + ' from ' +
-                    wind.deg_to_short_str(cond.wind_direction) + '<p>')
-        self.response.out.write('ten min wind avg: ' + str(cond.ten_min_wind_speed) + '<p>')
-        self.response.out.write('pressure: ' + str(cond.pressure) + ' - ' + cond.pressure_trend + '<p>')
-        self.response.out.write('humidity: ' + str(cond.outside_humidity) + '<p>')
+                    wind.deg_to_short_str(cond.wind_direction) + '<br>')
+        self.response.out.write('ten min wind avg: ' + str(cond.ten_min_wind_speed) + '<br>')
+        self.response.out.write('pressure: ' + str(cond.pressure) + ' - ' + cond.pressure_trend + '<br>')
+        self.response.out.write('humidity: ' + str(cond.outside_humidity) + '<br>')
         if cond.is_raining:
-          self.response.out.write('raining at ' + str(cond.rain_rate) + ' inches per hour' + '<p>')
-        self.response.out.write('this rain event: ' + str(cond.storm_rain) + '<p>')
-        self.response.out.write('rain today: ' + str(cond.day_rain) + ' inches' + '<p>')
-        self.response.out.write('rain this month: ' + str(cond.month_rain) + ' inches' + '<p>')
-        self.response.out.write('rain this year: ' + str(cond.year_rain) + ' inches' + '<p>')
+          self.response.out.write('raining at ' + str(cond.rain_rate) + ' inches per hour' + '<br>')
+        self.response.out.write('this rain event: ' + str(cond.storm_rain) + '<br>')
+        self.response.out.write('rain today: ' + str(cond.day_rain) + ' inches' + '<br>')
+        self.response.out.write('rain this month: ' + str(cond.month_rain) + ' inches' + '<br>')
+        self.response.out.write('rain this year: ' + str(cond.year_rain) + ' inches' + '<br>')
         if cond.solar_radiation <> 32767:
-          self.response.out.write('solar radiation: ' + str(cond.solar_radiation) + ' watts per square meter' + '<p>')
-        self.response.out.write('sunrise: ' + str(cond.sunrise) + '<p>')
-        self.response.out.write('sunset: ' + str(cond.sunset) + '<p>')
+          self.response.out.write('solar radiation: ' + str(cond.solar_radiation) + ' watts per square meter' + '<br>')
+        self.response.out.write('sunrise: ' + str(cond.sunrise) + '<br>')
+        self.response.out.write('sunset: ' + str(cond.sunset) + '<br>')
       else:
-        self.response.out.write('no conditions found' + "<p>")
+        self.response.out.write('no conditions found' + "<br>")
         logging.info('no conditions found')
-      self.response.out.write('latest archive record: ' + str(archive.ArchiveFactory.find_latest_datetime(location)) + '<p>')
-      self.response.out.write('last rain: ' + str(wxutils.last_rain(location)) + '<p>')
-      forecast = wunder_forecast.ForecastFactory.get(forecast_location)
+      self.response.out.write('latest archive record: ' + str(archive.ArchiveFactory.find_latest_datetime(location)) + '<br>')
+      self.response.out.write('last rain: ' + str(wxutils.last_rain(location)) + '<br>')
+      forecast = ForecastFactory.get(forecast_location)
       if forecast:
         self.response.out.write('\nForecast as of ')
-        self.response.out.write(forecast.as_of + '<p>')
+        self.response.out.write(forecast.as_of + '<br>')
         for day in forecast.days:
-          self.response.out.write(day.dayname + ': ' + day.forecast + '<p>')
+          self.response.out.write(day.dayname + ': ' + day.forecast + '<br>')
       self.response.out.write('</body></html>')
 
 current_conditions_factory = service_handlers.ServiceHandlerFactory.default(
