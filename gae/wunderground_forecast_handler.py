@@ -3,7 +3,7 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 
-from wunder_forecast import ForecastFactory
+from weather.services.wunder_forecast import ForecastFactory
 
 #    forecast_location: KBVY
 #    conditions_location: KBVY
