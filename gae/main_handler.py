@@ -21,6 +21,7 @@ import archive
 import wxutils
 import appconfig
 from weather.services.wunder_forecast import ForecastFactory
+from weather.services.wunder_conditions import ConditionsFactory
 
 from weather.units import wind
 
@@ -40,6 +41,10 @@ class MainHandler(webapp.RequestHandler):
           forecast_location = station_settings['forecast_location']
         else:
           forecast_location = 'KBVY'
+        if 'conditions_location' in station_settings:
+          conditions_location = station_settings['conditions_location']
+        else:
+          conditions_location = 'KBVY'
       else:
         location = "01915"
       self.response.out.write('<html><head><meta HTTP-EQUIV="Refresh" CONTENT="3">')
@@ -91,7 +96,14 @@ class MainHandler(webapp.RequestHandler):
         logging.info('no conditions found')
       self.response.out.write('latest archive record: ' + str(archive.ArchiveFactory.find_latest_datetime(location)) + '<br>')
       self.response.out.write('last rain: ' + str(wxutils.last_rain(location)) + '<br>')
-      forecast = ForecastFactory.get(forecast_location)
+      conditions = ConditionsFactory.get(forecast_location)
+      if conditions:
+        self.response.out.write('\nConditions ')
+        self.response.out.write(conditions.as_of + '<br>')
+        self.response.out.write('Weather: ' + conditions.weather + '<br>')
+        self.response.out.write('Visibility: ' + conditions.visibility + ' miles<br>')
+
+      forecast = ForecastFactory.get(conditions_location)
       if forecast:
         self.response.out.write('\nForecast as of ')
         self.response.out.write(forecast.as_of + '<br>')
