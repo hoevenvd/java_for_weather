@@ -5,6 +5,7 @@ require 'open-uri'
 require 'rexml/document'
 include REXML
 
+# example: http://forecast.weather.gov//MapClick.php?textField1=42.56212&textField2=-70.84997&TextType=3
 
 #mysql> describe noaa_forecasts;
 #+----------------+-------------+------+-----+---------+----------------+
@@ -36,9 +37,6 @@ include REXML
 #| pop              | bigint(20)   | YES  |     | NULL    |                |
 #+------------------+--------------+------+-----+---------+----------------+
 #10 rows in set (0.01 sec)
-
-
-# example: http://forecast.weather.gov//MapClick.php?textField1=42.56212&textField2=-70.84997&TextType=3
 
 class NOAAForecastUtils
   log = Logger.new(STDOUT)
