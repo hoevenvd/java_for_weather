@@ -42,7 +42,7 @@ class WunderConditionsWriter
   conditions = doc.elements[1].elements["weather"].text
   log.debug("conditions: " + conditions)
 
-  record = NoaaConditions.find_or_create_by_location(location)
+  record = WunderConditions.find_or_create_by_location(location)
   log.debug(record)
   record[:conditions_xml] = data
   record[:location] = location
