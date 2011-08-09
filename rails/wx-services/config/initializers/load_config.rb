@@ -15,11 +15,11 @@ AppConfig = OpenStruct.new(config.common)
 
 # TODO - DRY
 
-# stuff related to wunderground and cwop
+# stuff related to wunderground, google apps and cwop
 
 SVC_FILE = "#{RAILS_ROOT}/config/service_providers.yml"
 if File.exist?(SVC_FILE)
-  SVC_CONFIG = YAML.load_file(SVC_FILE)[RAILS_ENV]
+  SVC_CONFIG = YAML.load_file(SVC_FILE)["#{RAILS_ENV}"]
 else
   SVC_CONFIG = Hash.new
 end
