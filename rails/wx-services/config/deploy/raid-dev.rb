@@ -1,4 +1,4 @@
-set :application, "weather"
+set :application, "wx-services"
 
 set :deploy_dir, "/weather"
 
