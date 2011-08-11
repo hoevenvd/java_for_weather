@@ -90,7 +90,6 @@ Rails::Initializer.run do |config|
   config.gem 'rack'
   config.gem 'test-unit', :lib => 'test/unit'
 
-
 end
 
 #require 'actionwebservice'
