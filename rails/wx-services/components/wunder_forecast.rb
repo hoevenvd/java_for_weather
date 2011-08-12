@@ -50,7 +50,7 @@ class WunderForecastUtils
     log.debug(@xml)
     @doc = Document.new(@xml)
     log.debug("doc = " + @doc.to_s)
-    forecast = WunderForecast.find_or_create_by_location(AppConfig.location)
+    forecast = WunderForecast.find_or_create_by_location(AppConfig.noaa_location)
     txt_forecasts = (@doc.elements['//txt_forecast'])
     forecast.wunder_forecast_periods.destroy_all
     forecast.forecast_xml = @xml
