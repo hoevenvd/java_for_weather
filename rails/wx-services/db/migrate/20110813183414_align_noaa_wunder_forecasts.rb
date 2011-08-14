@@ -1,17 +1,29 @@
-require 'time'
-require 'parsedate'
-require 'net/http'
-require 'open-uri'
-require 'rexml/document'
-include REXML
+class AlignNoaaWunderForecasts < ActiveRecord::Migration
+  def self.up
+    add_column("wunder_forecasts", "last_retrieved", :datetime)
+    add_column("wunder_forecasts", "creation_time", :datetime)
+    remove_column("wunder_forecasts", "as_of")
 
+    rename_column("wunder_forecast_periods", "icon_url", "icon_location")
+    rename_column("wunder_forecast_periods", "forecast", "text")
+  end
 
-# example: http://forecast.weather.gov//MapClick.php?textField1=42.56212&textField2=-70.84997&TextType=3
+  def self.down
+    remove_column("wunder_forecasts", "last_retrieved")
+    remove_column("wunder_forecasts", "creation_time")
+    add_column("wunder_forecasts", "as_of", :string)
+
+    rename_column("wunder_forecast_periods", "icon_location", "icon_url")
+    rename_column("wunder_forecast_periods", "text", "forecast")
+  end
+end
+
 
 #mysql> describe wunder_forecast_periods;
 #+--------------------+--------------+------+-----+---------+----------------+
 #| Field              | Type         | Null | Key | Default | Extra          |
 #+--------------------+--------------+------+-----+---------+----------------+
+#| id                 | int(11)      | NO   | PRI | NULL    | auto_increment |
 #| name               | varchar(255) | NO   |     | NULL    |                |
 #| forecast           | text         | NO   |     | NULL    |                |
 #| icon_url           | varchar(255) | YES  |     | NULL    |                |
@@ -19,12 +31,15 @@ include REXML
 #| created_at         | datetime     | YES  |     | NULL    |                |
 #| updated_at         | datetime     | YES  |     | NULL    |                |
 #+--------------------+--------------+------+-----+---------+----------------+
-#7 rows in set (0.00 sec)
+#7 rows in set (0.01 sec)
+
+
 
 #mysql> describe forecast_periods;
 #+------------------+--------------+------+-----+---------+----------------+
 #| Field            | Type         | Null | Key | Default | Extra          |
 #+------------------+--------------+------+-----+---------+----------------+
+#| id               | int(11)      | NO   | PRI | NULL    | auto_increment |
 #| noaa_forecast_id | bigint(20)   | NO   | MUL | 0       |                |
 #| name             | varchar(20)  | NO   |     |         |                |
 #| text             | text         | YES  |     | NULL    |                |
@@ -37,31 +52,3 @@ include REXML
 #+------------------+--------------+------+-----+---------+----------------+
 #10 rows in set (0.01 sec)
 
-class WunderForecastUtils
-  log = Logger.new(STDOUT)
-  log.level = Logger::INFO
-
-  url='http://api.wunderground.com/auto/wui/geo/ForecastXML/index.xml?query=' + AppConfig.noaa_location
-
-  begin
-    f = open(url) # open-uri - treat the URL as an input stream
-    @xml = f.read
-    log.debug(@xml)
-    @doc = Document.new(@xml)
-    log.debug("doc = " + @doc.to_s)
-    forecast = WunderForecast.find_or_create_by_location(AppConfig.noaa_location)
-    txt_forecasts = (@doc.elements['//txt_forecast'])
-    forecast.wunder_forecast_periods.destroy_all
-    forecast.forecast_xml = @xml
-    forecast.creation_time = Time.parse((@doc.elements['//date']).text).utc
-    forecast.creation_time = forcast.creation_time - 1.day if forecast.creation_time > Time.now.utc
-    forecast.last_retrieved = Time.now.utc
-    forecast.save
-    txt_forecasts.elements.each("forecastday") do | pd |
-      forecast.wunder_forecast_periods << WunderForecastPeriod.new(
-        :name => pd.elements['title'].text, 
-        :text => pd.elements['fcttext'].text,
-        :icon_location => pd.elements['icons'][1].elements['icon_url'].text)
-    end
-  end
-end
