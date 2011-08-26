@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class Main {
+  private static final int MAX_ERRORS = 20;
   public static final Logger LOGGER = Logger.getLogger(Main.class);
   private Station station;
   private boolean checkArchive;
@@ -22,6 +23,7 @@ public class Main {
    * @since 1.0
    */
   public static void main(String[] args) {
+	int errorCount = 0;
     while (true) {
       try {
         ApplicationContext factory = new FileSystemXmlApplicationContext(
@@ -31,6 +33,9 @@ public class Main {
       } catch (Exception e) {
         LOGGER.error(e);
           try {
+            if (errorCount++ > MAX_ERRORS) {
+              System.exit(1);
+            }
             Thread.sleep(5000);
           } catch (InterruptedException ex) {
             LOGGER.error(ex);
