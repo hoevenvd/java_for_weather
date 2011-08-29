@@ -69,7 +69,7 @@ class MainHandler(webapp.RequestHandler):
         self.response.out.write("current date: " + datetime.datetime.strftime(datetime.datetime.now(tz=localtz),"%Y-%m-%d %H:%M:%S%z") + "<br>")
         self.response.out.write("Conditions for: " + location + "<br>")
         self.response.out.write("station type: " + cond.station + "<br>")
-        self.response.out.write(str(cond.date) + '<br>')
+        self.response.out.write('conditions as of: ' + str(cond.date) + '<br>')
         self.response.out.write('temp: ' + str(cond.outside_temp) + '<br>')
         self.response.out.write('feels like: ' + str(cond.apparent_temp) + '<br>')
         self.response.out.write('dewpoint: ' + str(cond.dewpoint) + '<br>')
@@ -99,13 +99,16 @@ class MainHandler(webapp.RequestHandler):
       conditions = ConditionsFactory.get(forecast_location)
       if conditions:
         self.response.out.write('\nConditions ')
+        self.response.out.write('Retrieved: ' + conditions.retrieved.strftime("%Y-%m-%d %H:%M:%S %z") +'<br>')
         self.response.out.write(conditions.as_of + '<br>')
         self.response.out.write('Weather: ' + conditions.weather + '<br>')
         self.response.out.write('Visibility: ' + conditions.visibility + ' miles<br>')
 
       forecast = ForecastFactory.get(conditions_location)
       if forecast:
-        self.response.out.write('\nForecast as of ')
+        self.response.out.write('Forecast<br>')
+        self.response.out.write('Retrieved: ' + forecast.retrieved.strftime("%Y-%m-%d %H:%M:%S %z") +'<br>')
+        self.response.out.write('As of ')
         self.response.out.write(forecast.as_of + '<br>')
         for day in forecast.days:
           self.response.out.write(day.dayname + ': ' + day.forecast + '<br>')

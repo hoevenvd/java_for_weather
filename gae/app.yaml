@@ -14,6 +14,7 @@ handlers:
 
 - url: /delete_archive.*
   script: delete_archive_handler.py
+  login: admin
 
 - url: /clean_cache.*
   script: clean_cache_handler.py
@@ -21,6 +22,7 @@ handlers:
   
 - url: /store_forecast.*
   script: wunderground_forecast_handler.py
+  login: admin
   
 - url: /test.*
   login: admin

@@ -1,3 +1,5 @@
+import datetime
+import pytz
 from google.appengine.api import memcache
 from xml.etree import ElementTree
 import urllib
@@ -13,6 +15,7 @@ class ForecastDay:
   
 class Forecast:
     def __init__(self, as_of):
+      self.retrieved = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
       self.as_of = as_of
       self.days = []
     def append(self, dayname, forecast):
