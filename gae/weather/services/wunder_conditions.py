@@ -1,3 +1,5 @@
+import datetime
+import pytz
 from google.appengine.api import memcache
 from xml.etree import ElementTree
 import urllib
@@ -11,7 +13,7 @@ class WunderConditions:
     self.as_of = as_of
     self.weather = weather
     self.visibility = visibility
-      
+    self.retrieved = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
 
 class ConditionsFactory:
   @staticmethod
