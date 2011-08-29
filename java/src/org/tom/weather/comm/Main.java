@@ -62,14 +62,14 @@ public class Main {
       } catch (Exception e) {
         LOGGER.error("exception - waiting 5s", e);
         try {
+          if (errorCount++ > MAX_ERRORS) {
+            System.exit(1);
+          }
           Thread.sleep(5000);
           boolean ok = getStation().test();
           // show results of station test after the wait
           LOGGER.warn("station test:" + (ok ? "ok" : "not ok"));
         } catch (Exception e1) {
-          if (errorCount++ > MAX_ERRORS) {
-            System.exit(1);
-          }
           LOGGER.error(e1);
           throw e1;
         }
