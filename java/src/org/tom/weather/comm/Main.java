@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class Main {
-  private static final int MAX_ERRORS = 20;
+  private static final int MAX_ERRORS = 5;
   public static final Logger LOGGER = Logger.getLogger(Main.class);
   private Station station;
   private boolean checkArchive;
