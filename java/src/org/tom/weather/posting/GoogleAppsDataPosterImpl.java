@@ -66,7 +66,7 @@ public class GoogleAppsDataPosterImpl implements DataPoster {
     }
 
 
-  public String postData(String content) {
+  public String postData(String content) throws Exception {
     String response = null;
     try {
       URL url = new URL(target);
@@ -92,6 +92,7 @@ public class GoogleAppsDataPosterImpl implements DataPoster {
       in.close ();
     } catch (Exception e) {
       LOGGER.error("** Exception caught:", e);
+      throw e;
     }
     LOGGER.debug(response);
     return response;
