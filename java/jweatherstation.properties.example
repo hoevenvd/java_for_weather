@@ -6,7 +6,7 @@
 #portName=serial-dev
 #portName=home.tom.org
 #portName=192.168.1.60
-portName=weerinlelystad.dyndns.org
+portName=192.168.2.60
 baudRate=10001
 # raingauge: 0 = no gauge, 1 = 0.01 inch, 2 = 0.2 mm
 rainGauge=1
