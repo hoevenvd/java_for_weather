@@ -6,6 +6,8 @@
 
 set :application, "wx-services"
 
+set :rails_env, "production"
+
 set :user, "maarten"
 ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "id_rsa")] 
 ssh_options[:port] = 22
