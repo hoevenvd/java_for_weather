@@ -1,5 +1,7 @@
 set :application, "weather"
 
+set :rails_env, "production"
+
 set :deploy_dir, "/weather"
 
 set :user, "maarten"
