@@ -54,7 +54,7 @@ class WunderForecastUtils
     forecast.wunder_forecast_periods.destroy_all
     forecast.forecast_xml = @xml
     forecast.creation_time = Time.parse((@doc.elements['//date']).text).utc
-    forecast.creation_time = forcast.creation_time - 1.day if forecast.creation_time > Time.now.utc
+    forecast.creation_time = forecast.creation_time - 1.day if forecast.creation_time > Time.now.utc
     forecast.last_retrieved = Time.now.utc
     forecast.save
     txt_forecasts.elements.each("forecastday") do | pd |
