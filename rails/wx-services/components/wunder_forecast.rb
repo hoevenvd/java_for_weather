@@ -51,7 +51,9 @@ class WunderForecastUtils
     log.debug("doc = " + @doc.to_s)
     forecast = WunderForecast.find_or_create_by_location(AppConfig.noaa_location)
     txt_forecasts = (@doc.elements['//txt_forecast'])
+    simple_forecasts = (@doc.elements['//simpleforecast'])
     forecast.wunder_forecast_periods.destroy_all
+    forecast.wunder_forecast_period_longs.destroy_all
     forecast.forecast_xml = @xml
     forecast.creation_time = Time.parse((@doc.elements['//date']).text).utc
     forecast.creation_time = forecast.creation_time - 1.day if forecast.creation_time > Time.now.utc
@@ -63,5 +65,19 @@ class WunderForecastUtils
         :text => pd.elements['fcttext'].text,
         :icon_location => pd.elements['icons'][1].elements['icon_url'].text)
     end
+
+
+    simple_forecasts.elements.each("forecastday") do | pd |
+      forecast.wunder_forecast_period_longs << WunderForecastPeriodLong.new(
+        :date => Time.at(pd.elements['date'].elements['epoch'].text.to_i).to_datetime,
+        :high => pd.elements['high'].elements['fahrenheit'].text.to_f,
+        :high_m => pd.elements['high'].elements['celsius'].text.to_f,
+        :low => pd.elements['low'].elements['fahrenheit'].text.to_f,
+        :low_m => pd.elements['low'].elements['celsius'].text.to_f,
+        :conditions => pd.elements['conditions'].text,
+        :icon_location => pd.elements['icons'][1].elements['icon_url'].text)
+    end
+
+
   end
 end

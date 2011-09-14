@@ -39,8 +39,15 @@ class WunderConditionsWriter
   visibility = doc.elements[1].elements["visibility_mi"].text.to_i
   log.debug("visibility: " + visibility.to_s)
 
+  visibility_m = doc.elements[1].elements["visibility_km"].text.to_i
+  log.debug("visibility_km: " + visibility_m.to_s)
+
   conditions = doc.elements[1].elements["weather"].text
   log.debug("conditions: " + conditions)
+
+  icon_url = doc.elements[1].elements["icons"].elements[1].elements["icon_url"].text
+  log.debug("icon_url: " + icon_url)
+
 
   record = WunderConditions.find_or_create_by_location(location)
   log.debug(record)
@@ -49,6 +56,8 @@ class WunderConditionsWriter
   record[:as_of] = as_of
   record[:conditions] = conditions
   record[:visibility] = visibility
+  record[:visibility_m] = visibility_m
+  record[:icon_url] = icon_url
   record[:updated_at] = Time.now
   log.debug(record)
   record.save!
