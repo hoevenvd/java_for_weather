@@ -22,7 +22,7 @@ Rails::Initializer.run do |config|
   
   config.frameworks += [ :action_web_service]
   config.action_web_service = Rails::OrderedOptions.new
-  config.load_paths += %W( #{RAILS_ROOT}/app/apis )
+  config.autoload_paths += %W( #{RAILS_ROOT}/app/apis )
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
@@ -38,7 +38,7 @@ Rails::Initializer.run do |config|
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
   # Add additional load paths for your own custom dirs
-  # config.load_paths += %W( #{RAILS_ROOT}/extras )
+  # config.autoload_paths += %W( #{RAILS_ROOT}/extras )
 
   # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)
@@ -68,20 +68,21 @@ Rails::Initializer.run do |config|
 
   # Set our local timezone
   # use rake time:zones:all|local|us to see list of options
-  config.time_zone = 'Amsterdam'
+  # use rake time:zones:all|local|us to see list of options
+  config.time_zone = 'Eastern Time (US & Canada)'
 
   # Make Active Record use UTC-base instead of local time
   config.active_record.default_timezone = :utc
 
-  ENV['TZ'] = 'Europe/Amsterdam'
-  
-  config.load_paths += %W( #{RAILS_ROOT}/app/apis )
-  config.load_paths += Dir["#{RAILS_ROOT}/vendor/gems/**"].map do |dir|
+  ENV['TZ'] = 'US/Eastern'
+
+  config.autoload_paths += %W( #{RAILS_ROOT}/app/apis )
+  config.autoload_paths += Dir["#{RAILS_ROOT}/vendor/gems/**"].map do |dir|
     File.directory?(lib = "#{dir}/lib") ? lib : dir
   end
 
 # TODO - fix this kludge and get rid of the components directory
-  config.load_paths += %W( #{RAILS_ROOT}/components )
+  config.autoload_paths += %W( #{RAILS_ROOT}/components )
 
   config.cache_store = :file_store, "#{RAILS_ROOT}/tmp/cache"
   
