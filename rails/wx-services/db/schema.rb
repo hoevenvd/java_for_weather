@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110907181447) do
+ActiveRecord::Schema.define(:version => 20110813183414) do
 
   create_table "archive_records", :force => true do |t|
     t.datetime "date",                                                                                     :null => false
@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(:version => 20110907181447) do
     t.decimal  "low_outside_temp",                           :precision => 4, :scale => 1
     t.decimal  "pressure",                                   :precision => 5, :scale => 3
     t.integer  "outside_humidity",             :limit => 2
-    t.float    "rainfall"
-    t.float    "high_rain_rate"
+    t.float    "rainfall",                     :limit => 5
+    t.float    "high_rain_rate",               :limit => 6
     t.integer  "average_wind_speed",           :limit => 2
     t.integer  "high_wind_speed",              :limit => 2
     t.integer  "direction_of_high_wind_speed", :limit => 2
@@ -107,16 +107,16 @@ ActiveRecord::Schema.define(:version => 20110907181447) do
     t.integer  "outside_humidity",      :limit => 2
     t.decimal  "dewpoint",                            :precision => 4, :scale => 1
     t.integer  "apparent_temp",         :limit => 2
-    t.float    "pressure"
+    t.float    "pressure",              :limit => 5
     t.string   "bar_status",            :limit => 25
     t.integer  "windspeed",             :limit => 2
     t.integer  "wind_direction",        :limit => 2
     t.boolean  "is_raining"
-    t.float    "rain_rate"
+    t.float    "rain_rate",             :limit => 5
     t.integer  "ten_min_avg_wind",      :limit => 2
     t.integer  "uv",                    :limit => 2
     t.integer  "solar_radiation",       :limit => 2
-    t.float    "daily_rain"
+    t.float    "daily_rain",            :limit => 5
     t.datetime "created_at"
     t.datetime "updated_at"
     t.float    "inside_temperature"
@@ -180,10 +180,12 @@ ActiveRecord::Schema.define(:version => 20110907181447) do
   add_index "noaa_conditions", ["location"], :name => "location"
 
   create_table "noaa_forecasts", :force => true do |t|
-    t.text     "forecast_xml",                               :null => false
+    t.text     "forecast_xml",                                 :null => false
     t.datetime "created_at"
-    t.string   "location",     :limit => 30, :default => "", :null => false
+    t.string   "location",       :limit => 30, :default => "", :null => false
     t.datetime "updated_at"
+    t.datetime "creation_time"
+    t.datetime "last_retrieved"
   end
 
   add_index "noaa_forecasts", ["created_at"], :name => "created_at"
@@ -196,17 +198,17 @@ ActiveRecord::Schema.define(:version => 20110907181447) do
     t.decimal  "high_outside_temp",                          :precision => 4, :scale => 1
     t.decimal  "low_outside_temp",                           :precision => 4, :scale => 1
     t.decimal  "pressure",                                   :precision => 5, :scale => 3
-    t.integer  "outside_humidity",             :limit => 2
+    t.integer  "outside_humidity"
     t.float    "rainfall"
     t.float    "high_rain_rate"
-    t.integer  "average_wind_speed",           :limit => 2
-    t.integer  "high_wind_speed",              :limit => 2
-    t.integer  "direction_of_high_wind_speed", :limit => 2
-    t.integer  "prevailing_wind_direction",    :limit => 2
+    t.integer  "average_wind_speed"
+    t.integer  "high_wind_speed"
+    t.integer  "direction_of_high_wind_speed"
+    t.integer  "prevailing_wind_direction"
     t.decimal  "inside_temp",                                :precision => 4, :scale => 1
     t.decimal  "average_dewpoint",                           :precision => 4, :scale => 1
-    t.integer  "average_apparent_temp",        :limit => 2
-    t.integer  "inside_humidity",              :limit => 2
+    t.integer  "average_apparent_temp"
+    t.integer  "inside_humidity"
     t.integer  "average_solar_radiation"
     t.integer  "average_uv_index"
     t.integer  "et"
@@ -247,13 +249,13 @@ ActiveRecord::Schema.define(:version => 20110907181447) do
     t.float    "average_apparent_temp_m"
   end
 
+  add_index "old_archive_records", ["average_apparent_temp"], :name => "index_old_archive_records_on_average_apparent_temp"
+  add_index "old_archive_records", ["average_dewpoint"], :name => "index_old_archive_records_on_average_dewpoint"
   add_index "old_archive_records", ["date", "location"], :name => "date_loc", :unique => true
   add_index "old_archive_records", ["date"], :name => "dates"
-  add_index "old_archive_records", ["location", "date", "high_outside_temp"], :name => "index_archive_records_on_location_and_date_and_high_outside_temp"
-  add_index "old_archive_records", ["location", "date", "high_wind_speed"], :name => "index_archive_records_on_location_and_date_and_high_wind_speed"
-  add_index "old_archive_records", ["location", "date", "low_outside_temp"], :name => "index_archive_records_on_location_and_date_and_low_outside_temp"
-  add_index "old_archive_records", ["location", "date", "rainfall"], :name => "index_archive_records_on_location_and_date_and_rainfall"
   add_index "old_archive_records", ["location"], :name => "locations"
+  add_index "old_archive_records", ["outside_humidity"], :name => "index_old_archive_records_on_outside_humidity"
+  add_index "old_archive_records", ["pressure"], :name => "index_old_archive_records_on_pressure"
 
   create_table "past_summaries", :force => true do |t|
     t.string   "period",                 :limit => 20,                               :null => false
@@ -318,6 +320,10 @@ ActiveRecord::Schema.define(:version => 20110907181447) do
   add_index "risesets", ["location"], :name => "index_risesets_on_location"
   add_index "risesets", ["month"], :name => "index_risesets_on_month"
 
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version"
+  end
+
   create_table "wunder_conditions", :force => true do |t|
     t.string   "location",       :limit => 30, :null => false
     t.text     "conditions"
@@ -326,24 +332,9 @@ ActiveRecord::Schema.define(:version => 20110907181447) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "visibility"
-    t.integer  "visibility_m"
-    t.string   "icon_url"
   end
 
   add_index "wunder_conditions", ["location"], :name => "index_wunder_conditions_on_location", :unique => true
-
-  create_table "wunder_forecast_period_longs", :force => true do |t|
-    t.datetime "date"
-    t.float    "high"
-    t.float    "high_m"
-    t.float    "low"
-    t.float    "low_m"
-    t.text     "conditions"
-    t.string   "icon_location"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "wunder_forecast_id"
-  end
 
   create_table "wunder_forecast_periods", :force => true do |t|
     t.string   "name",               :null => false
