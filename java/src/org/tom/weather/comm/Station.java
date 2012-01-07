@@ -73,7 +73,7 @@ public abstract class Station {
 
     } catch (UnknownHostException ex) {
         // must be a COM port
-        LOGGER.info(portName + " not an IP address, using serial");
+        LOGGER.info(portName + " not an IP address or hostname, using serial");
         this.portName = portName;
         this.baudRateOrPort = baudRate;
         portID = getPortID(portName);
