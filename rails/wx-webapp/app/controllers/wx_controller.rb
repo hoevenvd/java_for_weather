@@ -27,10 +27,10 @@ class WxController < ApplicationController
   end
 
   def get_riseset
-    @riseset_today = Riseset.riseset(Time.now)
+    @riseset_today = Riseset.riseset(AppConfig.climate_location, Time.now)
     @riseset_available = !(@riseset_today.nil?)
-    @riseset_week = Riseset.riseset(Time.now + 1.week)
-    @riseset_month = Riseset.riseset(Time.now + 1.month)
+    @riseset_week = Riseset.riseset(AppConfig.climate_location, Time.now + 1.week)
+    @riseset_month = Riseset.riseset(AppConfig.climate_location, Time.now + 1.month)
   end
   
   def get_noaa_conditions
