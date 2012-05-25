@@ -1,5 +1,4 @@
 class Riseset < ActiveRecord::Base
-	# thinks it is dark when it is not
   def self.riseset(location, date)
     r = Riseset.find_by_location_and_month_and_day(location,
             date.localtime.month, date.localtime.day)
