@@ -1,6 +1,6 @@
 <TABLE BORDER=1 ALIGN="CENTER" WIDTH="50%" >
 <% if @forecast != nil && @forecast.last_retrieved > 6.hours.ago %>
-<tr><td colspan="3" align="center"><center><b><h2> NOAA Forecast as of <%= distance_of_time_in_words_to_now(@forecast.last_retrieved, false) %> ago</h2></b></center></td></tr>
+<tr><td colspan="3" align="center"><center><b><h2> NOAA Forecast as of <%= distance_of_time_in_words_to_now(@forecast.last_retrieved, false) %> ago (<%= @forecast.last_retrieved.to_s(:time)  %>)</h2></b></center></td></tr>
 <% @forecast.forecast_periods.each do | pd | %>
   <tr>
    <td><b><%= pd.name %></b></td>
