@@ -27,9 +27,11 @@ while true
       log.debug(Time.now - t)
       log.debug("writing")
       t = Time.now
-      dest_soap.PutCurrentConditions("wx", LOCATION, conditions)
-      log.debug("done.")
-      log.debug(Time.now - t)
+      if (t - conditions.sample_date < 600) then
+        dest_soap.PutCurrentConditions("wx", LOCATION, conditions)
+        log.debug("done.")
+        log.debug(Time.now - t)
+      end
       error_count = 0
       sleep 2
     end
