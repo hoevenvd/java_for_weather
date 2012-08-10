@@ -16,54 +16,56 @@ module WeatherHelper
     RRDWriter.write_to_rrd(location, a)
   end
 
-
   def self.post_to_cwop(location)
      c = CurrentCondition.find_by_location(location)
-     return if c.nil?
-     req = AppConfig.cwop_id
-     req += ">APRS,TCPXX*:"
-     req += c.sample_date.utc.strftime("@%d%H%Mz")
-     req += AppConfig.cwop_lat_long
-     req += sprintf("_%03d", c[:wind_direction]) unless c[:wind_direction].nil?
-     req += sprintf("/%03d", c[:windspeed]) unless c[:windspeed].nil?
-     req += sprintf("g%03d", c[:gust]) unless c[:gust].nil?
-     req += sprintf("t%03d", c[:outside_temperature].to_i) unless c[:outside_temperature].nil?
+     return if c.nil? || c.date
+     t = Time.now
+     if (t - c.sample_date < 600) then
+       req = AppConfig.cwop_id
+       req += ">APRS,TCPXX*:"
+       req += c.sample_date.utc.strftime("@%d%H%Mz")
+       req += AppConfig.cwop_lat_long
+       req += sprintf("_%03d", c[:wind_direction]) unless c[:wind_direction].nil?
+       req += sprintf("/%03d", c[:windspeed]) unless c[:windspeed].nil?
+       req += sprintf("g%03d", c[:gust]) unless c[:gust].nil?
+       req += sprintf("t%03d", c[:outside_temperature].to_i) unless c[:outside_temperature].nil?
 
-     if !c.solar_radiation.nil?
-       # Luminescence (Solar Radiation). 
-       # Requires solar radiation sensor. 
-       # Data omitted if no solar radition sensor is present in the station.
-       # A capital L, "L", is used to report values between 0 and 999 w/m2.
-       #  A lower case L, "l", used to report values from 1000 to 1999 w/m2.
-       if (c.solar_radiation) > 1000
-         rads = sprintf("l%d", c.solar_radiation)
-       else
-         rads = sprintf("L%03d", c.solar_radiation)
+       if !c.solar_radiation.nil?
+         # Luminescence (Solar Radiation).
+         # Requires solar radiation sensor.
+         # Data omitted if no solar radition sensor is present in the station.
+         # A capital L, "L", is used to report values between 0 and 999 w/m2.
+         #  A lower case L, "l", used to report values from 1000 to 1999 w/m2.
+         if (c.solar_radiation) > 1000
+           rads = sprintf("l%d", c.solar_radiation)
+         else
+           rads = sprintf("L%03d", c.solar_radiation)
+         end
+         req += rads
        end
-       req += rads
-     end
-     req += sprintf("")
-     req += sprintf("r%03d", c[:hourly_rain] * 100) unless c[:hourly_rain].nil?
-     req += sprintf("p%03d", c[:twentyfour_hour_rain] * 100) unless c[:twentyfour_hour_rain].nil?
-     req += sprintf("P%03d", c[:daily_rain] * 100) unless c[:daily_rain].nil?
-     if (!c[:outside_humidity].nil?)
-       if (c[:outside_humidity] == 100)
-         req += "h00"
-       else
-         req += sprintf("h%02d", c[:outside_humidity])
+       req += sprintf("")
+       req += sprintf("r%03d", c[:hourly_rain] * 100) unless c[:hourly_rain].nil?
+       req += sprintf("p%03d", c[:twentyfour_hour_rain] * 100) unless c[:twentyfour_hour_rain].nil?
+       req += sprintf("P%03d", c[:daily_rain] * 100) unless c[:daily_rain].nil?
+       if (!c[:outside_humidity].nil?)
+         if (c[:outside_humidity] == 100)
+           req += "h00"
+         else
+           req += sprintf("h%02d", c[:outside_humidity])
+         end
        end
-     end
-     req += sprintf("b%05d", c[:pressure] * 10 * 33.8637526) unless c[:pressure].nil?
-     req += "eTomOrgDavisVP2"
-     init_str = "user #{AppConfig.cwop_id} pass -1 vers linux-1wire 1.00"
-     # rotate.aprs.net:14580
-     s = TCPSocket.open("cwop.aprs.net", 14580)
-     s.puts(init_str)
-     sleep 3
-     s.gets
-     s.puts(req)
-     sleep 3
-     s.gets
+       req += sprintf("b%05d", c[:pressure] * 10 * 33.8637526) unless c[:pressure].nil?
+       req += "eTomOrgDavisVP2"
+       init_str = "user #{AppConfig.cwop_id} pass -1 vers linux-1wire 1.00"
+       # rotate.aprs.net:14580
+       s = TCPSocket.open("cwop.aprs.net", 14580)
+       s.puts(init_str)
+       sleep 3
+       s.gets
+       s.puts(req)
+       sleep 3
+       s.gets
+    end
   end
 
   def self.post_to_wunderground(location, id, password)
