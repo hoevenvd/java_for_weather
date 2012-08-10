@@ -19,7 +19,7 @@ module WeatherHelper
   def self.post_to_cwop(location)
      c = CurrentCondition.find_by_location(location)
      t = Time.now
-     return if c.nil? or (t - c.sample_date < 600)
+     return if c.nil? or (t - c.sample_date > 600)
      req = AppConfig.cwop_id
      req += ">APRS,TCPXX*:"
      req += c.sample_date.utc.strftime("@%d%H%Mz")
