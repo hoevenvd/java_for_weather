@@ -1,0 +1,84 @@
+
+# /gae/
+/gae/.settings
+/gae/*.pyc
+/gae/data
+/gae/.pydevproject
+/gae/.project
+
+# /java/
+/java/src_generated
+/java/tmp
+/java/classes
+/java/nbproject
+/java/nbbuild.xml
+/java/log
+/java/weather.xml
+/java/jweatherstation.properties
+/java/jweatherstation.properties.wm
+/java/jweatherstation.properties.vp
+/java/log4j.properties
+/java/build.properties
+/java/.classpath
+/java/.project
+/java/.settings
+/java/.idea
+/java/Trunk.iml
+/java/Weather.iml
+/java/.settings
+
+# /java/src/
+/java/src/org
+/java/src/uk
+
+# /rails/
+
+# /rails/wx-services/
+/rails/wx-services/nbproject
+/rails/wx-services/log
+/rails/wx-services/cache
+/rails/wx-services/tmp
+/rails/wx-services/.idea
+/rails/wx-services/.project
+/rails/wx-services/.buildpath
+
+# /rails/wx-services/config/
+/rails/wx-services/config/database.yml
+/rails/wx-services/config/database.yml.mysql.yml
+/rails/wx-services/config/config.yml
+/rails/wx-services/config/service_providers.yml
+/rails/wx-services/config/database.yml.postgres
+/rails/wx-services/config/rrd_weather.cfg
+
+# /rails/wx-services/log/
+/rails/wx-services/log/*
+
+# /rails/wx-webapp/
+/rails/wx-webapp/nbproject
+/rails/wx-webapp/log
+/rails/wx-webapp/cache
+/rails/wx-webapp/tmp
+/rails/wx-webapp/.idea
+/rails/wx-webapp/.project
+/rails/wx-webapp/.buildpath
+
+# /rails/wx-webapp/config/
+/rails/wx-webapp/config/database.yml
+/rails/wx-webapp/config/database.yml.mysql.yml
+/rails/wx-webapp/config/config.yml
+/rails/wx-webapp/config/service_providers.yml
+/rails/wx-webapp/config/database.yml.postgres
+
+# /rails/wx-webapp/lib/
+
+# /rails/wx-webapp/log/
+/rails/wx-webapp/log/*.log
+
+# /rails/wx-webapp/public/
+/rails/wx-webapp/public/.htaccess
+
+# /rrd/
+/rrd/rrd-data
+
+# /rrd/conf/
+/rrd/conf/rrd_weather.cfg
