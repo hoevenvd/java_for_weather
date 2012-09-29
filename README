@@ -1,0 +1,9 @@
+This project is made from several components:
+
+doc: most of the docs from the project as well as some docs from Davis Instruments
+gae: alpha project of a Google App Engine version of the basic services
+images: some of the shared images used by the Java applet
+java: Java code, mostly used for polling the stations
+rails: the two core rails apps used to accept data from the Java poller and show the website
+rrd: graph generator used for graphs shown on the website
+
