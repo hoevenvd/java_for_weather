@@ -1,0 +1,10 @@
+build.properties
+weather.iml
+.idea/
+classes/
+jweatherstation.properties
+log/
+log4j.properties
+src_generated/
+tmp/
+weather.xml

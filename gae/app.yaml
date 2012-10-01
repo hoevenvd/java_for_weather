@@ -1,7 +1,16 @@
+<<<<<<< HEAD
 application: org-tom-wx
 version: 1
 runtime: python
 api_version: 1
+=======
+application: org-tom-wx-hrd
+version: 1
+#runtime: python27
+runtime: python
+api_version: 1
+#threadsafe: true
+>>>>>>> e7b2c0d5172885d29c1b164bb937ce7915c8cc7e
 
 handlers:
 
