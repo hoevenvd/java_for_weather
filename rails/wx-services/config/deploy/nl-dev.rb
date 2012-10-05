@@ -17,24 +17,23 @@ set :use_sudo, false
 # writable.  This stops that.
 set :group_writable, false
 
-set :repository,  "svn+ssh://tomorg@tommitchell.net/home/tomorg/svn/weather/trunk/rails/#{application}"
+set :deploy_subdir, "rails/wx-services"
+set :scm, :git
+set :deploy_via, :remote_cache
+set :repository_cache, "git_cache"
+set :ssh_options, { :forward_agent => true }
+set :repository, "git@github.com:mitct02/weather.git"
+set :branch, "master"
+
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
 set :deploy_to, "~/apps/#{application}"
 
-# If you aren't using Subversion to manage your source code, specify
-# your SCM below:
-set :scm, :subversion
-# set :scm_username, "#{user}"
-#set :scm_password, proc{Capistrano::CLI.password_prompt('SVN pass:')} 
-
-set :deploy_via, :export 
-
-role :app, "weerinlelystad.dyndns.org"
-role :web, "weerinlelystad.dyndns.org"
-role :db,  "weerinlelystad.dyndns.org", :primary => true
+role :app, "weerinwelsum.synology.me"
+role :web, "weerinwelsum.synology.me"
+role :db,  "weerinwelsum.synology.me", :primary => true
 
 
 task :symlink_config_yml, :roles => :app do
