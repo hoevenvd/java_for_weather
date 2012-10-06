@@ -65,6 +65,7 @@ class WeatherController < ApplicationController
     cond = CurrentCondition.find_or_create_by_location(location)
     cond[:sample_date] = Time.now.utc
     cond[:outside_temperature] = sample[:temp] == -9999.0 ? nil : sample[:temp]
+    cond[:extra_temp1] = sample[:extra_temp1] == -9999.0 ? nil : sample[:extra_temp1]
     cond[:outside_humidity] = sample[:humidity] == -9999 ? nil : sample[:humidity]
     cond[:pressure] = sample[:pressure] == -9999.0 ? nil : sample[:pressure]
     cond[:bar_status] = sample[:bar_status]

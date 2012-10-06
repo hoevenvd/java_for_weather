@@ -113,7 +113,7 @@ class CurrentCondition < ActiveRecord::Base
     self.pressure_m = inches_of_hg_to_mb(self.pressure).round_with_precision(1) unless self.pressure.nil?
     self.outside_temperature_m = to_c(self.outside_temperature).round_with_precision(1) unless self.outside_temperature.nil?
     self.inside_temperature_m = to_c(self.inside_temperature).round_with_precision(1) unless self.inside_temperature.nil?
-    
+    self.extra_temp1_m = to_c(self.extra_temp1).round_with_precision(1) unless self.extra_temp1.nil?
     return true
   end
 end
