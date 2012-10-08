@@ -445,6 +445,11 @@ public class Wm2DmpRecord implements ArchiveEntry {
         return numberOfWindSamples;
     }
 
+    public int getExtraTemp1() {
+        return extraTemperature1;
+    }
+
+
     /**
      * @return the highWindSpeedDirection
      */

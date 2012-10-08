@@ -67,6 +67,7 @@ public class DataUploaderImpl implements DataUploader, Cacheable {
     struct.setAverage_solar_radiation(entry.getAverageSolarRadiation());
     struct.setHigh_solar_radiation(entry.getHighSolarRadiation());
     struct.setNumber_of_wind_samples(entry.getNumberOfWindSamples());
+//MPJ    struct.setExtraTemp1(entry.getExtraTemp1());
     if (entry.isValid()) {
       WxWsClient.postArchiveEntry(password, getLocation(), struct);
       LOGGER.info(entry);

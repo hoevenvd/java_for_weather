@@ -58,4 +58,6 @@ public interface SnapShot extends Serializable {
   public java.util.Date getSunrise();
 
   public java.util.Date getSunset();
+
+  public int getExtraTemp1();
 }
