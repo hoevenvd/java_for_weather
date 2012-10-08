@@ -18,4 +18,5 @@ class InputSampleStruct < ActionWebService::Struct
   member :inside_humidity, :int
   member :sunrise, :time
   member :sunset, :time
+  member :extra_temp1, :float
 end
