@@ -178,6 +178,7 @@ public class DmpRecord implements ArchiveEntry {
       }
       averageWindSpeed = 0;
       windDirection = new Direction(0);
+      highWindSpeedDirection = new Direction(0); // if the average is garbage, so must be the max!
     }
   }
 
