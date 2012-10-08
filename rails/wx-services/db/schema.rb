@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121006203215) do
+ActiveRecord::Schema.define(:version => 20121006212941) do
 
   create_table "archive_records", :force => true do |t|
     t.datetime "date",                                                                                     :null => false
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(:version => 20121006203215) do
     t.integer  "soil_temp4",                   :limit => 8
     t.integer  "extra_humidity1",              :limit => 8
     t.integer  "extra_humidity2",              :limit => 8
-    t.integer  "extra_temp1",                  :limit => 8
+    t.decimal  "extra_temp1",                                :precision => 4, :scale => 1
     t.integer  "extra_temp2",                  :limit => 8
     t.integer  "extra_temp3",                  :limit => 8
     t.integer  "soil_moisture1",               :limit => 8
@@ -67,6 +67,11 @@ ActiveRecord::Schema.define(:version => 20121006203215) do
     t.float    "high_wind_speed_m"
     t.float    "average_dewpoint_m"
     t.float    "average_apparent_temp_m"
+    t.decimal  "high_extra_temp1",                           :precision => 4, :scale => 1
+    t.decimal  "low_extra_temp1",                            :precision => 4, :scale => 1
+    t.decimal  "extra_temp1_m",                              :precision => 4, :scale => 1
+    t.decimal  "high_extra_temp1_m",                         :precision => 4, :scale => 1
+    t.decimal  "low_extra_temp1_m",                          :precision => 4, :scale => 1
   end
 
   add_index "archive_records", ["average_apparent_temp"], :name => "index_archive_records_on_average_apparent_temp"
@@ -227,7 +232,7 @@ ActiveRecord::Schema.define(:version => 20121006203215) do
     t.integer  "soil_temp4"
     t.integer  "extra_humidity1"
     t.integer  "extra_humidity2"
-    t.integer  "extra_temp1"
+    t.decimal  "extra_temp1",                                :precision => 4, :scale => 1
     t.integer  "extra_temp2"
     t.integer  "extra_temp3"
     t.integer  "soil_moisture1"
@@ -249,6 +254,11 @@ ActiveRecord::Schema.define(:version => 20121006203215) do
     t.float    "high_wind_speed_m"
     t.float    "average_dewpoint_m"
     t.float    "average_apparent_temp_m"
+    t.decimal  "high_extra_temp1",                           :precision => 4, :scale => 1
+    t.decimal  "low_extra_temp1",                            :precision => 4, :scale => 1
+    t.decimal  "extra_temp1_m",                              :precision => 4, :scale => 1
+    t.decimal  "high_extra_temp1_m",                         :precision => 4, :scale => 1
+    t.decimal  "low_extra_temp1_m",                          :precision => 4, :scale => 1
   end
 
   add_index "old_archive_records", ["average_apparent_temp"], :name => "index_old_archive_records_on_average_apparent_temp"
@@ -297,6 +307,11 @@ ActiveRecord::Schema.define(:version => 20121006203215) do
     t.datetime "lowWindchillDate"
     t.datetime "hiOutsideHumidityDate"
     t.datetime "lowOutsideHumidityDate"
+    t.decimal  "avgExtraTemp1",                        :precision => 6, :scale => 1
+    t.decimal  "hiExtraTemp1",                         :precision => 6, :scale => 1
+    t.decimal  "lowExtraTemp1",                        :precision => 6, :scale => 1
+    t.datetime "hiExtraTemp1Date"
+    t.datetime "lowExtraTemp1Date"
   end
 
   add_index "past_summaries", ["hiDewpointDate"], :name => "index_past_summaries_on_hiDewpointDate"
