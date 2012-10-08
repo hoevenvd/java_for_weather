@@ -60,6 +60,7 @@ public class WxWsClient {
     a.setPressure(30.002);
     a.setLow_outside_temp(32.8);
     a.setPrevailing_wind_direction(270);
+//MPJ    a.setExtra_temp1(0);
     return a;
   }
 
@@ -74,6 +75,7 @@ public class WxWsClient {
     inputSampleStruct.setRain_rate(.01);
     inputSampleStruct.setWindspeed(12);
     inputSampleStruct.setHumidity(50);
+    inputSampleStruct.setExtra_temp1(0);
     return inputSampleStruct;
   }
 

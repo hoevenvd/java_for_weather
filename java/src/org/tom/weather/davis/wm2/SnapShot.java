@@ -27,6 +27,7 @@ public class SnapShot implements org.tom.weather.SnapShot {
   private java.util.Date date;
   private boolean valid;
   static double convertRain = 0;
+  int extraTemp1;
 
   public float getPressure() {
     return pressure;
@@ -287,4 +288,8 @@ public class SnapShot implements org.tom.weather.SnapShot {
         return -9999; // value not provided by WM2
     }
     
+    public int getExtraTemp1() {
+	return extraTemp1;
+   }
+
 }

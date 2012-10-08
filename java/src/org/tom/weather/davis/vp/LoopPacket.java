@@ -53,6 +53,7 @@ public class LoopPacket implements SnapShot {
   private Date sunset;
   private int crc;
   private UnsignedByte[] unsignedData;
+  private int extraTemp1;
 
   public LoopPacket(byte[] data) throws IllegalArgumentException {
     UnsignedByte[] unsignedPacket = UnsignedByte.getUnsignedBytes(data);
@@ -88,6 +89,7 @@ public class LoopPacket implements SnapShot {
         .getByte()) / 100.0f));
     sunrise = DateUtils.parseDate(null, null, unsignedPacket[91], unsignedPacket[92]).getTime();
     sunset = DateUtils.parseDate(null, null, unsignedPacket[93], unsignedPacket[94]).getTime();
+    extraTemp1 = unsignedPacket[18].getByte();
     crc = ((unsignedPacket[97].getByte() * 256) + unsignedPacket[98].getByte());
     CRC calcCRC = new CRC();
     calcCRC.updateCRC(data);
@@ -127,6 +129,7 @@ public class LoopPacket implements SnapShot {
     }
     sb.append(date);
     sb.append("\t Temp: " + outsideTemperature);
+    sb.append("\t Gras: " + extraTemp1);
     sb.append("\t Pressure: " + pressure);
     sb.append("\t Humidity: " + outsideHumidity);
     sb.append("\t Dewpoint: " + getDewpoint());
@@ -183,6 +186,10 @@ public class LoopPacket implements SnapShot {
   public float getOutsideTemp() {
     return (float) outsideTemperature.getTemperatureFahrenheit();
   }
+  
+  public int getExtraTemp1() {
+    return extraTemp1-90;
+  }
 
   public float getWindchill() {
     return Converter.getWindChill((int)getWindspeed(), getOutsideTemp());
@@ -198,7 +205,7 @@ public class LoopPacket implements SnapShot {
 
   public String shortToString() {
     if (isValid()) {
-      return DateUtils.getSqlDate(getDate()) + " : " + getOutsideTemp() +
+      return DateUtils.getSqlDate(getDate()) + " : " + getOutsideTemp() + " : **" + getExtraTemp1() +
         " : " + getWindspeed() + " : " + getWindDirection().toShortString() +
         " : " + getPressure() + " : " + getBarStatus() +
         (isRaining() ? " : " + "raining at " + getRainRate() : "");

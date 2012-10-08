@@ -48,6 +48,7 @@ public class WebServiceDataPosterImpl implements DataPoster {
     sample.setSunrise((Calendar)cal.clone());
     cal.setTime(snap.getSunset());
     sample.setSunset(cal);
+    sample.setExtra_temp1(snap.getExtraTemp1());
     try {
       WxWsClient.postSample(password, location, sample);
     } catch (RemoteException e) {
