@@ -427,6 +427,11 @@ public class DmpRecord implements ArchiveEntry {
     return solarRadiation;
   }
 
+  public int getExtraTemp1() {
+    return extraTemperature1;
+  }
+
+
   public int getNumberOfWindSamples() {
     return numberOfWindSamples;
   }

@@ -57,4 +57,6 @@ public interface ArchiveEntry extends Serializable {
   public int getHighSolarRadiation();
   
   public int getNumberOfWindSamples();
+
+  public int getExtraTemp1();
 }
