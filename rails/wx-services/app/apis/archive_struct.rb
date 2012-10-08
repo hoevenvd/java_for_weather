@@ -28,4 +28,6 @@ class ArchiveStruct < ActionWebService::Struct
   member :high_uv_index, :int
   member :average_solar_radiation, :int
   member :high_solar_radiation, :int
+  member :extra_temp1, :float
+  member :extra_temp1_m, :float
 end

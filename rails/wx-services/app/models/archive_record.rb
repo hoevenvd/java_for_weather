@@ -42,6 +42,7 @@ class ArchiveRecord < ActiveRecord::Base
     end
 
     self.outside_temp_m = to_c(self.outside_temp).round_with_precision(1) unless self.outside_temp.nil?
+    self.extra_temp1_m = to_c(self.extra_temp1).round_with_precision(1) unless self.extra_temp1.nil?
     self.low_outside_temp_m = to_c(self.low_outside_temp).round_with_precision(1) unless self.low_outside_temp.nil?
     self.high_outside_temp_m = to_c(self.high_outside_temp).round_with_precision(1) unless self.high_outside_temp.nil?
     self.inside_temp_m = to_c(self.inside_temp).round_with_precision(1) unless self.inside_temp.nil?

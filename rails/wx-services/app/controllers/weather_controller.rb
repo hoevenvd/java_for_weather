@@ -58,7 +58,9 @@ class WeatherController < ApplicationController
         :monthly_rain => sample[:monthly_rain],
         :yearly_rain => sample[:yearly_rain],
         :storm_rain => sample[:storm_rain],
-        :rain_rate => sample[:rain_rate])
+        :rain_rate => sample[:rain_rate],
+        :extra_temp1 => sample[:extra_temp1]
+      )
   end
   
   def put_current_conditions(password, location, sample)
@@ -124,6 +126,7 @@ class WeatherController < ApplicationController
         :location => location,
         :date => entry[:date],
         :outside_temp => entry[:outside_temp],
+        :extra_temp1 => entry[:extra_temp1],
         :high_outside_temp => entry[:high_outside_temp],
         :low_outside_temp => entry[:low_outside_temp],
         :pressure => entry[:pressure],
@@ -156,6 +159,7 @@ class WeatherController < ApplicationController
         :location => location,
         :date => entry[:date],
         :outside_temp => entry[:outside_temp],
+        :extra_temp1 => entry[:extra_temp1],
         :high_outside_temp => entry[:high_outside_temp],
         :low_outside_temp => entry[:low_outside_temp],
         :pressure => entry[:pressure],
@@ -182,6 +186,7 @@ class WeatherController < ApplicationController
     rec[:location] = location
     rec[:date] = date
     rec[:outside_temp] = entry[:outside_temp] == -9999.0 ? nil : entry[:outside_temp]
+    rec[:extra_temp1] = entry[:extra_temp1] == -9999.0 ? nil : entry[:extra_temp1]
     rec[:high_outside_temp] = entry[:high_outside_temp] == -9999.0 ? nil : entry[:high_outside_temp]
     rec[:low_outside_temp] = entry[:low_outside_temp] == -9999.0 ? nil : entry[:low_outside_temp]
     rec[:pressure] = entry[:pressure] == -9999.0 ? nil : entry[:pressure]
