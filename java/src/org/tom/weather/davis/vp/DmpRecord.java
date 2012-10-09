@@ -429,7 +429,7 @@ public class DmpRecord implements ArchiveEntry {
   }
 
   public int getExtraTemp1() {
-    return extraTemperature1;
+    return extraTemperature1-90;
   }
 
 
