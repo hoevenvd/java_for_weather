@@ -76,7 +76,7 @@ module Cache
     #check_this_hour(archive_record)
   end
 
-  HIGH_LOW_FIELDS = [:Temp, :Pressure, :Dewpoint, :Windchill, :OutsideHumidity]
+  HIGH_LOW_FIELDS = [:Temp, :ExtraTemp1, :Pressure, :Dewpoint, :Windchill, :OutsideHumidity]
 
   def check_this_month(archive_record, location)
     month = PastSummary.find_by_period_and_location(:this_month, location)
@@ -96,6 +96,22 @@ module Cache
       today.save!
     end
 
+    # high Extra temp1
+    if month != nil and archive_record[:high_extra_temp1] >= month[:hiExtraTemp1]
+      month[:hiExtraTemp1] = archive_record[:high_extra_temp1]
+      month[:hiExtraTemp1Date] = archive_record[:date]
+      # if it is the high for the month, it must also be the high for the week
+      week = PastSummary.find_by_period_and_location(:this_week, location)
+      week[:hiExtraTemp1] = archive_record[:high_extra_temp1]
+      week[:hiExraTemp1Date] = archive_record[:date]
+      week.save!
+      # if it is the high for the month, it must also be the high for the week
+      today = PastSummary.find_by_period_and_location(:today, location)
+      today[:hiExtraTemp1] = archive_record[:high_extra_temp1]
+      today[:hiExtraTemp1Date] = archive_record[:date]
+      today.save!
+    end
+
     # low outside temp
     if month != nil and archive_record[:low_outside_temp] <= month[:lowTemp]
       month[:lowTemp] = archive_record[:low_outside_temp]
@@ -109,6 +125,22 @@ module Cache
       today = PastSummary.find_by_period_and_location(:today, location)
       today[:lowTemp] = archive_record[:low_outside_temp]
       today[:lowTempDate] = archive_record[:date]
+      today.save!
+    end
+
+    # low extra temp
+    if month != nil and archive_record[:low_extra_temp1] <= month[:lowExtraTemp1]
+      month[:lowExtraTemp1] = archive_record[:low_extra_temp1]
+      month[:lowExtraTemp1Date] = archive_record[:date]
+      # if it is the low for the month, it must also be the low for the week
+      week = PastSummary.find_by_period_and_location(:this_week, location)
+      week[:lowExtraTemp1] = archive_record[:low_extra_temp1]
+      week[:lowExtraTemp1Date] = archive_record[:date]
+      week.save!
+      # if it is the low for the month, it must also be the low for the week
+      today = PastSummary.find_by_period_and_location(:today, location)
+      today[:lowExtraTemp1] = archive_record[:low_extra_temp1]
+      today[:lowExtraTemp1Date] = archive_record[:date]
       today.save!
     end
   end
