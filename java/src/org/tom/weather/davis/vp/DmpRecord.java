@@ -178,6 +178,7 @@ public class DmpRecord implements ArchiveEntry {
       }
       averageWindSpeed = 0;
       windDirection = new Direction(0);
+      highWindSpeedDirection = new Direction(0); // if the average is garbage, so must be the max!
     }
   }
 
@@ -428,7 +429,7 @@ public class DmpRecord implements ArchiveEntry {
   }
 
   public int getExtraTemp1() {
-    return extraTemperature1;
+    return extraTemperature1-90;
   }
 
 

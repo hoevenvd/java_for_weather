@@ -129,7 +129,6 @@ public class LoopPacket implements SnapShot {
     }
     sb.append(date);
     sb.append("\t Temp: " + outsideTemperature);
-    sb.append("\t Gras: " + extraTemp1);
     sb.append("\t Pressure: " + pressure);
     sb.append("\t Humidity: " + outsideHumidity);
     sb.append("\t Dewpoint: " + getDewpoint());
@@ -205,7 +204,7 @@ public class LoopPacket implements SnapShot {
 
   public String shortToString() {
     if (isValid()) {
-      return DateUtils.getSqlDate(getDate()) + " : " + getOutsideTemp() + " : **" + getExtraTemp1() +
+      return DateUtils.getSqlDate(getDate()) + " : " + getOutsideTemp() + 
         " : " + getWindspeed() + " : " + getWindDirection().toShortString() +
         " : " + getPressure() + " : " + getBarStatus() +
         (isRaining() ? " : " + "raining at " + getRainRate() : "");
