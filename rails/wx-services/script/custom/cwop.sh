@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-export PATH=$PATH:/usr/local/bin
-
 #echo "running cwop.sh"
 
-cd ~/apps/weather/current
-export RAILS_ENV=production
-./script/runner components/cwop.rb
+# assume run from rails root (~/apps/wx-services/current)
 
+./script/runner lib/cwop.rb

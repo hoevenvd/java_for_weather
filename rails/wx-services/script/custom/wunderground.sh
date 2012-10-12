@@ -2,7 +2,7 @@
 
 #echo "running wunderground.sh"
 
-#cd ~/apps/wx-services/current
+# assume run from rails root (~/apps/wx-services/current)
 
-./script/runner components/wunder_conditions.rb
-./script/runner components/wunder_forecast.rb
+./script/runner lib/wunder_conditions.rb
+./script/runner lib/wunder_forecast.rb

@@ -4,11 +4,7 @@
 
 export PATH=$PATH:/usr/local/bin
 
-cd ~/apps/weather/current
+# assume run from rails root (~/apps/wx-services/current)
 
-export RAILS_ENV=development
-
-./script/runner components/noaa.rb KBVY
-./script/runner components/noaa_utils.rb KBVY
-
-
+./script/runner lib/noaa_conditions.rb
+./script/runner lib/noaa_forecast.rb
