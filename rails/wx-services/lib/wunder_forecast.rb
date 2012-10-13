@@ -41,7 +41,8 @@ class WunderForecastUtils
   log = Logger.new(STDOUT)
   log.level = Logger::INFO
 
-  url='http://api.wunderground.com/auto/wui/geo/ForecastXML/index.xml?query=' + AppConfig.noaa_location
+  location = ARGV[0] ||= AppConfig.noaa_location
+  url='http://api.wunderground.com/auto/wui/geo/ForecastXML/index.xml?query=' + location
 
   begin
     f = open(url) # open-uri - treat the URL as an input stream
@@ -49,7 +50,7 @@ class WunderForecastUtils
     log.debug(@xml)
     @doc = Document.new(@xml)
     log.debug("doc = " + @doc.to_s)
-    forecast = WunderForecast.find_or_create_by_location(AppConfig.noaa_location)
+    forecast = WunderForecast.find_or_create_by_location(location)
     txt_forecasts = (@doc.elements['//txt_forecast'])
     simple_forecasts = (@doc.elements['//simpleforecast'])
     forecast.wunder_forecast_periods.destroy_all

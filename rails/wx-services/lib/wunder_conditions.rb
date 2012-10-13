@@ -26,7 +26,7 @@ class WunderConditionsWriter
   log = Logger.new(STDOUT)
   log.level = Logger::INFO
 
-  URL='http://api.wunderground.com/auto/wui/geo/WXCurrentObXML/index.xml?query=' + AppConfig.noaa_location
+  URL='http://api.wunderground.com/auto/wui/geo/WXCurrentObXML/index.xml?query=' + ARGV[0] ||= AppConfig.noaa_location
   f = open(URL) # open-uri - treat the URL as an input stream
   data = f.read
   log.debug(data)
