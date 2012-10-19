@@ -12,8 +12,8 @@ class WxController < ApplicationController
   end
 
   def get_noaa_forecast
-    # @forecast != nil && @forecast.last_retrieved > 6.hours.ago
     @forecast = NoaaForecast.latest(AppConfig.noaa_location)
+    @wunder_forecast = WunderForecast.latest(AppConfig.noaa_location)
   end
 
   def get_climate
