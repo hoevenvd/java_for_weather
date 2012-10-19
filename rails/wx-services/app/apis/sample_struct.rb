@@ -1,6 +1,7 @@
 class SampleStruct < ActionWebService::Struct
   member :sample_date, :time
   member :temp, :float
+  member :extra_temp1, :float
   member :dewpoint, :float
   member :pressure, :float
   member :bar_status, :string

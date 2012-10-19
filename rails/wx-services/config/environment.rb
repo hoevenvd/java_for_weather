@@ -83,15 +83,10 @@ Rails::Initializer.run do |config|
     File.directory?(lib = "#{dir}/lib") ? lib : dir
   end
 
-# TODO - fix this kludge and get rid of the components directory
-  config.autoload_paths += %W( #{RAILS_ROOT}/components )
-
   config.cache_store = :file_store, "#{RAILS_ROOT}/tmp/cache"
   
 # config rack as a frozen gem
   config.gem 'rack'
-
-  config.gem 'test-unit', :lib => 'test/unit'
 
 end
 

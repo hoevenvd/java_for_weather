@@ -44,7 +44,7 @@ class NOAAForecastUtils
   log = Logger.new(STDOUT)
   log.level = Logger::INFO
 
-  LOCATION = AppConfig.noaa_location
+  LOCATION = ARGV[0] ||= AppConfig.noaa_location
   HOST = "forecast.weather.gov"
 #  PORT = 80
   LONG = AppConfig.longitude  # -70.8405
