@@ -4,7 +4,9 @@
 <% @forecast.forecast_periods.each do | pd | %>
   <tr>
    <td><b><%= pd.name %></b></td>
-   <td><img border=0 src="<%= pd.icon_location %>"></td>
+   <% if !pd.icon_location.nil? %>
+        <td><img border=0 src="<%= pd.icon_location %>"></td>
+   <% end %>
    <td><%= pd.text %></td>
   </tr>
 <% end %>
