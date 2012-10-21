@@ -16,9 +16,6 @@ set :use_sudo, false
 # writable.  This stops that.
 set :group_writable, false
 
-<<<<<<< HEAD
-set :repository,  "svn+ssh://tomorg@tommitchell.net/home/tomorg/svn/weather/trunk/rails/#{application}"
-=======
 set :deploy_subdir, "rails/wx-webapp"
 set :scm, :git
 set :deploy_via, :remote_cache
@@ -26,33 +23,16 @@ set :repository_cache, "git_cache"
 set :ssh_options, { :forward_agent => true }
 set :repository, "git@github.com:mitct02/weather.git"
 set :branch, "master"
->>>>>>> e7b2c0d5172885d29c1b164bb937ce7915c8cc7e
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
 set :deploy_to, "~/apps/#{application}"
 
-<<<<<<< HEAD
-# If you aren't using Subversion to manage your source code, specify
-# your SCM below:
-set :scm, :subversion
-# set :scm_username, "#{user}"
-#set :scm_password, proc{Capistrano::CLI.password_prompt('SVN pass:')} 
-
-set :deploy_via, :export 
-
-=======
->>>>>>> e7b2c0d5172885d29c1b164bb937ce7915c8cc7e
 role :app, "henrymitchell.org"
 role :web, "henrymitchell.org"
 role :db,  "henrymitchell.org", :primary => true
 
-#role :app, "dev"
-#role :web, "dev"
-#role :db,  "dev", :primary => true
-
-#todo: copy database.yml
 # cp ~/apps/weather/config/database.yml ~/cap/weather/shared/system/
 # make system the permanent place and do a ln on deployment
 #desc "Symlink config.yml and database.yml from shared to  current directory
