@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121006212941) do
+ActiveRecord::Schema.define(:version => 20121024100556) do
 
   create_table "archive_records", :force => true do |t|
     t.datetime "date",                                                                                     :null => false
@@ -288,7 +288,7 @@ ActiveRecord::Schema.define(:version => 20121006212941) do
     t.decimal  "lowPressure",                          :precision => 6, :scale => 1
     t.decimal  "lowTemp",                              :precision => 6, :scale => 1
     t.integer  "lowWindchill",           :limit => 8
-    t.decimal  "rain",                                 :precision => 6, :scale => 2
+    t.float    "rain"
     t.datetime "hiTempDate"
     t.datetime "lowTempDate"
     t.datetime "gustDate"
