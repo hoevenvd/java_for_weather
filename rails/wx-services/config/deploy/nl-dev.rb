@@ -5,7 +5,7 @@ set :rails_env, "development"
 
 set :user, "maarten"
 ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "id_rsa")] 
-ssh_options[:port] = 2010
+#ssh_options[:port] = 2010
 
 # fixes host verification problem
 default_run_options[:pty] = true
@@ -31,9 +31,9 @@ set :branch, "master"
 # via the :deploy_to variable:
 set :deploy_to, "~/apps/#{application}"
 
-role :app, "weerinwelsum.synology.me"
-role :web, "weerinwelsum.synology.me"
-role :db,  "weerinwelsum.synology.me", :primary => true
+role :app, "ontwikkel"
+role :web, "ontwikkel"
+role :db,  "ontwikkel", :primary => true
 
 
 task :symlink_config_yml, :roles => :app do
