@@ -1,8 +1,5 @@
 load 'deploy' if respond_to?(:namespace) # cap2 differentiator
 Dir['vendor/plugins/*/recipes/*.rb'].each { |plugin| load(plugin) }
-<<<<<<< HEAD
-load 'config/deploy'
-=======
 load 'config/deploy'
 
 require 'capistrano/recipes/deploy/strategy/remote_cache'
@@ -33,4 +30,3 @@ end
 
 
 set :strategy, RemoteCacheSubdir.new(self)
->>>>>>> e7b2c0d5172885d29c1b164bb937ce7915c8cc7e
