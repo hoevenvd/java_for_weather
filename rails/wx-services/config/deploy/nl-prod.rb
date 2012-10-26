@@ -10,7 +10,7 @@ set :rails_env, "production"
 
 set :user, "maarten"
 ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "id_rsa")] 
-ssh_options[:port] = 22
+#ssh_options[:port] = 22
 
 # fixes host verification problem
 default_run_options[:pty] = true
@@ -35,10 +35,6 @@ set :branch, "master"
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
 set :deploy_to, "~/apps/#{application}"
-
-role :app, "weerinwelsum.synology.me"
-role :web, "weerinwelsum.synology.me"
-role :db,  "weerinwelsum.synology.me", :primary => true
 
 role :app, "webserver"
 role :web, "webserver"
