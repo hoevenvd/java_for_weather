@@ -1,6 +1,6 @@
 build.properties
 weather.iml
-.idea/
+.idea
 classes/
 jweatherstation.properties
 log/
