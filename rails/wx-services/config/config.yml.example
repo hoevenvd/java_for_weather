@@ -12,7 +12,7 @@ common:
   cwop_id: CW1234
   cwop_lat_long: 5229.28N/00529.93E
   rrd_enabled: true
-  rrd_lib_dir:
+  rrd_lib_dir:  # this is the directory where RRD.so lives
   rrd_graphs:
     01915:
       rrd_files_location: /Users/tom/dev/rrd-data
