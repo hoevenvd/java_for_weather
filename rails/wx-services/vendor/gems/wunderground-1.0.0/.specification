@@ -1,0 +1,227 @@
+--- !ruby/object:Gem::Specification 
+name: wunderground
+version: !ruby/object:Gem::Version 
+  hash: 23
+  prerelease: false
+  segments: 
+  - 1
+  - 0
+  - 0
+  version: 1.0.0
+platform: ruby
+authors: 
+- Winfred Nadeau
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2012-07-03 00:00:00 Z
+default_executable: 
+dependencies: 
+- !ruby/object:Gem::Dependency 
+  name: json
+  prerelease: false
+  requirement: &id001 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ">"
+      - !ruby/object:Gem::Version 
+        hash: 7
+        segments: 
+        - 1
+        - 4
+        - 0
+        version: 1.4.0
+  type: :runtime
+  version_requirements: *id001
+- !ruby/object:Gem::Dependency 
+  name: httparty
+  prerelease: false
+  requirement: &id002 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ">"
+      - !ruby/object:Gem::Version 
+        hash: 7
+        segments: 
+        - 0
+        - 6
+        - 0
+        version: 0.6.0
+  type: :runtime
+  version_requirements: *id002
+- !ruby/object:Gem::Dependency 
+  name: addressable
+  prerelease: false
+  requirement: &id003 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        hash: 3
+        segments: 
+        - 0
+        version: "0"
+  type: :runtime
+  version_requirements: *id003
+- !ruby/object:Gem::Dependency 
+  name: shoulda
+  prerelease: false
+  requirement: &id004 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        hash: 3
+        segments: 
+        - 0
+        version: "0"
+  type: :development
+  version_requirements: *id004
+- !ruby/object:Gem::Dependency 
+  name: bundler
+  prerelease: false
+  requirement: &id005 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ~>
+      - !ruby/object:Gem::Version 
+        hash: 23
+        segments: 
+        - 1
+        - 0
+        - 0
+        version: 1.0.0
+  type: :development
+  version_requirements: *id005
+- !ruby/object:Gem::Dependency 
+  name: jeweler
+  prerelease: false
+  requirement: &id006 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ~>
+      - !ruby/object:Gem::Version 
+        hash: 1
+        segments: 
+        - 1
+        - 5
+        - 1
+        version: 1.5.1
+  type: :development
+  version_requirements: *id006
+- !ruby/object:Gem::Dependency 
+  name: simplecov
+  prerelease: false
+  requirement: &id007 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        hash: 3
+        segments: 
+        - 0
+        version: "0"
+  type: :development
+  version_requirements: *id007
+- !ruby/object:Gem::Dependency 
+  name: mocha
+  prerelease: false
+  requirement: &id008 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ">"
+      - !ruby/object:Gem::Version 
+        hash: 45
+        segments: 
+        - 0
+        - 9
+        - 11
+        version: 0.9.11
+  type: :development
+  version_requirements: *id008
+- !ruby/object:Gem::Dependency 
+  name: ruby-debug19
+  prerelease: false
+  requirement: &id009 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        hash: 3
+        segments: 
+        - 0
+        version: "0"
+  type: :development
+  version_requirements: *id009
+- !ruby/object:Gem::Dependency 
+  name: ruby-debug
+  prerelease: false
+  requirement: &id010 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        hash: 3
+        segments: 
+        - 0
+        version: "0"
+  type: :development
+  version_requirements: *id010
+description: A simple ruby API wrapper for interacting with the Wunderground API
+email: winfred.nadeau@gmail.com
+executables: []
+
+extensions: []
+
+extra_rdoc_files: 
+- LICENSE.txt
+- README.markdown
+files: 
+- Gemfile
+- LICENSE.txt
+- README.markdown
+- Rakefile
+- VERSION
+- lib/wunderground.rb
+- test/helper.rb
+- test/test_wunderground.rb
+- wunderground.gemspec
+- wunderground_ruby.gemspec
+has_rdoc: true
+homepage: http://github.com/wnadeau/wunderground_ruby
+licenses: 
+- MIT
+post_install_message: 
+rdoc_options: []
+
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  none: false
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      hash: 3
+      segments: 
+      - 0
+      version: "0"
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  none: false
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      hash: 3
+      segments: 
+      - 0
+      version: "0"
+requirements: []
+
+rubyforge_project: 
+rubygems_version: 1.3.7
+signing_key: 
+specification_version: 3
+summary: A simple ruby API wrapper for interacting with the Wunderground API
+test_files: 
+- test/helper.rb
+- test/test_wunderground.rb

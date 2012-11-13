@@ -1,0 +1,142 @@
+--- !ruby/object:Gem::Specification 
+name: addressable
+version: !ruby/object:Gem::Version 
+  hash: 7
+  prerelease: false
+  segments: 
+  - 2
+  - 3
+  - 2
+  version: 2.3.2
+platform: ruby
+authors: 
+- Bob Aman
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2012-07-27 00:00:00 -04:00
+default_executable: 
+dependencies: 
+- !ruby/object:Gem::Dependency 
+  name: rake
+  prerelease: false
+  requirement: &id001 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        hash: 5
+        segments: 
+        - 0
+        - 7
+        - 3
+        version: 0.7.3
+  type: :development
+  version_requirements: *id001
+- !ruby/object:Gem::Dependency 
+  name: rspec
+  prerelease: false
+  requirement: &id002 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        hash: 43
+        segments: 
+        - 2
+        - 9
+        - 0
+        version: 2.9.0
+  type: :development
+  version_requirements: *id002
+- !ruby/object:Gem::Dependency 
+  name: launchy
+  prerelease: false
+  requirement: &id003 !ruby/object:Gem::Requirement 
+    none: false
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        hash: 23
+        segments: 
+        - 0
+        - 3
+        - 2
+        version: 0.3.2
+  type: :development
+  version_requirements: *id003
+description: |
+  Addressable is a replacement for the URI implementation that is part of
+  Ruby's standard library. It more closely conforms to the relevant RFCs and
+  adds support for IRIs and URI templates.
+
+email: bob@sporkmonger.com
+executables: []
+
+extensions: []
+
+extra_rdoc_files: 
+- README.md
+files: 
+- lib/addressable/idna/native.rb
+- lib/addressable/idna/pure.rb
+- lib/addressable/idna.rb
+- lib/addressable/template.rb
+- lib/addressable/uri.rb
+- lib/addressable/version.rb
+- spec/addressable/idna_spec.rb
+- spec/addressable/net_http_compat_spec.rb
+- spec/addressable/template_spec.rb
+- spec/addressable/uri_spec.rb
+- data/unicode.data
+- tasks/clobber.rake
+- tasks/gem.rake
+- tasks/git.rake
+- tasks/metrics.rake
+- tasks/rspec.rake
+- tasks/rubyforge.rake
+- tasks/yard.rake
+- website/index.html
+- CHANGELOG.md
+- Gemfile
+- LICENSE.txt
+- Rakefile
+- README.md
+has_rdoc: true
+homepage: http://addressable.rubyforge.org/
+licenses: []
+
+post_install_message: 
+rdoc_options: 
+- --main
+- README.md
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  none: false
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      hash: 3
+      segments: 
+      - 0
+      version: "0"
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  none: false
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      hash: 3
+      segments: 
+      - 0
+      version: "0"
+requirements: []
+
+rubyforge_project: addressable
+rubygems_version: 1.3.7
+signing_key: 
+specification_version: 3
+summary: URI Implementation
+test_files: []
+
