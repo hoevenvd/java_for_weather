@@ -88,7 +88,7 @@ Rails::Initializer.run do |config|
   config.cache_store = :file_store, "#{RAILS_ROOT}/tmp/cache"
   
 # config rack as a frozen gem
-  config.gem 'rack'
+  require 'rack'
 
 end
 
