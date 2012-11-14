@@ -57,7 +57,7 @@ task :symlink_public, :roles => :app do
 #       /home/#{user}/public_html/#{deploy_dir}"
 #
   run "ln -nsf #{shared_path}/images
-       #{current_path}/public/"
+       #{release_path}/public/"
 
 # fixup .htaccess for passenger
 # example can be found in config/dot_htaccess_passenger
