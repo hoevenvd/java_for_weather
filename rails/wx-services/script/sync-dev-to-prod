@@ -1,7 +1,0 @@
-#!/bin/sh
-
-while true; do
- ./script/runner ./components/dev_prod_data_sync.rb
- sleep 10
-done
-

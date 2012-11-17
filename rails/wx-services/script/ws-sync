@@ -1,8 +1,0 @@
-#!/bin/sh
-
-while true; do
- ./script/runner ./components/ws_data_sync.rb -e production
- echo "ws update stopped" | mail -s "ws update stopped" tom@tom.org
- sleep 60
-done
-
