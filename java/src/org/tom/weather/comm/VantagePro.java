@@ -40,10 +40,12 @@ public class VantagePro extends Station implements WeatherStation {
 	private static final Logger DATA_PROBLEMS_LOGGER = Logger
 			.getLogger("DATA_PROBLEMS_LOGGER");
 
-	public VantagePro(String portName, int baudRate, int rainGauge)
+	public VantagePro(String portName, int baudRate, int rainGauge, boolean wlip)
 			throws PortInUseException, NoSuchPortException, IOException {
-		super(portName, baudRate, rainGauge);
+		super(portName, baudRate, rainGauge,wlip);
 		LOGGER.debug("rainGauge: " + rainGauge);
+		LOGGER.debug("wlip: " + wlip);
+		DmpRecord.setRainValue(rainGauge);
 	}
 
 	private void processDmpAftPacket(DataUploader myUploader, byte[] page, int pageOffset)
@@ -105,7 +107,7 @@ public class VantagePro extends Station implements WeatherStation {
 		LOGGER.debug("about to send TEST");
 		sendString("TEST\n");
 		// wait HALF A SECOND!
-		delay(500);
+		delay(5000);
 		boolean ok = false;
 		byte tmp[] = new byte[10];
 		int bytesRead = this.getInputStream().read(tmp);

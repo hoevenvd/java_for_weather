@@ -1,27 +1,3 @@
 /.idea
 
-# /java/
-/java/src_generated
-/java/tmp
-/java/classes
-/java/nbproject
-/java/nbbuild.xml
-/java/log
-/java/weather.xml
-/java/jweatherstation.properties
-/java/jweatherstation.properties.wm
-/java/jweatherstation.properties.vp
-/java/log4j.properties
-/java/build.properties
-/java/.classpath
-/java/.project
-/java/.settings
-/java/.idea
-/java/Trunk.iml
-/java/Weather.iml
-/java/.settings
-
-# /java/src/
-/java/src/org
-/java/src/uk
 

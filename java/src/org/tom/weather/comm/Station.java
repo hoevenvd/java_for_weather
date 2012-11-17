@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Date;
 
 import javax.comm.CommPortIdentifier;
 import javax.comm.NoSuchPortException;
@@ -54,12 +55,13 @@ public abstract class Station {
   protected boolean usingSerial;
   protected List posterList;
   protected String location;
+  boolean _wlip = false;
   
-  public Station(String portName, int baudRate, int rainGauge) throws PortInUseException,
+  public Station(String portName, int baudRate, int rainGauge, boolean wlip) throws PortInUseException,
       NoSuchPortException, IOException {
-      LOGGER.debug("rainGauge: " + rainGauge);
       // parse the portname as an IP addr
       // if it is a vaid one, then treat baudRateOrPort as a port number
+    _wlip = wlip;
     try {
         ip = InetAddress.getByName(portName);
         // portName must be a valid IP address, so assign port number
@@ -68,8 +70,6 @@ public abstract class Station {
         inputStream = new DataInputStream(new BufferedInputStream(s.getInputStream()));
         outputStream = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
         usingSerial = false;
-        LOGGER.debug(inputStream);
-        LOGGER.debug(outputStream);
 
     } catch (UnknownHostException ex) {
         // must be a COM port
@@ -193,7 +193,19 @@ public abstract class Station {
       LOGGER.warn(e);
     }
   }
+  
+  protected void uploadWeatherlink() {
+      try {
+      outputStream.close();
+      }
+      catch (Exception e) {}
+      LOGGER.debug("*** UPLOAD WEATHERLINK ***");
+  }
 
+  protected boolean getWlip() {
+  return _wlip;
+  }     
+      
   protected boolean getAck() throws IOException {
     delay(500);
     int ack = getInputStream().read();
@@ -306,3 +318,4 @@ public abstract class Station {
   public abstract void readCurrentConditions() throws Exception;
 
 }
+        

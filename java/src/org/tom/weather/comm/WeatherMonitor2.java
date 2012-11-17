@@ -52,9 +52,9 @@ public class WeatherMonitor2 extends Station implements WeatherStation {
     private static float outsideTempCAL;
     private static float insideTempCAL;
 
-    public WeatherMonitor2(String portName, int baudRate, int rainGauge) throws PortInUseException,
+    public WeatherMonitor2(String portName, int baudRate, int rainGauge, boolean wlip) throws PortInUseException,
             NoSuchPortException, IOException {
-        super(portName, baudRate, rainGauge);
+        super(portName, baudRate, rainGauge, wlip);
 		Wm2DmpRecord.setRainValue(rainGauge);
     }
 

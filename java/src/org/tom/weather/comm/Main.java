@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import org.tom.weather.comm.Station;
+
 public class Main {
   private static final int MAX_ERRORS = 5;
   public static final Logger LOGGER = Logger.getLogger(Main.class);
@@ -58,6 +60,10 @@ public class Main {
         }
         if (isCheckArchive()) {
           getStation().readArchiveMemory();
+        }
+	if (getStation().getWlip()) {
+        getStation().uploadWeatherlink();
+        System.exit(0);
         }
       } catch (Exception e) {
         LOGGER.error("exception - waiting 5s", e);
