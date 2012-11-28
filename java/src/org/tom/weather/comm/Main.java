@@ -9,7 +9,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
-
+import java.util.Calendar;
 import org.tom.weather.comm.Station;
 
 public class Main {
@@ -17,7 +17,7 @@ public class Main {
   public static final Logger LOGGER = Logger.getLogger(Main.class);
   private Station station;
   private boolean checkArchive;
-
+  
   /**
    * Main method
    * 
@@ -63,7 +63,15 @@ public class Main {
         }
 	if (getStation().getWlip()) {
         getStation().uploadWeatherlink();
-        System.exit(0);
+	//Calendar now = Calendar.getInstance();
+	//int minute = now.get(Calendar.MINUTE);
+	//if (minute == 00)
+	//{
+	//    LOGGER.debug("Going for a timeout of one minute, to upload archive to WEATHERLINK");
+	//    Thread.sleep(60000);
+	//}
+	
+        //System.exit(0);
         }
       } catch (Exception e) {
         LOGGER.error("exception - waiting 5s", e);
