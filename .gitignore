@@ -1,5 +1,5 @@
 build.properties
-weather.iml
+*.iml
 .idea
 classes/
 jweatherstation.properties

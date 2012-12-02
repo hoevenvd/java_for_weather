@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Date;
 
 import javax.comm.CommPortIdentifier;
 import javax.comm.NoSuchPortException;
@@ -48,30 +49,42 @@ public abstract class Station {
   private SerialPort port = null;
   private CommPortIdentifier portID = null;
   private String portName;
+  String _portName = "";
+  int _baudRate = 0;
   private int baudRateOrPort;
   protected CRC crc = new CRC();
   protected InetAddress ip;
   protected boolean usingSerial;
   protected List posterList;
   protected String location;
-  
-  public Station(String portName, int baudRate, int rainGauge) throws PortInUseException,
-      NoSuchPortException, IOException {
-      LOGGER.debug("rainGauge: " + rainGauge);
+  boolean _wlip = false;
+  private Socket s;
+  private int baudRate;
+
+  public Station(String portName, int baudRate, int rainGauge, boolean wlip) {
       // parse the portname as an IP addr
       // if it is a vaid one, then treat baudRateOrPort as a port number
+    _wlip = wlip;
     try {
+    openSocket(portName, baudRate);
+    }
+    catch (Exception e) {}
+    }
+
+  protected void openSocket (String portName, int baudRate) throws PortInUseException,
+      NoSuchPortException, IOException {
+    try {    
+        _portName = portName;
+	_baudRate = baudRate;
         ip = InetAddress.getByName(portName);
         // portName must be a valid IP address, so assign port number
         baudRateOrPort = baudRate;
-        Socket s = new Socket(ip.getHostAddress(), baudRate);
+        s = new Socket(ip.getHostAddress(), baudRate);
         inputStream = new DataInputStream(new BufferedInputStream(s.getInputStream()));
         outputStream = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
         usingSerial = false;
-        LOGGER.debug(inputStream);
-        LOGGER.debug(outputStream);
-
-    } catch (UnknownHostException ex) {
+    }
+    catch (UnknownHostException ex) {
         // must be a COM port
         LOGGER.info(portName + " not an IP address or hostname, using serial");
         this.portName = portName;
@@ -193,7 +206,27 @@ public abstract class Station {
       LOGGER.warn(e);
     }
   }
+  
+  protected void uploadWeatherlink() {
+      try {
+      outputStream.close();
+      s.close();
+      }
+      catch (Exception e) {}
+    try {  
+    	LOGGER.debug("*** UPLOAD WEATHERLINK ***");
+	delay(10000);
+	openSocket(_portName, _baudRate);  
+	}
+    catch (Exception e) {
+	LOGGER.debug(e);
+    }
+    }
 
+  protected boolean getWlip() {
+  return _wlip;
+  }     
+      
   protected boolean getAck() throws IOException {
     delay(500);
     int ack = getInputStream().read();
@@ -306,3 +339,4 @@ public abstract class Station {
   public abstract void readCurrentConditions() throws Exception;
 
 }
+        

@@ -6,22 +6,32 @@
 #portName=serial-dev
 #portName=home.tom.org
 #portName=192.168.1.60
-portName=192.168.2.60
-baudRate=10001
+portName=192.168.1.48
+baudRate=5511
 # raingauge: 0 = no gauge, 1 = 0.01 inch, 2 = 0.2 mm
-rainGauge=1
+rainGauge=2
+
+# if an WeatherLinkIP (WLIP) datalogger on board, this wlip-switch releases the
+# socket every minute for 5 seconds or so. During that 5 seconds, the WLIP
+# will send data to the Davis Weatherlink network. 
+# Set to false if no WLIP on board, or you dont want to send data to the 
+# Davis Weatherlink network.
+
+wlip=true
 
 # serial settings
 #portName=/dev/ttyS99
 #baudRate=19200
 
-ws.password=secret
-ws.location=LELYSTAD
+graph.db.Driver=com.mysql.jdbc.Driver
+graph.db.Url=jdbc:mysql://v-servers/weather_production?autoReconnect=true
+graph.db.Username=wxprod
+graph.db.Password=production
+graph.metric=true
+graph.location=WELSUMVP
+graph.baseDir=/data/tmp/charts
+#graph.baseDir=c:/tmp/graphs
 
-gae.post.url=http://localhost:8080/conditionsservice.post_condition
-gae.upload.url=http://localhost:8080/archiveservice.upload_archive
-#gae.post.url=http://org-tom-wx.appspot.com/conditionsservice.post_condition
-gae.lastdate.url=http://localhost:8080/archiveservice.get_last_archive_date
-gae.password=secret
-gae.location=01915
-gae.station=vp2 # vp, vp2, wm2 are valid
+ws.password=wx
+ws.location=WELSUMVP
+
