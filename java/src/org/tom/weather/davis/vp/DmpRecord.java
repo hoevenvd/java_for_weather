@@ -20,6 +20,7 @@ import uk.me.jstott.jweatherstation.datatypes.Pressure;
 import uk.me.jstott.jweatherstation.datatypes.Temperature;
 import uk.me.jstott.jweatherstation.util.Process;
 import uk.me.jstott.jweatherstation.util.UnsignedByte;
+import org.tom.weather.comm.VantagePro;
 
 /**
  * 
@@ -76,6 +77,7 @@ public class DmpRecord implements ArchiveEntry {
   private int soilMoisture2;
   private int soilMoisture3;
   private int soilMoisture4;
+ static double convertRain = 0;
 
   public DmpRecord(byte[] data) {
     UnsignedByte[] unsignedData = UnsignedByte.getUnsignedBytes(data);
@@ -87,8 +89,8 @@ public class DmpRecord implements ArchiveEntry {
     lowOutsideTemperature = new Temperature(unsignedData[8], unsignedData[9]);
     if (unsignedData[10].getByte() != 0 || unsignedData[11].getByte() != 0) {
       if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("rain data[10] " + unsignedData[10]);
-        LOGGER.debug("rain data[11] " + unsignedData[11]);
+        LOGGER.debug("rain data[10] " + unsignedData[10].getByte());
+        LOGGER.debug("rain data[11] " + unsignedData[11].getByte());
       }
     }
     rainfall = Process.bytesToInt(unsignedData[10], unsignedData[11]);
@@ -362,11 +364,21 @@ public class DmpRecord implements ArchiveEntry {
   }
 
   public double getRain() {
-    return rainfall / 100.0;
+    	if (convertRain != -9999)
+    	{
+        	return (rainfall / 100.0)*convertRain;
+    	}
+    	else
+    		return -9999;
   }
   
   public double getHighRainRate() {
-    return highRainfallRate / 100.0;
+      	if (convertRain != -9999)
+      	{
+      		return (highRainfallRate*convertRain)/100;
+      	}
+      	else
+      		return -9999;
   }
 
   public int getAvgWindSpeed() {
@@ -449,5 +461,12 @@ public class DmpRecord implements ArchiveEntry {
      */
     public void setHighWindSpeedDirection(Direction highWindSpeedDirection) {
         this.highWindSpeedDirection = highWindSpeedDirection;
+    }
+
+    public static synchronized void setRainValue(int rainGauge) {
+      	convertRain = -9999; // initial
+       	if (rainGauge == 0) {convertRain = -9999;}
+       	if (rainGauge == 1) {convertRain = 1;}
+       	if (rainGauge == 2) {convertRain = 0.7874015748031496;}
     }
 }
