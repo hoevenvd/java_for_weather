@@ -88,6 +88,9 @@
     <constructor-arg>
 			<value>${rainGauge}</value>
 		</constructor-arg>
+    <constructor-arg>
+            <value>${wlip}</value>
+    </constructor-arg>
 
 		<property name="uploaderList">
 			<list>
