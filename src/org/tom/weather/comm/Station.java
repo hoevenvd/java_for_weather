@@ -73,16 +73,23 @@ public abstract class Station {
 
   protected void openSocket (String portName, int baudRate) throws PortInUseException,
       NoSuchPortException, IOException {
-    try {    
+    try {
         _portName = portName;
-	_baudRate = baudRate;
+	    _baudRate = baudRate;
         ip = InetAddress.getByName(portName);
         // portName must be a valid IP address, so assign port number
         baudRateOrPort = baudRate;
-        s = new Socket(ip.getHostAddress(), baudRate);
+        s = new Socket();
+        try {
+        s.connect(new InetSocketAddress(ip.getHostAddressAddress(), baudRate), 1000);
         inputStream = new DataInputStream(new BufferedInputStream(s.getInputStream()));
         outputStream = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
         usingSerial = false;
+        }
+        catch (SocketTimeoutException ste)
+        {
+            LOGGER.debug(ste);
+        }
     }
     catch (UnknownHostException ex) {
         // must be a COM port

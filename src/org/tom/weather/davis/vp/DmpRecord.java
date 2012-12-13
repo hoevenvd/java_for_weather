@@ -292,7 +292,7 @@ public class DmpRecord implements ArchiveEntry {
         + ","
         + averageUVIndex
         + ","
-        + ET
+        + getET()
         + ","
         + highSolarRadiation
         + ","
@@ -371,6 +371,16 @@ public class DmpRecord implements ArchiveEntry {
     	else
     		return -9999;
   }
+
+  public double getET() {
+    	if (convertRain != -9999)
+    	{
+        	return (ET / 100.0)*convertRain;
+    	}
+    	else
+    		return -9999;
+  }
+
   
   public double getHighRainRate() {
       	if (convertRain != -9999)
