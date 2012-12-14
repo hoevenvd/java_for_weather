@@ -449,6 +449,9 @@ public class Wm2DmpRecord implements ArchiveEntry {
         return extraTemperature1;
     }
 
+    public float getET() {
+        return ET;
+    }
 
     /**
      * @return the highWindSpeedDirection

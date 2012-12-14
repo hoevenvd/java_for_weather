@@ -59,4 +59,6 @@ public interface ArchiveEntry extends Serializable {
   public int getNumberOfWindSamples();
 
   public int getExtraTemp1();
+
+  public float getET();
 }

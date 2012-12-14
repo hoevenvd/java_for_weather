@@ -61,6 +61,7 @@ public class WxWsClient {
     a.setLow_outside_temp(32.8);
     a.setPrevailing_wind_direction(270);
     a.setExtra_temp1(0);
+    a.setEt(0);
     return a;
   }
 

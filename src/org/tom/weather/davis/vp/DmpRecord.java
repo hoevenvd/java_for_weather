@@ -55,7 +55,7 @@ public class DmpRecord implements ArchiveEntry {
   private Direction highWindSpeedDirection;
   private Direction windDirection;
   private int averageUVIndex;
-  private int ET;
+  private float evapotranspiration;
   private int highSolarRadiation;
   private int highUVIndex;
   private int forecastRule;
@@ -116,7 +116,10 @@ public class DmpRecord implements ArchiveEntry {
     // are
     // 0-15
     averageUVIndex = unsignedData[28].getByte() == 255 ? -9999 : unsignedData[28].getByte();
-    ET = unsignedData[29].getByte();
+    evapotranspiration = unsignedData[29].getByte();
+      if (LOGGER.isDebugEnabled()) {
+        LOGGER.debug("evapotranspiration = " + unsignedData[29].getByte());
+    }
     highSolarRadiation = Process.bytesToInt(unsignedData[30], unsignedData[31]);
     highUVIndex = unsignedData[32].getByte() == 255 ? -9999 : unsignedData[32].getByte();
     forecastRule = unsignedData[33].getByte();
@@ -372,10 +375,10 @@ public class DmpRecord implements ArchiveEntry {
     		return -9999;
   }
 
-  public double getET() {
+  public float getET() {
     	if (convertRain != -9999)
     	{
-        	return (ET / 100.0)*convertRain;
+        	return (evapotranspiration / (float)1000);
     	}
     	else
     		return -9999;
