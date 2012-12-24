@@ -268,7 +268,7 @@ public class WeatherMonitor2 extends Station implements WeatherStation {
                 newNumberOfArchiveBytes = getNumberOfArchiveEntries();
             }
             resetArchiveMemory();
-        } catch (IOException e) {
+        } catch (IOException e) {   // TODO do something smarter here, related to log4j and informative
             System.err.println(e.toString());
             e.printStackTrace();
             // don't erase archive memory

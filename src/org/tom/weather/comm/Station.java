@@ -3,32 +3,20 @@
  */
 package org.tom.weather.comm;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.SocketTimeoutException;
+import java.net.InetSocketAddress;
+import org.apache.log4j.Logger;
+import uk.me.jstott.jweatherstation.util.CRC;
+import uk.me.jstott.jweatherstation.util.UnsignedByte;
+
+import javax.comm.*;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Date;
-
-import javax.comm.CommPortIdentifier;
-import javax.comm.NoSuchPortException;
-import javax.comm.PortInUseException;
-import javax.comm.SerialPort;
-import javax.comm.UnsupportedCommOperationException;
-
-import org.apache.log4j.Logger;
-
-import uk.me.jstott.jweatherstation.util.CRC;
-import uk.me.jstott.jweatherstation.util.UnsignedByte;
 
 /**
  * 
@@ -81,7 +69,7 @@ public abstract class Station {
         baudRateOrPort = baudRate;
         s = new Socket();
         try {
-        s.connect(new InetSocketAddress(ip.getHostAddressAddress(), baudRate), 1000);
+        s.connect(new InetSocketAddress(ip.getHostAddress(), baudRate), 1000);
         inputStream = new DataInputStream(new BufferedInputStream(s.getInputStream()));
         outputStream = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
         usingSerial = false;
