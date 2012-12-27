@@ -85,7 +85,7 @@ public class VantagePro extends Station implements WeatherStation {
 	private void wakeup() throws IOException {
 		clearInputBuffer();
 		for (int i = 1; i <= 3; i++) {
-			sendByte((byte) 0x0d);
+			sendByte((byte) 0x0D);
 			delay(1200);
 			int bytes = getInputStream().available();
 			if (bytes == 2) {

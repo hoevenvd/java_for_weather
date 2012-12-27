@@ -11,8 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -81,14 +83,14 @@ public abstract class Station {
         baudRateOrPort = baudRate;
         s = new Socket();
         try {
-        s.connect(new InetSocketAddress(ip.getHostAddressAddress(), baudRate), 1000);
+        s.connect(new InetSocketAddress(ip.getHostAddress(), baudRate), 1000);
         inputStream = new DataInputStream(new BufferedInputStream(s.getInputStream()));
         outputStream = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
         usingSerial = false;
         }
         catch (SocketTimeoutException ste)
         {
-            LOGGER.debug(ste);
+            LOGGER.debug("*** STE caught! ***"+ste);
         }
     }
     catch (UnknownHostException ex) {

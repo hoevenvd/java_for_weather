@@ -123,4 +123,9 @@ public class BaseArchiveEntryImpl implements ArchiveEntry {
     return 0;
   }
 
+  public float getET() {
+    return 0;
+  }
+
+
 }
