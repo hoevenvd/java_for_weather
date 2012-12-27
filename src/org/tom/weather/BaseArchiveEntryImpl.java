@@ -123,9 +123,8 @@ public class BaseArchiveEntryImpl implements ArchiveEntry {
     return 0;
   }
 
-  public float getET() {
-    return 0;
-  }
-
+    public float getET() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
 }
