@@ -376,12 +376,7 @@ public class DmpRecord implements ArchiveEntry {
   }
 
   public float getET() {
-    	if (convertRain != -9999)
-    	{
-        	return (evapotranspiration / (float)1000);
-    	}
-    	else
-    		return -9999;
+        return (evapotranspiration / (float)1000);
   }
 
   
@@ -453,8 +448,16 @@ public class DmpRecord implements ArchiveEntry {
     return solarRadiation;
   }
 
+
   public int getExtraTemp1() {
+    if (extraTemperature1 != 255)
+    {
     return extraTemperature1-90;
+    }
+    else
+    {
+    return 255;
+    }
   }
 
 
