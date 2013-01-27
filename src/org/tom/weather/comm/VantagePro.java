@@ -110,7 +110,8 @@ public class VantagePro extends Station implements WeatherStation {
 		delay(5000);
 		boolean ok = false;
 		byte tmp[] = new byte[10];
-		int bytesRead = this.getInputStream().read(tmp);
+        checkStreamAvailable();
+        int bytesRead = this.getInputStream().read(tmp);
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < bytesRead; i++) {
 			if (tmp[i] != 10 && tmp[i] != 13) {
@@ -192,7 +193,8 @@ public class VantagePro extends Station implements WeatherStation {
 		}
 
 		byte[] header = new byte[bytes];
-		int bytesRead = getInputStream().read(header);
+        checkStreamAvailable();
+        int bytesRead = getInputStream().read(header);
 		if (bytesRead == 0) { // header must be null - give up and try again
 			LOGGER.warn("got zero bytes from serial stream when more were expected");
 			return;
@@ -236,7 +238,8 @@ public class VantagePro extends Station implements WeatherStation {
 				LOGGER.debug("sent ack");
 			}
 
-			byte[] myByte = new byte[1];
+            checkStreamAvailable();
+            byte[] myByte = new byte[1];
 			getInputStream().read(myByte);
 			int sequenceNumber = (int) myByte[0];
 			if (LOGGER.isDebugEnabled()) {
@@ -255,7 +258,16 @@ public class VantagePro extends Station implements WeatherStation {
 		}
 	}
 
-	private void uploadDmpRecords(DataUploader myUploader, List dmpRecords2) throws Exception {
+    private int checkStreamAvailable() throws IOException {
+        int a;
+        if ((a = getInputStream().available()) <= 0) {
+            throw new IOException("Stream has zero bytes available unexpectedly");
+        } else {
+            return a;
+        }
+    }
+
+    private void uploadDmpRecords(DataUploader myUploader, List dmpRecords2) throws Exception {
 
 		if (getUploaderList().size() > 0) {
 			ArchiveEntry[] entries = new ArchiveEntry[dmpRecords2.size()];
@@ -279,24 +291,20 @@ public class VantagePro extends Station implements WeatherStation {
 		}
 
 		byte[] localBuffer = new byte[BUFFER_SIZE];
-		try {
-			int available = getInputStream().available();
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug(available + " bytes available");
-			}
-			if (available > 0) {
-				int bytes = getInputStream().read(localBuffer);
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("looking for: " + localBuffer.length
-							+ " retrieved: " + bytes + " bytes");
-				}
-				processDmpAftPacket(myUploader, localBuffer, offset);
-			}
-			delay(500);
-		} catch (IOException ex) {
-			LOGGER.error("Cannot read input stream", ex);
-			throw ex;
-		}
+
+        int available =  checkStreamAvailable();
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(available + " bytes available");
+        }
+        if (available > 0) {
+            int bytes = getInputStream().read(localBuffer);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("looking for: " + localBuffer.length
+                        + " retrieved: " + bytes + " bytes");
+            }
+            processDmpAftPacket(myUploader, localBuffer, offset);
+        }
+        delay(500);
 	}
 
 	private UnsignedByte[] dateToBytes(Date dbLastDate) {
