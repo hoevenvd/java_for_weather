@@ -8,3 +8,4 @@ log4j.properties
 src_generated/
 tmp/
 weather.xml
+nohup.out
